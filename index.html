@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="apple-touch-icon" href="icon.png"><link rel="icon" type="image/png" href="icon.png"><meta name="apple-mobile-web-app-title" content="Trade App"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#05070a"></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="apple-touch-icon" href="icon.png"><link rel="icon" type="image/png" href="icon.png"><meta name="apple-mobile-web-app-title" content="Trade App"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#05070a"><meta http-equiv="Cache-Control" content="no-cache, must-revalidate"><meta http-equiv="Pragma" content="no-cache"></head><body>
 <title>Trade App</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -270,6 +270,13 @@ form{display:flex;flex-direction:column;gap:15px}
 /* iconița Foto de pe Acasă */
 .homerow{display:grid;grid-template-columns:86px minmax(0,1fr);gap:var(--gap);align-items:stretch}
 .homerow .accs{gap:9px}
+.newver{position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top,0px));z-index:70;
+  display:flex;align-items:center;gap:11px;padding:11px 12px 11px 15px;border-radius:var(--r-p);
+  background:linear-gradient(180deg,#48FFAE,#13B96E);color:#002313;font-size:13.5px;font-weight:650;
+  box-shadow:0 12px 30px -10px rgba(43,232,139,.75)}
+.newver span{flex:1 1 auto}
+.newver button{min-height:0;padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:700;
+  background:rgba(0,35,19,.9);color:#B9FFD8;border:0;box-shadow:none}
 .fototile{width:100%;min-height:0;padding:14px 8px;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:9px;
   border-radius:var(--r-m);border:1px solid var(--edge);background:var(--surf);box-shadow:var(--surf-sh);
@@ -502,6 +509,10 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
 
 <div class="aura" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i><i class="a4"></i><i class="a5"></i><i class="a6"></i></div>
 <div class="grain" aria-hidden="true"></div>
+<div class="newver" id="newVer" hidden>
+  <span>A apărut o versiune nouă.</span>
+  <button type="button" id="btnHardReload">Încarcă acum</button>
+</div>
 <div class="app">
   <div class="topbar">
     <button type="button" class="tb-logo" id="tbLogo" aria-label="Poză de profil"><span id="tbInit">TA</span></button>
@@ -666,6 +677,8 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
         <div><i id="dbDot"></i><span id="dbTxt">Se încarcă lista „De trimis”…</span></div>
       </div>
       <button type="button" class="ghost wide" id="btnReload" style="margin-top:14px">Încarcă din Sheets</button>
+      <p class="note" style="margin-top:12px">Versiunea instalată: <b id="buildTxt">—</b> · <button type="button" class="tiny" id="btnVer">Caută versiune nouă</button></p>
+      <p class="msg" id="verMsg" hidden></p>
     </div>
     <div class="card"><h2>Partajare</h2>
       <p class="hint" style="margin:-4px 0 12px">Oricine deschide linkul poate citi <b>și scrie</b> în foaia ta. Linkul folosește un cod separat de parola ta și îl poți anula oricând.</p>
@@ -890,6 +903,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
+var BUILD="20.11.2026 16:00";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1953,6 +1967,32 @@ function lCalc(){
     +'<div><span class="ln">TP 2R</span><span class="lv" style="color:var(--win)">$'+Math.round(rUsd*2)+'</span></div>'
     +'<div><span class="ln">SL</span><span class="lv">'+String(sl).replace(".",",")+' pct</span></div>'
     +'<div><span class="ln">TP</span><span class="lv">'+String(Math.round(sl*2*100)/100).replace(".",",")+' pct</span></div>'; }
+
+/* ---------- versiune / cache ---------- */
+function hardReload(){
+  var u=location.pathname+"?v="+Date.now()+(location.hash||"#acasa");
+  try{ if(window.caches&&caches.keys) caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }); }catch(e){}
+  location.replace(u); }
+if($("btnHardReload")) $("btnHardReload").onclick=hardReload;
+if($("buildTxt")) $("buildTxt").textContent=BUILD;
+async function checkVersion(manual){
+  var m=$("verMsg"), b=$("btnVer");
+  function say3(t,c){ if(!m) return; m.hidden=false; m.className="msg"+(c?" "+c:""); m.textContent=t; }
+  if(manual && b){ b.disabled=true; b.textContent="Verific…"; }
+  try{
+    var r=await fetch(location.pathname+"?cb="+Date.now(),{cache:"no-store"});
+    if(!r.ok) throw new Error(r.status);
+    var txt=await r.text();
+    var k=txt.match(/var BUILD="([^"]+)"/);
+    if(!k) throw new Error("fără amprentă");
+    if(k[1]!==BUILD){ if($("newVer")) $("newVer").hidden=false;
+      say3("Pe server e versiunea "+k[1]+", tu ai "+BUILD+". Apasă „Încarcă acum” sus.","ok"); }
+    else if(manual) say3("Ai ultima versiune ("+BUILD+").","ok");
+  }catch(e){ if(manual) say3("N-am putut verifica: "+(e&&e.message||e),"no"); }
+  finally{ if(manual && b){ b.disabled=false; b.textContent="Caută versiune nouă"; } } }
+if($("btnVer")) $("btnVer").onclick=function(){ checkVersion(true); };
+setTimeout(function(){ checkVersion(false); },4000);
+document.addEventListener("visibilitychange",function(){ if(!document.hidden) checkVersion(false); });
 
 /* ---------- întreținere ---------- */
 function oldSynced(){ var lim=Date.now()-180*864e5;
