@@ -321,6 +321,10 @@ form{display:flex;flex-direction:column;gap:15px}
   cursor:pointer;display:grid;place-items:center;line-height:1;box-shadow:none;
   background:rgba(0,6,14,.74);border:1px solid var(--edge);color:var(--t1);font-size:13px;backdrop-filter:blur(8px)}
 button.primary.big{min-height:54px;font-size:16px;letter-spacing:-.01em}
+.kverd{border-radius:var(--r-m);padding:11px 14px;font-size:12.5px;line-height:1.45;border:1px solid var(--edge);background:var(--ctl);color:var(--t2)}
+.kverd.ok{background:rgba(43,232,139,.1);border-color:rgba(43,232,139,.28);color:#8DF7C2}
+.kverd.no{background:rgba(255,77,94,.1);border-color:rgba(255,77,94,.28);color:#FF93A0}
+.kverd.mid{background:rgba(255,194,74,.09);border-color:rgba(255,194,74,.26);color:#FFD27A}
 .kiv{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);font-weight:600;margin-top:4px}
 .kstop{border-radius:var(--r-m);padding:13px 14px;background:rgba(255,77,94,.11);border:1px solid rgba(255,77,94,.3)}
 .kstop b{font-size:17px;font-weight:750;color:var(--loss);letter-spacing:-.02em}
@@ -333,13 +337,16 @@ button.primary.big{min-height:54px;font-size:16px;letter-spacing:-.01em}
 .wrc.good::before{background:var(--win);box-shadow:0 0 14px rgba(43,232,139,.8)}
 .wrc.bad::before{background:var(--loss);box-shadow:0 0 14px rgba(255,77,94,.7)}
 .wrc.mid::before{background:var(--warn)}
-.wrl{font-size:11.5px;color:var(--t2);font-weight:550;line-height:1.3}
+.wrtop{display:flex;align-items:flex-start;gap:9px}
+.wrl{flex:1 1 auto;min-width:0;font-size:11.5px;color:var(--t2);font-weight:550;line-height:1.35}
 .wrv{font-size:38px;font-weight:750;letter-spacing:-.045em;line-height:1.05;margin-top:3px;color:var(--t1)}
 .wrc.good .wrv{color:var(--win)} .wrc.bad .wrv{color:var(--loss)} .wrc.mid .wrv{color:var(--warn)}
 .wrc.thin .wrv{color:var(--t2)}
 .wrm{font-size:11px;color:var(--t3);margin-top:2px}
-.wrh{position:absolute;top:12px;right:13px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+.wrh{flex:0 0 auto;margin-top:-1px;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap;
   color:var(--t1);font-weight:700;background:var(--ctl-on);border:1px solid var(--gl2);padding:3px 8px;border-radius:999px}
+.wrc.none .wrv{font-size:19px;color:var(--t3);letter-spacing:-.01em;margin-top:7px}
+.wrc.none::before{background:var(--t4)}
 .lotout{border-radius:var(--r-m);padding:15px;border:1px solid var(--edge);background:var(--ctl);
   display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .lotout div{display:flex;flex-direction:column;gap:3px}
@@ -584,7 +591,8 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
       <div class="seg wrapseg" id="cSrc" role="group" aria-label="Sursa datelor"></div>
       <div class="seg wrapseg" id="cDim" role="group" aria-label="Felia" style="margin-top:9px"></div>
       <div class="tbl-wrap" style="margin-top:12px"><table id="cTbl"></table></div>
-      <button type="button" class="ghost wide" id="btnBT" style="margin-top:11px">Încarcă backtestul (DAX 500 + GBPUSD 500)</button>
+      <button type="button" class="ghost wide" id="btnBT" style="margin-top:11px">Sincronizează backtestul</button>
+      <p class="note" id="btStat">Backtest nesincronizat.</p>
       <p class="msg" id="btMsg" hidden></p>
       <p class="note">Piața o alegi cu filtrul de sus. Zilele cu ★★★ sunt scoase din calcul. WR = W/(W+L) · interval 90% Wilson · R/trade = (2W−L)/n. Sub 15 tradeuri cifra e orientativă și apare cu *. Un filtru ales pe aceleași date e supraestimat.</p>
     </div>
@@ -903,7 +911,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="20.11.2026 16:00";   /* amprenta versiunii */
+var BUILD="20.11.2026 16:22";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1397,7 +1405,6 @@ function renderCells(force){
   var inst=(jf.inst==="DAX"||jf.inst==="GBPUSD")?jf.inst:(jf.inst==="ALL"?"toate":"DAX+GU");
   var nm={live:"Live",bt:"Backtest",totw:"TOTW"}[cf.src];
   $("cN").textContent=nm+" · "+inst+" · "+tot.n;
-  var bt=$("btnBT"); if(bt) bt.hidden=!!(btRows.DAX&&btRows.GBPUSD);
   tb.textContent="";
   var hr=el("tr"); [DIMS[cf.dim].t,"n","W/L/BE","WR","Int.90","R/tr"].forEach(function(h){ hr.appendChild(el("th",null,h)); }); tb.appendChild(hr);
   if(!cs.length){ var tr0=el("tr"), td0=el("td",null, cf.src==="live"?"Niciun trade cu rezultat.":"Apasă pe butonul de mai jos ca să încarci datele.");
@@ -1416,12 +1423,32 @@ function renderCells(force){
 seg($("cSrc"),["live","bt","totw"],function(v){ cf.src=v; renderCells(); },["Live","Backtest","TOTW"],function(){return cf.src;});
 seg($("cDim"),["ziiv","zi","iv","liq","setup","mss","dir"],function(v){ cf.dim=v; renderCells(); },
     ["Zi × interval","Zi","Interval","Lichiditate","Setup","MSS","Direcție"],function(){return cf.dim;});
-async function loadBT(){
-  if(btBusy) return; var b=$("btnBT"), m=$("btMsg");
-  function say2(t,c){ if(!m) return; m.hidden=false; m.className="msg"+(c?" "+c:""); m.textContent=t; }
-  if(!mcp){ say2("Google Sheets nu e disponibil aici. Setează serverul în Setări.","no"); return; }
-  btBusy=true; if(b){ b.disabled=true; b.textContent="Se încarcă…"; }
-  var cS=COL, cN=COLN;
+/* ---------- copia locală a backtestului (sincronizată cu Sheets) ---------- */
+var BTK="tradeapp-bt", btAt=0;
+function btSlim(r){ return {inst:r.inst,instRaw:r.instRaw,date:r.date,time:r.time,interval:r.interval,
+  res:r.res,dir:r.dir,liq:r.liq,setup:r.setup,mss:r.mss,re:!!r.re,ses:r.ses,news:r.news}; }
+function btSave(){
+  try{ localStorage.setItem(BTK,JSON.stringify({v:1,at:btAt,
+    dax:(btRows.DAX||[]).map(btSlim), gu:(btRows.GBPUSD||[]).map(btSlim), totw:(totwRows||[]).map(btSlim)})); }
+  catch(e){}
+}
+function btRestore(){
+  try{ var j=JSON.parse(localStorage.getItem(BTK)||"null"); if(!j||j.v!==1) return false;
+    btRows.DAX=j.dax||[]; btRows.GBPUSD=j.gu||[]; totwRows=j.totw||[]; btAt=j.at||0;
+    return !!(btRows.DAX.length||btRows.GBPUSD.length); }catch(e){ return false; }
+}
+function btCount(){ return ((btRows.DAX&&btRows.DAX.length)||0)+((btRows.GBPUSD&&btRows.GBPUSD.length)||0); }
+function btStatus(){ var e=$("btStat"); if(!e) return;
+  if(!btCount()){ e.textContent="Backtest nesincronizat."; return; }
+  var d=btAt?new Date(btAt):null;
+  e.textContent="Backtest local: DAX "+((btRows.DAX||[]).length)+" · GU "+((btRows.GBPUSD||[]).length)+
+    " · TOTW "+((totwRows||[]).length)+(d?(" · "+pad(d.getDate())+"."+pad(d.getMonth()+1)+" "+pad(d.getHours())+":"+pad(d.getMinutes())):""); }
+async function loadBT(silent){
+  if(btBusy) return false; var b=$("btnBT"), m=$("btMsg");
+  function say2(t,c){ if(silent||!m) return; m.hidden=false; m.className="msg"+(c?" "+c:""); m.textContent=t; }
+  if(!mcp){ say2("Google Sheets nu e disponibil aici. Setează serverul în Setări.","no"); return false; }
+  btBusy=true; if(b && !silent){ b.disabled=true; b.textContent="Se sincronizează…"; }
+  var cS=COL, cN=COLN, ok=false;
   try{
     var jobs=[["DAX",TABS_SHEET.BT_DAX],["GBPUSD",TABS_SHEET.BT_GBPUSD],["TOTW",TABS_SHEET.TOTW]], i, got=[];
     for(i=0;i<jobs.length;i++){
@@ -1432,11 +1459,15 @@ async function loadBT(){
       if(jobs[i][0]==="TOTW") totwRows=rows; else btRows[jobs[i][0]]=rows;
       got.push(jobs[i][0]+" "+rows.length);
     }
-    say2("Încărcat: "+got.join(" · ")+".","ok");
-    if(b){ b.hidden=true; }
-  }catch(e){ say2("Nu am putut citi: "+failText(e),"no"); if(b){ b.disabled=false; b.textContent="Încearcă din nou"; } }
-  finally{ COL=cS; COLN=cN; btBusy=false; renderCells(true); } }
-if($("btnBT")) $("btnBT").onclick=loadBT;
+    btAt=Date.now(); btSave(); ok=true;
+    say2("Sincronizat: "+got.join(" · ")+".","ok");
+  }catch(e){ say2("Nu am putut citi: "+failText(e),"no"); if(b && !silent){ b.disabled=false; b.textContent="Încearcă din nou"; } }
+  finally{ COL=cS; COLN=cN; btBusy=false; btStatus();
+    if(b) b.textContent=btCount()?"Resincronizează backtestul":"Sincronizează backtestul";
+    if(b) b.disabled=false;
+    renderCells(true); if($("ovl") && !$("ovl").hidden && ovlPane==="check" && $("kOut").innerHTML) kVerify(); }
+  return ok; }
+if($("btnBT")) $("btnBT").onclick=function(){ loadBT(false); };
 
 function renderJournal(){
   paintSeg($("fltInst")); paintSeg($("fltRes"));
@@ -1887,14 +1918,17 @@ function kClear(){ var o=$("kOut"); if(o) o.innerHTML=""; }
 
 function kTrade(){ return {id:"__k",dest:"LIVE",inst:kv.inst,instRaw:kv.inst,date:todayISO(),time:hhmm(),
   res:"",dir:"BUY",liq:kv.liq,setup:kv.setup,mss:kv.mss,re:false,news:"───",com:"",ctx:""}; }
+function nTr(n){ return n===1?"1 trade":(n+" tradeuri"); }
 function wrCard(lab,st,hint){
-  var wr=(st.wr==null?"–":Math.round(100*st.wr)+"%");
-  var cls=(st.n<5)?"thin":((st.W+st.L)>=10 ? (st.wr<0.34?"bad":(st.wr>=0.52?"good":"mid")) : "thin");
-  return '<div class="wrc '+cls+'"><div class="wrl">'+esc(lab)+'</div>'+
-    '<div class="wrv">'+wr+'</div>'+
-    '<div class="wrm">'+st.n+' tradeuri'+(st.n&&st.n<15?' · orientativ':'')+' · '+
-    (st.n?fmtR(st.R/st.n):'–')+'/trade</div>'+
-    (hint?'<div class="wrh">'+esc(hint)+'</div>':'')+'</div>'; }
+  var empty=(st.n===0);
+  var wr=empty?"fără date":(st.wr==null?"doar BE":Math.round(100*st.wr)+"%");
+  var cls=empty?"none":((st.W+st.L)>=10 ? (st.wr<0.34?"bad":(st.wr>=0.52?"good":"mid")) : "thin");
+  var sub=empty?"nicio tranzacție în eșantion":
+    (nTr(st.n)+(st.n<15?" · orientativ":"")+" · "+fmtR(st.R/st.n)+"/trade");
+  return '<div class="wrc '+cls+'">'+
+    '<div class="wrtop"><div class="wrl">'+esc(lab)+'</div>'+
+    (hint?'<span class="wrh">'+esc(hint)+'</span>':'')+'</div>'+
+    '<div class="wrv">'+wr+'</div><div class="wrm">'+esc(sub)+'</div></div>'; }
 function kVerify(){
   var t=kTrade(), iv=interval(t.time,t.date), d=parseISO(t.date), zi=ZILE_D[d.getDay()];
   var useBT=!!(btRows[t.inst]&&btRows[t.inst].length);
@@ -1902,6 +1936,7 @@ function kVerify(){
     .filter(function(x){ return resK(x) && noStars(x); });
   function sub(f){ return stat(pool.filter(f)); }
   var sLiq=sub(function(x){ return x.liq===t.liq; });
+  var sSetLiq=t.setup?sub(function(x){ return x.liq===t.liq && x.setup===t.setup; }):null;
   var sLiqIv=sub(function(x){ return x.liq===t.liq && ivOf(x)===iv; });
   var sFull=sub(function(x){ return x.liq===t.liq && ivOf(x)===iv &&
     String(x.mss||"").toUpperCase()===t.mss && (!t.setup || x.setup===t.setup); });
@@ -1911,11 +1946,19 @@ function kVerify(){
   h+='<div class="kiv">'+zi+' · '+iv+' · '+t.time+'</div>';
   h+='<div class="wrs">';
   h+=wrCard("Lichiditate "+t.liq, sLiq);
+  if(sSetLiq) h+=wrCard(t.setup+" pe "+t.liq, sSetLiq);
   h+=wrCard(t.liq+" în "+iv, sLiqIv);
   h+=wrCard((t.setup?t.setup+" + ":"")+t.liq+" · MSS "+(t.mss==="AGRESIV"?"agresiv":"normal")+" · "+iv, sFull, "intrarea ta");
   h+='</div>';
-  h+='<p class="note">'+(useBT?("Backtest "+t.inst):"Live")+', fără ★★★. Prag de lucru 40%, bază 52%.'+
-     (useBT?'':' Încarcă backtestul din Jurnal → Celule ca să ai eșantion mare.')+'</p>';
+  var best=sFull.n>=10?sFull:(sSetLiq&&sSetLiq.n>=10?sSetLiq:(sLiqIv.n>=10?sLiqIv:sLiq));
+  if(best.n>=10 && best.wr!=null){
+    var vb=Math.round(100*best.wr);
+    h+='<div class="kverd '+(vb<40?"no":(vb>=52?"ok":"mid"))+'">'+
+      (vb<40?"Sub pragul de lucru de 40%.":(vb>=52?"Peste baza de 52%.":"Între 40% și 52%: se poate, dar nu e dintre cele bune."))+
+      ' Cea mai sigură felie cu eșantion: '+vb+'% din '+best.n+'.</div>'; }
+  h+='<p class="note">'+(useBT?("Backtest "+t.inst+" ("+pool.length+" tradeuri)"):("Live "+t.inst+" ("+pool.length+" tradeuri)"))+
+     ', fără ★★★. Prag de lucru 40%, bază 52%.'+
+     (useBT?'':' Sincronizează backtestul din Jurnal ca să ai eșantion mare.')+'</p>';
   $("kOut").innerHTML=h;
   $("kOut").scrollIntoView({behavior:"smooth",block:"nearest"}); }
 $("kGo").onclick=kVerify;
@@ -1992,6 +2035,8 @@ async function checkVersion(manual){
   finally{ if(manual && b){ b.disabled=false; b.textContent="Caută versiune nouă"; } } }
 if($("btnVer")) $("btnVer").onclick=function(){ checkVersion(true); };
 setTimeout(function(){ checkVersion(false); },4000);
+setTimeout(function(){ if(!mcp) return;
+  if(!btCount() || (Date.now()-btAt)>12*3600*1000) loadBT(true); },2500);
 document.addEventListener("visibilitychange",function(){ if(!document.hidden) checkVersion(false); });
 
 /* ---------- întreținere ---------- */
@@ -2031,21 +2076,22 @@ function onTab(t){ if(tabNow()===t) return true; stale[t]=1; return false; }
 function renderAll(){
   kpis(); renderAccts(); update();
   if(onTab("acasa")) renderHome();
-  if(onTab("jurnal")){ renderJournal(); renderCells(); }
+  if(onTab("jurnal")){ renderJournal(); renderCells(); btStatus(); }
   if(onTab("calendar")){ renderCal(); renderDay(); }
   if(onTab("adauga")) renderQueue();
   if(onTab("setari")){ paintThemes(); paintFree(); newsPaint(); paintAccs(); mntPaint(); } }
 function flushTab(h){ if(!stale[h]) return; stale[h]=0;
   if(h==="acasa") renderHome();
-  else if(h==="jurnal"){ renderJournal(); renderCells(); }
+  else if(h==="jurnal"){ renderJournal(); renderCells(); btStatus(); }
   else if(h==="calendar"){ renderCal(); renderDay(); }
   else if(h==="adauga") renderQueue();
   else if(h==="setari"){ paintThemes(); paintFree(); newsPaint(); paintAccs(); mntPaint(); } }
 
 /* ---------- boot ---------- */
+btRestore();
 showTab(); resetForm();
 kpis(); renderAccts(); update(); renderHome(); renderJournal(); renderCells(); renderCal(); renderDay(); renderQueue();
-paintThemes(); paintFree(); newsPaint(); paintAccs(); mntPaint();
+paintThemes(); paintFree(); newsPaint(); paintAccs(); mntPaint(); btStatus();
 (async function(){
   var c=window.claude;
   if(c && c.use){
