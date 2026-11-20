@@ -15,7 +15,11 @@ function doGet() {
 function doPost(e) {
   try {
     const p = JSON.parse(e.postData.contents || '{}');
-    if (String(p.token || '') !== TOKEN) return out({ ok: false, code: 'bad_token', error: 'Parolă greșită.' });
+    const tk = String(p.token || '');
+    const owner = (tk === TOKEN);
+    if (!owner && !(shareToken() && tk === shareToken())) return out({ ok: false, code: 'bad_token', error: 'Parolă greșită.' });
+    // doar proprietarul administrează linkul de partajare
+    if (p.action.indexOf('share_') === 0 && !owner) return out({ ok: false, code: 'tool_error', error: 'Doar tu poți administra linkul de partajare.' });
     switch (p.action) {
       case 'ping':   return out({ ok: true, rev: rev() });
       case 'get':    return out({ ok: true, values: getRange(p.range), rev: rev() });
@@ -26,12 +30,25 @@ function doPost(e) {
       case 'set':    return out(withLock(() => { putDoc(p.id, p.data, false); return { ok: true }; }));
       case 'merge':  return out(withLock(() => { putDoc(p.id, p.data, true); return { ok: true }; }));
       case 'delete': return out(withLock(() => { delDoc(p.id); return { ok: true }; }));
+      case 'share_get':    return out({ ok: true, token: shareToken() });
+      case 'share_new':    return out({ ok: true, token: newShareToken() });
+      case 'share_revoke': return out({ ok: true, token: revokeShareToken() });
       default:       return out({ ok: false, code: 'tool_error', error: 'Acțiune necunoscută: ' + p.action });
     }
   } catch (err) {
     return out({ ok: false, code: 'tool_error', error: String(err && err.message || err) });
   }
 }
+
+/* ---------- link de partajare ---------- */
+// Token separat de parola ta. Îl poți anula oricând, fără să schimbi parola.
+function shareToken() { return PropertiesService.getScriptProperties().getProperty('share') || ''; }
+function newShareToken() {
+  const t = Utilities.getUuid().replace(/-/g, '');
+  PropertiesService.getScriptProperties().setProperty('share', t);
+  return t;
+}
+function revokeShareToken() { PropertiesService.getScriptProperties().deleteProperty('share'); return ''; }
 
 /* ---------- utilitare ---------- */
 function out(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
