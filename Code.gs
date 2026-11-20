@@ -40,6 +40,25 @@ function doPost(e) {
   }
 }
 
+/* ---------- backup lunar ---------- */
+// Rulează din Declanșatoare (Triggers): backupLunar, lunar.
+// Ține ultimele 12 copii în folderul „Trade App backup" din Drive.
+function backupLunar() {
+  const file = DriveApp.getFileById(ss().getId());
+  const name = 'Trade App backup';
+  const it = DriveApp.getFoldersByName(name);
+  const folder = it.hasNext() ? it.next() : DriveApp.createFolder(name);
+  const stamp = Utilities.formatDate(new Date(), ss().getSpreadsheetTimeZone(), 'yyyy-MM-dd');
+  file.makeCopy('TRANZACTII ' + stamp, folder);
+  // păstrează ultimele 12
+  const all = [];
+  const files = folder.getFiles();
+  while (files.hasNext()) { const f = files.next(); all.push({ f: f, d: f.getDateCreated().getTime() }); }
+  all.sort((a, b) => b.d - a.d);
+  for (let i = 12; i < all.length; i++) all[i].f.setTrashed(true);
+  return all.length;
+}
+
 /* ---------- link de partajare ---------- */
 // Token separat de parola ta. Îl poți anula oricând, fără să schimbi parola.
 function shareToken() { return PropertiesService.getScriptProperties().getProperty('share') || ''; }
@@ -71,7 +90,14 @@ function parseRange(range) {
   if (ALLOWED.indexOf(name) < 0) throw new Error('Foaie nepermisă: ' + name);
   const sh = ss().getSheetByName(name);
   if (!sh) throw new Error('Foaia nu există: ' + name);
-  return { sh: sh, a1: range.slice(k + 1) };
+  let a1 = range.slice(k + 1);
+  // interval deschis la final ("A6:S"): îl ducem până la ultimul rând cu date
+  const open = a1.match(/^([A-Z]+)(\d+):([A-Z]+)$/);
+  if (open) {
+    const last = Math.max(sh.getLastRow(), Number(open[2]));
+    a1 = open[1] + open[2] + ':' + open[3] + last;
+  }
+  return { sh: sh, a1: a1 };
 }
 
 /* ---------- citire / scriere tradeuri ---------- */

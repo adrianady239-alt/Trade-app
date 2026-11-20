@@ -78,9 +78,16 @@ body{margin:0;background:var(--ink);color:var(--t1);font-family:var(--font);font
 /* bara de sus, ca o pastilă */
 .topbar{display:flex;align-items:center;gap:10px;padding:7px 8px 7px 7px;border-radius:var(--r-p);
   background:var(--surf);border:1px solid var(--edge);box-shadow:var(--inset)}
-.tb-logo{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;
-  background:radial-gradient(circle at 35% 30%,#1BE88B,#0B6B45);color:#01150B;font-weight:800;font-size:14px;
+.tb-logo{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;padding:0;
+  border:0;cursor:pointer;overflow:hidden;background:radial-gradient(circle at 35% 30%,#1BE88B,#0B6B45);
+  color:#01150B;font-weight:800;font-size:14px;font-family:inherit;background-size:cover;background-position:center;
   box-shadow:0 0 16px rgba(43,232,139,.45),0 1px 0 rgba(255,255,255,.35) inset}
+.tb-logo.has{background-image:var(--av);box-shadow:0 0 14px rgba(120,205,255,.3),0 0 0 1px var(--edge-hi) inset}
+.tb-logo.has #tbInit{display:none}
+.avrow{display:flex;align-items:center;gap:13px}
+.avprev{width:56px;height:56px;border-radius:50%;flex:none;background-size:cover;background-position:center;
+  background-color:var(--ctl);border:1px solid var(--edge);display:grid;place-items:center;
+  font-weight:800;font-size:17px;color:var(--t3)}
 .tb-mid{flex:1;min-width:0;text-align:center}
 .tb-t{display:block;font-size:14px;font-weight:650;letter-spacing:-.02em}
 .tb-s{display:block;font-size:11px;color:var(--t3);margin-top:1px}
@@ -146,6 +153,13 @@ body[data-tab="acasa"] h1#viewTitle{display:none}
 
 /* inelele conturilor */
 .accs{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+.accs[data-n="1"]{grid-template-columns:1fr}
+.accs[data-n="3"]{grid-template-columns:1fr 1fr 1fr;gap:9px}
+.accs[data-n="3"] .ring,.accs[data-n="3"] .ring svg{width:84px;height:84px}
+.accs[data-n="3"] .ring .v{font-size:17px}
+.accd.none{text-decoration:none;align-items:center;justify-content:center;min-height:120px;gap:5px}
+.accd.none b{font-size:13px;color:var(--t2);font-weight:600}
+.accd.none span{font-size:11px;color:var(--t3)}
 .accd{padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;border-radius:var(--r-m)}
 .ring{position:relative;width:108px;height:108px}
 .ring svg{width:108px;height:108px;transform:rotate(-90deg)}
@@ -253,6 +267,66 @@ form{display:flex;flex-direction:column;gap:15px}
 .seg button[aria-pressed="true"]{background:var(--ctl-on);color:var(--t1);font-weight:650;
   border-color:var(--gl2);box-shadow:var(--inset)}
 .seg.big button{min-height:46px;font-size:15px}
+/* buton „Verifică intrarea” */
+.precheck{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 14px;
+  border-radius:var(--r-m);border:1px solid var(--edge);background:var(--surf);box-shadow:var(--surf-sh);
+  color:var(--t1);font:inherit;cursor:pointer;position:relative;overflow:hidden}
+.precheck::before{content:"";position:absolute;inset:0 0 auto;height:1px;background:var(--spec)}
+.precheck:active{transform:scale(.99)}
+.pc-i{flex:0 0 auto;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+  background:var(--ctl-on);border:1px solid var(--gl2);color:var(--win)}
+.pc-i svg{width:20px;height:20px}
+.pc-t{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.pc-t b{font-size:14.5px;font-weight:650;letter-spacing:-.01em}
+.pc-t span{font-size:11.5px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-a{flex:0 0 auto;font-size:20px;color:var(--t3);line-height:1}
+
+/* fereastra de verificare */
+.ovl{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.ovl-bg{position:absolute;inset:0;background:rgba(0,3,8,.66);backdrop-filter:blur(5px)}
+.ovl-card{position:relative;width:100%;max-width:520px;max-height:94vh;display:flex;flex-direction:column;
+  background:var(--surf);border:1px solid var(--edge);border-radius:var(--r-l) var(--r-l) 0 0;
+  box-shadow:0 -24px 60px -20px #000;padding:14px var(--pad) calc(14px + env(safe-area-inset-bottom,0px))}
+.ovl-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ovl-h h2{margin:0;font-size:16px;font-weight:650;letter-spacing:-.02em;flex:1 1 auto}
+.ovl-x{appearance:none;border:1px solid var(--edge);background:var(--ctl);color:var(--t2);
+  width:32px;height:32px;border-radius:50%;font-size:13px;cursor:pointer;flex:0 0 auto}
+.ovl-b{overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-top:12px;-webkit-overflow-scrolling:touch}
+.ovl-b > *{flex:0 0 auto}
+.shotbox{display:block;position:relative;border:1px dashed var(--edge-hi);border-radius:var(--r-m);
+  min-height:116px;background:var(--ctl-in);cursor:pointer;overflow:hidden}
+.shotbox img{display:block;width:100%;max-height:260px;object-fit:cover}
+.sb-t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.sb-t b{font-size:14px;font-weight:600;color:var(--t2)} .sb-t span{font-size:11.5px;color:var(--t3)}
+.newsbox{border:1px solid var(--edge);border-radius:var(--r-m);padding:12px;background:var(--ctl)}
+.nb-h{display:flex;align-items:baseline;gap:9px;margin-bottom:10px}
+.nb-h span:first-child{font-size:13.5px;font-weight:650}
+.nb-d{font-size:11px;color:var(--t3);margin-left:auto}
+.nb-n{margin:10px 0 0;font-size:11px;color:var(--t3);line-height:1.45}
+.dash{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--t3);font-weight:600;
+  display:flex;align-items:center;gap:9px;margin-top:3px}
+.dash::after{content:"";flex:1 1 auto;height:1px;background:var(--sep2)}
+.chks{display:flex;flex-direction:column;gap:9px}
+.chks label{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--t2);cursor:pointer}
+.chks input[type=checkbox]{width:21px;height:21px;min-height:0;padding:0;border-radius:6px;
+  box-shadow:none;border:0;background:transparent;accent-color:var(--win);flex:0 0 auto}
+.verd{border-radius:var(--r-m);padding:13px 14px;border:1px solid var(--edge);background:var(--ctl)}
+.verd .vh{display:flex;align-items:baseline;gap:9px}
+.verd .vt{font-size:19px;font-weight:750;letter-spacing:-.02em}
+.verd.ok .vt{color:var(--win)} .verd.no .vt{color:var(--loss)} .verd.warn .vt{color:var(--warn)}
+.verd .vn{font-size:12px;color:var(--t3)}
+.verd ul{margin:9px 0 0;padding-left:17px;display:flex;flex-direction:column;gap:5px}
+.verd li{font-size:12.5px;color:var(--t2);line-height:1.45}
+.verd li.no{color:#FF93A0} .verd li.warn{color:#FFD27A}
+.lotout{border-radius:var(--r-m);padding:15px;border:1px solid var(--edge);background:var(--ctl);
+  display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lotout div{display:flex;flex-direction:column;gap:3px}
+.lotout .ln{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--t3);font-weight:600}
+.lotout .lv{font-size:22px;font-weight:700;letter-spacing:-.03em}
+.lotout .big{grid-column:1/-1} .lotout .big .lv{font-size:34px;color:var(--win)}
+.tshot{display:block;width:100%;border-radius:var(--r-s);margin:10px 0 0;border:1px solid var(--edge)}
+.seg.wrapseg{flex-wrap:wrap}
+.seg.wrapseg button{flex:0 1 auto;min-height:32px;padding:6px 11px;font-size:12.5px}
 .seg.res button[data-v="WIN"][aria-pressed="true"]{background:linear-gradient(180deg,#48FFAE,#13B96E);color:#002313;border-color:transparent}
 .seg.res button[data-v="LOSE"][aria-pressed="true"]{background:linear-gradient(180deg,#FF8792,#D92B3C);color:#2B0309;border-color:transparent}
 .seg.res button[data-v="BREAK EVEN"][aria-pressed="true"]{background:linear-gradient(180deg,#A8B5C4,#6B7787);color:#070D14;border-color:transparent}
@@ -287,6 +361,11 @@ th,td{text-align:right;padding:9px 4px;border-bottom:1px solid var(--sep2);white
 th:first-child,td:first-child{text-align:left}
 tr:last-child td{border-bottom:0}
 th{font-size:10px;color:var(--t3);font-weight:600;letter-spacing:.09em;text-transform:uppercase}
+td.good{color:var(--win);font-weight:650} td.bad{color:var(--loss);font-weight:650}
+#cTbl,#kStats{font-size:11.5px}
+#cTbl th,#cTbl td,#kStats th,#kStats td{padding:8px 3px}
+#cTbl td:first-child,#kStats td:first-child{white-space:normal;line-height:1.3;min-width:92px}
+td.pos{color:var(--win)} td.neg{color:var(--loss)}
 .eq svg{display:block;width:100%;height:auto}
 .eq text{font-size:10px;fill:var(--t3)}
 
@@ -324,9 +403,33 @@ th{font-size:10px;color:var(--t3);font-weight:600;letter-spacing:.09em;text-tran
 .status i{width:7px;height:7px;border-radius:50%;background:var(--t4);flex:none;margin-top:7px}
 .status i.ok{background:var(--win);box-shadow:0 0 9px rgba(43,232,139,.7)}
 .status i.bad{background:var(--loss)}
+.status i.warn{background:var(--warn)}
 .acc{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end}
 .accv{font-size:21px;font-weight:700;letter-spacing:-.03em;color:var(--t2);text-align:right;padding-bottom:10px;min-width:72px}
 .accv.pos{color:var(--win)} .accv.neg{color:var(--loss)}
+/* administrare conturi */
+.accmgr{display:flex;flex-direction:column;gap:12px}
+.accrow{border:1px solid var(--line);border-radius:var(--r-m);padding:12px 12px 10px;background:var(--ctl)}
+.accrow-h{display:flex;align-items:center;gap:9px}
+.accrow-h i{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.accrow-h .accnm{flex:1 1 auto;min-width:0;padding-bottom:0;font-weight:600}
+.accrow-h .accv{font-size:17px;padding-bottom:0;min-width:0;white-space:nowrap}
+.accrow-g{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
+.accrow-g .f label{font-size:10.5px}
+.accrow-a{display:flex;align-items:center;gap:8px;margin-top:11px}
+.accrow-a .accn{font-size:11px;color:var(--t3);margin-right:auto}
+button.tiny{appearance:none;border:1px solid var(--line);background:transparent;color:var(--t2);
+  font:inherit;font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer}
+button.tiny:hover{border-color:var(--t3);color:var(--fg)}
+button.tiny.danger{color:var(--loss)}
+.acchist{margin-top:16px;display:flex;flex-direction:column;gap:9px}
+.acchd{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);font-weight:600}
+.accold{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;
+  border:1px solid var(--line);border-radius:var(--r-m);padding:10px 12px;opacity:.78}
+.accold b{display:block;font-size:12.5px;font-weight:600;color:var(--t2)}
+.accold span{font-size:10.5px;color:var(--t3)}
+.accold .accv{font-size:15px;padding-bottom:0;min-width:0}
+.accold-a{grid-column:1/-1;display:flex;gap:8px}
 .queue{display:flex;flex-direction:column;border:1px solid var(--edge);border-radius:var(--r-m);overflow:hidden}
 .queue > * + *{border-top:1px solid var(--sep2)}
 .sync{display:flex;flex-direction:column;gap:10px;margin-top:14px}
@@ -384,7 +487,8 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
 <div class="grain" aria-hidden="true"></div>
 <div class="app">
   <div class="topbar">
-    <span class="tb-logo" aria-hidden="true">TA</span>
+    <button type="button" class="tb-logo" id="tbLogo" aria-label="Poză de profil"><span id="tbInit">TA</span></button>
+    <input type="file" accept="image/*" id="avFile" hidden>
     <span class="tb-mid"><span class="tb-t">Trade App</span><span class="tb-s" id="todayDate">—</span></span>
     <button type="button" class="tb-btn" id="btnSync" title="Reîncarcă din Sheets"><i id="topDot"></i><span id="topTxt" hidden></span></button>
   </div>
@@ -411,30 +515,13 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
       </div>
     </section>
 
-    <div class="accs">
-      <div class="glass accd">
-        <div class="ring">
-          <svg viewBox="0 0 108 108" aria-hidden="true">
-            <circle cx="54" cy="54" r="46" fill="none" stroke="rgba(120,205,255,.12)" stroke-width="8"/>
-            <circle id="ring1" cx="54" cy="54" r="46" fill="none" stroke="#2BE88B" stroke-width="8" stroke-linecap="round"
-              stroke-dasharray="0 289" style="filter:drop-shadow(0 0 7px rgba(43,232,139,.95))"/>
-          </svg>
-          <div class="mid"><span class="v" id="ringV1">–</span><span class="t" id="accT1">din 10%</span></div>
-        </div>
-        <div class="n" id="accN1">Cont 1</div>
-      </div>
-      <div class="glass accd">
-        <div class="ring">
-          <svg viewBox="0 0 108 108" aria-hidden="true">
-            <circle cx="54" cy="54" r="46" fill="none" stroke="rgba(120,205,255,.12)" stroke-width="8"/>
-            <circle id="ring2" cx="54" cy="54" r="46" fill="none" stroke="#A855F7" stroke-width="8" stroke-linecap="round"
-              stroke-dasharray="0 289" style="filter:drop-shadow(0 0 7px rgba(168,85,247,.95))"/>
-          </svg>
-          <div class="mid"><span class="v" id="ringV2">–</span><span class="t" id="accT2">din 10%</span></div>
-        </div>
-        <div class="n" id="accN2">Cont 2</div>
-      </div>
-    </div>
+    <button type="button" class="precheck" id="btnCheck">
+      <span class="pc-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h2.2l1.1-1.8A1 1 0 0 1 8.7 3.7h6.6a1 1 0 0 1 .9.5L17.3 6h2.2A1.5 1.5 0 0 1 21 7.5v10A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/><circle cx="12" cy="12" r="3.4"/></svg></span>
+      <span class="pc-t"><b>Verifică intrarea</b><span>Foto setup · lichiditate · MSS → WR și verdict</span></span>
+      <span class="pc-a" aria-hidden="true">›</span>
+    </button>
+
+    <div class="accs" id="accs"></div>
 
     <div class="glass month">
       <div class="mhd"><span class="mt" id="heroLbl">Luna</span><span class="mv" id="kMonth">0R</span></div>
@@ -464,6 +551,14 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
     <div class="card"><h2>Statistică live <span class="chip" id="jN">0</span></h2>
       <div class="tbl-wrap"><table id="jStats"></table></div>
       <p class="note">WR = W/(W+L) · interval 90% · R/trade = (2W−L)/n · sub 15 tradeuri = orientativ.</p>
+    </div>
+    <div class="card"><h2>Celule <span class="chip" id="cN">–</span></h2>
+      <div class="seg wrapseg" id="cSrc" role="group" aria-label="Sursa datelor"></div>
+      <div class="seg wrapseg" id="cDim" role="group" aria-label="Felia" style="margin-top:9px"></div>
+      <div class="tbl-wrap" style="margin-top:12px"><table id="cTbl"></table></div>
+      <button type="button" class="ghost wide" id="btnBT" style="margin-top:11px">Încarcă backtestul (DAX 500 + GBPUSD 500)</button>
+      <p class="msg" id="btMsg" hidden></p>
+      <p class="note">Piața o alegi cu filtrul de sus. Zilele cu ★★★ sunt scoase din calcul. WR = W/(W+L) · interval 90% Wilson · R/trade = (2W−L)/n. Sub 15 tradeuri cifra e orientativă și apare cu *. Un filtru ales pe aceleași date e supraestimat.</p>
     </div>
     <div class="card eq"><h2>Curba R</h2><div id="jEq"></div></div>
     <div class="list" id="jList"></div>
@@ -564,21 +659,109 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
       </div>
       <p class="msg" id="shareMsg" hidden></p>
     </div>
+    <div class="card"><h2>Poză de profil</h2>
+      <div class="avrow">
+        <div class="avprev" id="avPrev">TA</div>
+        <div class="actions" style="flex:1">
+          <button type="button" class="ghost wide" id="btnAv">Alege poza</button>
+          <button type="button" class="ghost wide danger" id="btnAvDel" hidden>Șterge poza</button>
+        </div>
+      </div>
+      <p class="note">Se salvează doar pe acest dispozitiv, nu în Google Sheets.</p>
+    </div>
     <div class="card"><h2>Temă</h2>
       <div class="themes" id="themeList"></div>
       <p class="note">Se salvează doar pe acest dispozitiv.</p>
     </div>
     <div class="card"><h2>Conturi</h2>
-      <div class="acc"><div class="f"><label for="fAcct1">Cont 1</label><input id="fAcct1"></div><span class="accv" id="accV1">–</span></div>
-      <div class="row" style="margin-top:10px"><div class="f"><label for="fTg1">Target cont 1 (%)</label><input id="fTg1" type="number" inputmode="decimal" min="1" max="100" step="0.5"></div><div></div></div>
-      <div class="acc" style="margin-top:14px"><div class="f"><label for="fAcct2">Cont 2</label><input id="fAcct2"></div><span class="accv" id="accV2">–</span></div>
-      <div class="row" style="margin-top:10px"><div class="f"><label for="fTg2">Target cont 2 (%)</label><input id="fTg2" type="number" inputmode="decimal" min="1" max="100" step="0.5"></div><div></div></div>
-      <p class="note">Procentul se calculează automat după fiecare execuție pe Live (+2% la TP, -1% la SL, 0 la BE), pe ambele conturi.</p>
+      <div class="accmgr" id="accList"></div>
+      <button type="button" class="ghost wide" id="btnAccAdd" style="margin-top:12px">Adaugă cont</button>
+      <p class="note">Procentul crește automat după fiecare execuție pe Live (+2% la TP, −1% la SL, 0 la BE). Când închizi un cont, procentul se îngheață și contul trece în istoric. Pe Acasă apar doar conturile active.</p>
+      <div class="acchist" id="accHist" hidden></div>
+    </div>
+    <div class="card"><h2>Zile libere</h2>
+      <div class="row">
+        <div class="f"><label for="fFreeM">Luna</label><select id="fFreeM"></select></div>
+        <div class="f"><label for="fFreeD">Zilele</label><input id="fFreeD" inputmode="numeric" autocomplete="off" placeholder="13, 17, 19"></div>
+      </div>
+      <button type="button" class="ghost wide" id="btnFree" style="margin-top:11px">Salvează zilele</button>
+      <p class="msg" id="freeMsg" hidden></p>
+      <p class="note">Zilele în care tranzacționezi. Dacă luna e goală, aplicația nu mai spune „zi de job”.</p>
+    </div>
+    <div class="card"><h2>Întreținere</h2>
+      <div class="status"><div><i id="mntDot"></i><span id="mntTxt">—</span></div></div>
+      <button type="button" class="ghost wide" id="btnPrune" style="margin-top:12px">Curăță coada și pozele vechi</button>
+      <p class="msg" id="mntMsg" hidden></p>
+      <p class="note">Șterge din aplicație tradeurile deja scrise în Sheets mai vechi de 180 de zile și pozele rămase fără trade. Rândurile din Google Sheets rămân neatinse.</p>
     </div>
     <div class="card"><h2>Reguli</h2>
       <p class="note" style="margin:0;line-height:1.6">Max 2 tradeuri pe zi · stop după 2 pierderi · BE la 1.5R · DAX 10:15–18:00, luni/marți fără 10:15–12:00 · GBPUSD fără 16:15–16:45 · exclus DAX LIQ LOCALA+ și GBPUSD LOD+ · fără ★★★, NFP, CPI, FOMC.</p>
     </div>
   </section>
+</div>
+
+<div class="ovl" id="ovl" hidden>
+  <div class="ovl-bg" id="ovlBg"></div>
+  <div class="ovl-card" role="dialog" aria-modal="true" aria-labelledby="ovlT">
+    <div class="ovl-h"><h2 id="ovlT">Înainte de intrare</h2>
+      <button type="button" class="ovl-x" id="ovlX" aria-label="Închide">✕</button></div>
+    <div class="seg" id="ovlTab" role="group" aria-label="Secțiune"></div>
+
+    <div class="ovl-b" id="paneCheck">
+      <label class="shotbox" id="shotBox">
+        <input type="file" accept="image/*" id="shotFile" hidden>
+        <img id="shotImg" alt="Setup" hidden>
+        <span class="sb-t" id="shotHint"><b>Foto setup</b><span>Apasă ca să faci poza</span></span>
+      </label>
+      <button type="button" class="tiny" id="shotDel" hidden style="align-self:flex-start">Șterge poza</button>
+
+      <div class="newsbox">
+        <div class="nb-h"><span>Știrile zilei</span><span class="nb-d" id="kNewsD">—</span></div>
+        <div class="row">
+          <div class="f"><label for="kNewsT">Ore (ora României)</label><input id="kNewsT" inputmode="numeric" autocomplete="off" placeholder="15:30, 17:00"></div>
+          <div class="f"><label for="kNewsN">Care</label><input id="kNewsN" autocomplete="off" placeholder="CPI, NFP…"></div>
+        </div>
+        <div class="seg" id="kNewsS" role="group" aria-label="Impact" style="margin-top:9px"></div>
+        <p class="nb-n">Le pui o dată pe zi, din indicatorul FTMO News (linia violet). Se salvează pe ziua de azi și intră automat în verdict.</p>
+      </div>
+
+      <div class="f"><label>Piață</label><div class="seg" id="kInst" role="group" aria-label="Piață"></div></div>
+      <div class="f"><label for="kLiq">Lichiditate preluată</label><select id="kLiq"></select></div>
+      <div class="f"><label>MSS</label><div class="seg" id="kMss" role="group" aria-label="MSS"></div></div>
+
+      <div class="dash">Din poză · le poți schimba</div>
+      <div class="f"><label>Direcție</label><div class="seg" id="kDir" role="group" aria-label="Direcție"></div></div>
+      <div class="f"><label for="kSetup">Setup</label><select id="kSetup"></select></div>
+
+      <div class="row">
+        <div class="f"><label for="kTime">Ora</label><input id="kTime" inputmode="numeric" autocomplete="off" placeholder="hh:mm"></div>
+        <div class="f"><label for="kFvg">FVG (puncte)</label><input id="kFvg" type="number" inputmode="decimal" step="0.1" placeholder="1"></div>
+      </div>
+      <div class="chks">
+        <label><input type="checkbox" id="kG1"><span>Intru în jumătatea FVG, în max 30 min</span></label>
+        <label><input type="checkbox" id="kG2"><span>Setup format în max 1H de la preluare</span></label>
+        <label><input type="checkbox" id="kG3"><span>Entry la min 2 puncte de ultimul low/high</span></label>
+        <label><input type="checkbox" id="kG4"><span>Displacement clar</span></label>
+      </div>
+
+      <div id="kVerdict"></div>
+      <div class="tbl-wrap"><table id="kStats"></table></div>
+      <p class="note" id="kSrc"></p>
+      <button type="button" class="primary wide" id="kUse">Trece în formular</button>
+    </div>
+
+    <div class="ovl-b" id="paneLot" hidden>
+      <div class="f"><label>Piață</label><div class="seg" id="lotInst" role="group" aria-label="Piață"></div></div>
+      <div class="f"><label for="lAcc">Cont</label><select id="lAcc"></select></div>
+      <div class="row">
+        <div class="f"><label for="lRisk">Risc (%)</label><input id="lRisk" type="number" inputmode="decimal" step="0.1" min="0.1"></div>
+        <div class="f"><label for="lSl">SL (puncte)</label><input id="lSl" type="number" inputmode="decimal" step="0.1" min="0.1"></div>
+      </div>
+      <div class="f"><label for="lPv">$ pe punct, la 1 lot</label><input id="lPv" type="number" inputmode="decimal" step="0.01" min="0.01"></div>
+      <div class="lotout" id="lOut"></div>
+      <p class="note">Lot = (sold × risc%) ÷ (SL × $ pe punct). Valoarea pe punct o pui o dată pentru fiecare piață, din contractul brokerului, și se salvează. TP-ul e la 2× SL.</p>
+    </div>
+  </div>
 </div>
 
 <nav class="nav" aria-label="Navigare">
@@ -662,7 +845,36 @@ var LUNI=["IANUARIE","FEBRUARIE","MARTIE","APRILIE","MAI","IUNIE","IULIE","AUGUS
 var LUNI_D=["Ianuarie","Februarie","Martie","Aprilie","Mai","Iunie","Iulie","August","Septembrie","Octombrie","Noiembrie","Decembrie"];
 var ZILE=["DUMINICA","LUNI","MARTI","MIERCURI","JOI","VINERI","SAMBATA"];
 var ZILE_D=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];
-var FREE={"2026-11":[13,17,19,23,25,27]};
+var FREE={"2026-11":[13,17,19,23,25,27]};   /* implicit; se poate schimba din Setări */
+var freeCfg={};
+function freeDays(key){ var a=freeCfg[key]; return (a&&a.length)?a:(FREE[key]||null); }
+
+/* ---------- coloanele se potrivesc după antet, nu după poziție ---------- */
+var HEAD=["PIATA","LUNA","DATA","ZIUA","REZULTAT","BUY/SELL","LICHIDITATE","SETUP","MSS","RE-ENTRY",
+          "SESIUNE","STIRI","PROFIT %","RR","ORA","INTERVAL","SCREENSHOT","","COMENTARII"];
+var COL=null, COLN=19;
+function normH(x){ return String(x||"").toUpperCase().replace(/[ĂÂ]/g,"A").replace(/Î/g,"I")
+  .replace(/Ș|Ş/g,"S").replace(/Ț|Ţ/g,"T").replace(/[^A-Z0-9%\/]/g,""); }
+function applyCols(hdr){
+  if(!hdr||!hdr.length) return false;
+  var m={}, i;
+  for(i=0;i<hdr.length;i++){ var k=normH(hdr[i]); if(k && m[k]==null) m[k]=i; }
+  if(m[normH("DATA")]==null || m[normH("PIATA")]==null) return false;
+  COL=m; COLN=Math.max(hdr.length,19); return true; }
+function ci(name){ if(COL){ var i=COL[normH(name)]; if(i!=null) return i; } return HEAD.indexOf(name); }
+function colL(x){ var o=""; while(x>0){ var r=(x-1)%26; o=String.fromCharCode(65+r)+o; x=(x-r-1)/26; } return o; }
+function endCol(){ return colL(COLN); }
+function rowRange(tab,row){ return "'"+tab+"'!A"+row+":"+endCol()+row; }
+
+/* ---------- schimbarea orei: SUA și Europa nu comută în aceeași zi ---------- */
+function nthSun(y,m,k){ var d=new Date(Date.UTC(y,m,1)), off=(7-d.getUTCDay())%7; return 1+off+(k-1)*7; }
+function lastSun(y,m){ var d=new Date(Date.UTC(y,m+1,0)); return d.getUTCDate()-d.getUTCDay(); }
+function shiftFor(iso){
+  var d=iso?parseISO(iso):new Date(), y=d.getFullYear(), mo=d.getMonth(), da=d.getDate();
+  if(mo===2){ var a=nthSun(y,2,2), b=lastSun(y,2); if(da>=a&&da<b) return -60; }
+  if(mo===9){ if(da>=lastSun(y,9)) return -60; }
+  if(mo===10){ if(da<nthSun(y,10,1)) return -60; }
+  return 0; }
 var BAD_WORDS=["mic","inghesuit","înghesuit","fortat","forțat","forţat","intarziat","întârziat","cherry"];
 var DEFAULT_ACCTS=["Cont Live - Ftmo 10k","Cont Challenge - IF 10k"];
 
@@ -672,8 +884,43 @@ var DESTS={LIVE:{label:"Live",insts:INSTS,hint:"Se scrie în „🔆LIVE - Execu
 var TABS_SHEET={LIVE:"🔆LIVE - Executii",TOTW:"📊 TRADES OF THE  WEEK",BT_DAX:"DAX (500)",BT_GBPUSD:"GBPUSD (500)",BT_UK100:"UK100"};
 function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst]:TABS_SHEET[d]; }
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
-var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, accts=DEFAULT_ACCTS.slice(), bals=[2,9], balAt=Date.parse("2026-11-16T12:00:00Z"), plan=null;
-var targets=[10,10];
+var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
+var accounts=null;
+var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
+var PV_DEF={DAX:1,GBPUSD:10};
+var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
+var newsCfg={};   /* "2026-11-20": {t:["15:30","17:00"], s:"★★★", n:"CPI"} */
+function newsOf(iso){ var d=newsCfg[iso]; return d?{t:(d.t||[]),s:(d.s||"───"),n:(d.n||"")}:{t:[],s:"───",n:""}; }
+function newsTimes(str){ var out=[];
+  String(str||"").split(/[^0-9:]+/).forEach(function(x){ var m=x.match(/^(\d{1,2}):(\d{2})$/);
+    if(m && +m[1]<24 && +m[2]<60) out.push(pad(+m[1])+":"+m[2]); });
+  return out.filter(function(v,i,a){ return a.indexOf(v)===i; }).sort(); }
+function cfgSet(c){ c=c||{}; cfgX.risk=(+c.risk>0?+c.risk:1);
+  cfgX.pv={DAX:(+(c.pv&&c.pv.DAX)>0?+c.pv.DAX:PV_DEF.DAX), GBPUSD:(+(c.pv&&c.pv.GBPUSD)>0?+c.pv.GBPUSD:PV_DEF.GBPUSD)};
+  cfgX.acc=c.acc||null; }
+function esc(x){ return String(x==null?"":x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function accUid(){ return "a"+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+function accDefaults(){ var t0=Date.parse("2026-11-16T12:00:00Z");
+  return [{id:"a1",name:DEFAULT_ACCTS[0],start:2,target:10,size:10000,from:t0,to:null,closed:false,why:"",final:null},
+          {id:"a2",name:DEFAULT_ACCTS[1],start:9,target:10,size:10000,from:t0,to:null,closed:false,why:"",final:null}]; }
+function accFix(a){ a=a||{}; return {id:a.id||accUid(), name:String(a.name||"Cont"), start:(+a.start||0),
+  target:(+a.target>0?+a.target:10), size:(+a.size>0?+a.size:10000), from:(+a.from||Date.parse("2026-11-16T12:00:00Z")),
+  to:(a.to?+a.to:null), closed:!!a.closed, why:String(a.why||""), final:(a.final==null?null:+a.final)}; }
+function accSet(list){ accounts=(list||[]).map(accFix); }
+function accMigrate(d){ var b=accDefaults();
+  if(d){ if(d.accts&&d.accts.length>=2){ b[0].name=d.accts[0]||b[0].name; b[1].name=d.accts[1]||b[1].name; }
+    if(d.bals&&d.bals.length>=2){ b[0].start=+d.bals[0]||0; b[1].start=+d.bals[1]||0; }
+    if(d.balAt){ b[0].from=+d.balAt; b[1].from=+d.balAt; }
+    if(d.targets&&d.targets.length>=2){ b[0].target=+d.targets[0]||10; b[1].target=+d.targets[1]||10; } }
+  return b; }
+function accAll(){ if(!accounts) accounts=accDefaults(); return accounts; }
+function accLive(){ return accAll().filter(function(a){ return !a.closed; }); }
+function accDone(){ return accAll().filter(function(a){ return a.closed; }); }
+function accCounts(a,x){ if((x.dest||"LIVE")!=="LIVE"||!x.res||!x.createdAt) return false;
+  if(x.createdAt<=a.from) return false; if(a.to && x.createdAt>a.to) return false; return true; }
+function accPct(a){ if(a.closed && a.final!=null) return +a.final;
+  var sum=+a.start||0; trades.forEach(function(x){ if(accCounts(a,x)) sum+=pctOf(x.res); }); return sum; }
+function accN(a){ var n=0; trades.forEach(function(x){ if(accCounts(a,x)) n++; }); return n; }
 var editRow=null;   /* rând din Sheets aflat în editare */
 /* ---------- teme ---------- */
 var THEMES=[
@@ -710,6 +957,31 @@ function paintThemes(){ var box=$("themeList"); if(!box) return; var cur=documen
       box.appendChild(b); }); }
   Array.prototype.forEach.call(box.children,function(b){ b.setAttribute("aria-pressed", b.dataset.id===cur); }); }
 applyTheme(curTheme());
+
+/* ---------- zile libere, editabile ---------- */
+function monthKeys(){ var o=[], d=new Date(); d.setDate(1);
+  for(var i=0;i<14;i++){ o.push(d.getFullYear()+"-"+pad(d.getMonth()+1)); d.setMonth(d.getMonth()+1); } return o; }
+function paintFree(){ var sel=$("fFreeM"); if(!sel) return;
+  if(!sel.children.length){ monthKeys().forEach(function(k){ var o=el("option",null,LUNI_D[+k.slice(5,7)-1]+" "+k.slice(0,4)); o.value=k; sel.appendChild(o); }); }
+  var k=sel.value||monthKeys()[0]; sel.value=k;
+  $("fFreeD").value=(freeDays(k)||[]).join(", "); }
+if($("fFreeM")) $("fFreeM").addEventListener("change",paintFree);
+if($("btnFree")) $("btnFree").onclick=function(){
+  var k=$("fFreeM").value, raw=$("fFreeD").value||"";
+  var d=raw.split(/[^0-9]+/).filter(Boolean).map(Number).filter(function(x){return x>=1&&x<=31;});
+  d=d.filter(function(x,i){return d.indexOf(x)===i;}).sort(function(a,b){return a-b;});
+  freeCfg[k]=d; saveSettings(); renderAll(); paintFree();
+  var m=$("freeMsg"); m.hidden=false; m.className="msg ok";
+  m.textContent=d.length?("Salvat: "+d.join(", ")):"Luna e goală, nu mai apare „zi de job”."; };
+
+/* ---------- notarea BE ---------- */
+async function saveBE(t,val,btn){
+  if(!mcp){ btn.textContent="Fără server"; return; }
+  var old=btn.textContent; btn.disabled=true; btn.textContent="Salvez…";
+  var ed=Object.assign({},t); ed.com=((t.com||"")+" "+val).trim();
+  try{ await mcp.callTool(SERVER,"edit_values",{spreadsheetId:SHEET,range:rowRange(TAB,t.row),values:[toRow(ed)]},{cache:false});
+    btn.textContent="Salvat"; loadSheet(); }
+  catch(e){ btn.disabled=false; btn.textContent=old==="Salvez…"?val:old; } }
 
 /* ---------- link de partajare ---------- */
 var shareTok="";
@@ -788,24 +1060,33 @@ $("fLiq").value="LIQ LOCALA"; $("fSetup").value="SLG+OSG";
 function liqDisc(l){ l=l||""; var plus=/\+$/.test(l), b=l.replace("+","");
   var m={"LIQ LOCALA":"Locala","LIQ MAJORA":"Majora","LIQ MINORA":"Minora"}; return (m[b]||b)+(plus?"+":""); }
 function setupDisc(s){ return (s||"").split("+").reverse().join("/"); }
-function interval(t){ var m=mins(t);
-  if(m<12*60) return "10:15 - 12:00"; if(m<16*60+15) return "12:00 - 16:15"; if(m<16*60+45) return "16:15 - 16:45"; return "16:45 - 22:00"; }
+function interval(t,iso){ var m=mins(t), h=shiftFor(iso);
+  if(m<12*60+h) return "10:15 - 12:00"; if(m<16*60+15+h) return "12:00 - 16:15";
+  if(m<16*60+45+h) return "16:15 - 16:45"; return "16:45 - 22:00"; }
 function session(t){ return mins(t)<15*60?"LONDRA":"NEW YORK"; }
-function toRow(t){ var d=parseISO(t.date), r=t.res;
-  return [t.instRaw||t.inst, LUNI[d.getMonth()], roDate(t.date), ZILE[d.getDay()], r, t.dir, t.liq, t.setup, t.mss, t.re?"RE-ENTRY":"",
-    session(t.time), t.news||"───", r==="WIN"?"2%":r==="LOSE"?"-1%":"0%", r==="WIN"?2:r==="LOSE"?-1:0, t.time, interval(t.time), t.shot||"", "", t.com||""]; }
+function toRow(t){ var d=parseISO(t.date), r=t.res, out=[], i;
+  for(i=0;i<COLN;i++) out.push("");
+  function put(nm,v){ var k=ci(nm); if(k>=0&&k<out.length) out[k]=v; }
+  put("PIATA",t.instRaw||t.inst); put("LUNA",LUNI[d.getMonth()]); put("DATA",roDate(t.date));
+  put("ZIUA",ZILE[d.getDay()]); put("REZULTAT",r); put("BUY/SELL",t.dir);
+  put("LICHIDITATE",t.liq); put("SETUP",t.setup); put("MSS",t.mss);
+  put("RE-ENTRY",t.re?"RE-ENTRY":""); put("SESIUNE",session(t.time)); put("STIRI",t.news||"───");
+  put("PROFIT %", r==="WIN"?"2%":r==="LOSE"?"-1%":"0%"); put("RR", r==="WIN"?2:r==="LOSE"?-1:0);
+  put("ORA",t.time); put("INTERVAL",interval(t.time,t.date)); put("SCREENSHOT",t.shot||"");
+  put("COMENTARII",t.com||"");
+  return out; }
 function discord(t){ var d=parseISO(t.date), ses=t.ses||session(t.time);
   return "Instrument: "+(DISC_CODE[t.inst]||t.inst)+"\nDirecție: "+(t.dir==="SELL"?"Short":"Long")+
     "\nData / Ora:  "+roDate(t.date)+" - "+t.time+"  - "+ZILE_D[d.getDay()]+"\nSesiune:  "+(ses==="LONDRA"?"Londra":"NY")+
     "\n\nContext : "+(t.ctx||"")+"\nTip lichiditate: "+(t.liqTxt||liqDisc(t.liq))+"\nTip setup : "+(t.setupTxt||setupDisc(t.setup))+
-    "\n\nRisc alocat:  1%\n"+accts.map(function(a,i){ var tot=totalFor(t,i); return (a||DEFAULT_ACCTS[i])+" : "+resPct(t.res)+(tot==null?"":" ("+fmtPct(tot)+")"); }).join("\n"); }
+    "\n\nRisc alocat:  1%\n"+accLive().map(function(a){ var tot=totalFor(t,a); return a.name+" : "+resPct(t.res)+(tot==null?"":" ("+fmtPct(tot)+")"); }).join("\n"); }
 function pctOf(r){ return r==="WIN"?2:r==="LOSE"?-1:0; }
 function fmtPct(v){ v=Math.round(v*100)/100; return (v>0?"+":"")+String(v).replace(".",",")+"%"; }
-function totalFor(t,i){
-  var mine=(t.src!=="sheet") && (!t.createdAt || t.createdAt>balAt);
-  if(!mine) return null;
-  var key=t.date+" "+t.time, sum=bals[i]||0;
-  trades.forEach(function(x){ if((x.dest||"LIVE")!=="LIVE"||!x.res||!(x.createdAt>balAt)) return; if(x.id===t.id) return;
+function totalFor(t,a){
+  if(t.src==="sheet" || !t.createdAt || t.createdAt<=a.from) return null;
+  if(a.to && t.createdAt>a.to) return null;
+  var key=t.date+" "+t.time, sum=+a.start||0;
+  trades.forEach(function(x){ if(!accCounts(a,x)) return; if(x.id===t.id) return;
     if((x.date+" "+x.time)<=key) sum+=pctOf(x.res); });
   if(t.res) sum+=pctOf(t.res);
   return sum; }
@@ -814,21 +1095,31 @@ function rOf(r){ return r==="WIN"?2:r==="LOSE"?-1:0; }
 function resKey(r){ return r==="WIN"?"W":r==="LOSE"?"L":r==="BREAK EVEN"?"BE":"P"; }
 
 function checks(t){ var w=[];
+  t=t||{}; t.inst=t.inst||""; t.liq=t.liq||""; t.setup=t.setup||""; t.mss=t.mss||"NORMAL"; t.dir=t.dir||"BUY";
   if(!t.date) return [{l:"no",m:"Data trebuie scrisă ca zz.ll.aaaa (ex: 13.11.2026)."}];
   if(!t.time) return [{l:"no",m:"Ora trebuie scrisă ca hh:mm (ex: 17:12)."}];
   var d=parseISO(t.date), dow=d.getDay(), m=mins(t.time), core=CORE.indexOf(t.inst)>=0;
   if(dow===0||dow===6) w.push({l:"no",m:"Weekend."});
   if((t.dest||"LIVE")!=="LIVE") return w;
-  var fk=t.date.slice(0,7); if(FREE[fk] && FREE[fk].indexOf(d.getDate())<0) w.push({l:"warn",m:"Data nu e în lista de zile libere din "+(LUNI[d.getMonth()].toLowerCase())+"."});
+  var fk=t.date.slice(0,7), fd=freeDays(fk);
+  if(fd && fd.indexOf(d.getDate())<0) w.push({l:"warn",m:"Data nu e în lista de zile libere din "+(LUNI[d.getMonth()].toLowerCase())+"."});
+  var H=shiftFor(t.date);
+  if(H) w.push({l:"warn",m:"Săptămână cu ora schimbată: fereastra e cu o oră mai devreme."});
   if(!core) w.push({l:"no",m:t.inst+" e în afara algoritmului (doar DAX și GBPUSD)."});
-  if(t.inst==="DAX"){ if(m>=18*60) w.push({l:"no",m:"DAX după 18:00."});
-    if(m<10*60+15) w.push({l:"warn",m:"DAX înainte de 10:15: corect doar în săptămânile cu ora schimbată."});
-    if((dow===1||dow===2)&&m>=10*60+15&&m<12*60) w.push({l:"no",m:"DAX luni/marți în 10:15–12:00 (38% WR, n 77)."});
+  if(t.inst==="DAX"){ if(m>=18*60+H) w.push({l:"no",m:"DAX după 18:00."});
+    if(m<10*60+15+H) w.push({l:"warn",m:"DAX înainte de deschiderea ferestrei."});
+    if((dow===1||dow===2)&&m>=10*60+15+H&&m<12*60+H) w.push({l:"no",m:"DAX luni/marți în 10:15–12:00 (38% WR, n 77)."});
     if(t.liq==="LIQ LOCALA+") w.push({l:"no",m:"DAX LIQ LOCALA+ e exclus din filtrul Normal (25%, n 15)."}); }
-  if(t.inst==="GBPUSD"){ if(m>=16*60+15&&m<16*60+45) w.push({l:"no",m:"GBPUSD în 16:15–16:45."});
+  if(t.inst==="GBPUSD"){ if(m>=16*60+15+H&&m<16*60+45+H) w.push({l:"no",m:"GBPUSD în 16:15–16:45."});
     if(t.liq==="LOD+") w.push({l:"no",m:"GBPUSD LOD+ e exclus din filtrul Normal (33%, n 12)."}); }
   if(t.mss==="AGRESIV") w.push({l:"warn",m:"MSS Agresiv."});
-  if(t.news==="★★★") w.push({l:"no",m:"Știre ★★★: zi fără trading."});
+  var NW=newsOf(t.date), st=(t.news&&t.news!=="───")?t.news:NW.s, nn=NW.n?(" ("+NW.n+")"):"";
+  if(st==="★★★") w.push({l:"no",m:"Știre ★★★"+nn+": zi fără trading."});
+  else if(st==="★★") w.push({l:"warn",m:"Știre ★★"+nn+" azi."});
+  if(NW.t.length){ var mm=mins(t.time), near=null, best=1e9;
+    NW.t.forEach(function(x){ var dd=Math.abs(mins(x)-mm); if(dd<best){ best=dd; near=x; } });
+    if(best<=2) w.push({l:"no",m:"Restricție FTMO: ești la "+best+" min de știrea de la "+near+". Fără ordine, SL, TP sau modificări, 2 minute înainte și după."});
+    else if(best<=15) w.push({l:"warn",m:"Știre la "+near+", adică peste "+best+" min."}); }
   var txt=((t.com||"")+" "+(t.ctx||"")).toLowerCase();
   if(BAD_WORDS.some(function(b){return new RegExp("(^|[^a-zăâîșț])"+b).test(txt);})) w.push({l:"no",m:"Comentariu „mic / înghesuit / forțat / întârziat / cherry pick”: live 0W / 8L / 1BE."});
   var same=all().filter(function(x){return x.key!==("q:"+t.id) && x.date===t.date && CORE.indexOf(x.inst)>=0;});
@@ -840,11 +1131,16 @@ function checks(t){ var w=[];
 function normDate(s){ s=String(s||"").trim(); var m=s.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})$/); if(!m) return s;
   var a=+m[1], b=+m[2]; if(s.indexOf("/")>=0 && a<=12){ var x=a; a=b; b=x; }
   return m[3]+"-"+pad(b)+"-"+pad(a); }
-function parseSheet(vals){ var out=[];
-  (vals||[]).forEach(function(r,i){ if(!r||!String(r[0]||"").trim()) return; var g=function(k){return String(r[k]==null?"":r[k]).trim();};
-    var date=normDate(g(2)); if(!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
-    out.push({key:"s:"+(7+i), src:"sheet", row:7+i, inst:g(0)==="US100"?"NASDAQ":g(0), instRaw:g(0), date:date, res:g(4), dir:g(5), liq:g(6), setup:g(7), mss:g(8),
-      re:!!g(9), ses:g(10), news:g(11), time:g(14), interval:g(15), shot:g(16), com:g(18), ctx:g(18)}); });
+function parseSheet(vals,start){ var out=[]; start=start||7;
+  var c={p:ci("PIATA"),d:ci("DATA"),r:ci("REZULTAT"),b:ci("BUY/SELL"),l:ci("LICHIDITATE"),s:ci("SETUP"),
+         m:ci("MSS"),re:ci("RE-ENTRY"),se:ci("SESIUNE"),n:ci("STIRI"),o:ci("ORA"),i:ci("INTERVAL"),
+         sh:ci("SCREENSHOT"),cm:ci("COMENTARII")};
+  (vals||[]).forEach(function(r,i){ if(!r) return; var g=function(k){return k<0?"":String(r[k]==null?"":r[k]).trim();};
+    if(!g(c.p)) return;
+    var date=normDate(g(c.d)); if(!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+    out.push({key:"s:"+(start+i), src:"sheet", row:start+i, inst:g(c.p)==="US100"?"NASDAQ":g(c.p), instRaw:g(c.p),
+      date:date, res:g(c.r), dir:g(c.b), liq:g(c.l), setup:g(c.s), mss:g(c.m), re:!!g(c.re), ses:g(c.se),
+      news:g(c.n), time:g(c.o), interval:g(c.i), shot:g(c.sh), com:g(c.cm), ctx:g(c.cm)}); });
   return out; }
 function all(){ var q=trades.filter(function(t){return !t.synced && (t.dest||"LIVE")==="LIVE";}).map(function(t){ var x=Object.assign({},t); x.key="q:"+t.id; x.src="queue"; return x; });
   return sheet.concat(q); }
@@ -855,7 +1151,8 @@ function usdOf(r){ return (r<0?"-$":"$")+Math.abs(Math.round(r*100)); }
 function byTime(a,b){ return (a.time||"").localeCompare(b.time||""); }
 /* scara zilei: 10:15 -> 22:00 */
 var DAY_A=10*60+15, DAY_B=22*60;
-function pctOfDay(t){ var m=mins(t); return Math.max(0,Math.min(100,(m-DAY_A)/(DAY_B-DAY_A)*100)); }
+function pctOfDay(t,iso){ var h=shiftFor(iso), a=DAY_A+h, b=DAY_B+h, m=mins(t);
+  return Math.max(0,Math.min(100,(m-a)/(b-a)*100)); }
 function instClass(i){ return i==="DAX"?"dax":(i==="GBPUSD"?"gu":"oth"); }
 function instCode(i){ return i==="GBPUSD"?"GU":(i==="NASDAQ"?"NQ":i); }
 
@@ -900,10 +1197,11 @@ function renderSpark(A,mo){
   $("spark").innerHTML=s+'</svg>'; }
 
 function renderHome(){
-  var A=all(), tdy=todayISO(), d=new Date(), dow=d.getDay(), fk=tdy.slice(0,7), free=FREE[fk];
+  var A=all(), tdy=todayISO(), d=new Date(), dow=d.getDay(), fk=tdy.slice(0,7), free=freeDays(fk);
   var T=A.filter(function(t){return isCore(t)&&t.date===tdy;}).sort(byTime);
   var n=T.length, L=T.filter(function(t){return t.res==="LOSE";}).length;
-  function nextFree(){ var out=null; Object.keys(FREE).sort().forEach(function(k){ FREE[k].forEach(function(dd){ var iso=k+"-"+pad(dd); if(iso>tdy&&(!out||iso<out)) out=iso; }); }); return out; }
+  function nextFree(){ var out=null, K={}; Object.keys(FREE).forEach(function(k){K[k]=1;}); Object.keys(freeCfg).forEach(function(k){K[k]=1;});
+    Object.keys(K).sort().forEach(function(k){ (freeDays(k)||[]).forEach(function(dd){ var iso=k+"-"+pad(dd); if(iso>tdy&&(!out||iso<out)) out=iso; }); }); return out; }
   var nf=nextFree(), nfTxt=nf?("Următoarea zi liberă: "+ZILE_D[parseISO(nf).getDay()].toLowerCase()+" "+roDate(nf).slice(0,5)+"."):"Trimite lista zilelor libere pentru luna asta.";
   $("todayDate").textContent=ZILE_D[dow]+", "+d.getDate()+" "+LUNI_D[d.getMonth()].toLowerCase();
   var t1,t2,off=false;
@@ -918,12 +1216,14 @@ function renderHome(){
   s.setAttribute("aria-label", n+" din 2 tradeuri azi");
   /* banda sesiunii */
   var b=$("band"); Array.prototype.slice.call(b.querySelectorAll(".mk,.now,.closed")).forEach(function(x){ x.remove(); });
-  var cl=el("span","closed"); cl.style.left=pctOfDay("16:15")+"%";
-  cl.style.width=(pctOfDay("16:45")-pctOfDay("16:15"))+"%"; b.appendChild(cl);
-  T.forEach(function(t){ if(!t.time) return; var m=el("span","mk "+resKey(t.res)); m.style.left=pctOfDay(t.time)+"%";
+  var H=shiftFor(tdy);
+  var c1=16*60+15+H, c2=16*60+45+H, fmtm=function(x){ return pad(Math.floor(x/60))+":"+pad(x%60); };
+  var cl=el("span","closed"); cl.style.left=pctOfDay(fmtm(c1),tdy)+"%";
+  cl.style.width=(pctOfDay(fmtm(c2),tdy)-pctOfDay(fmtm(c1),tdy))+"%"; b.appendChild(cl);
+  T.forEach(function(t){ if(!t.time) return; var m=el("span","mk "+resKey(t.res)); m.style.left=pctOfDay(t.time,tdy)+"%";
     m.title=(t.instRaw||t.inst)+" "+t.time; b.appendChild(m); });
   var nowM=pad(d.getHours())+":"+pad(d.getMinutes());
-  if(mins(nowM)>=DAY_A && mins(nowM)<=DAY_B){ var nw=el("span","now"); nw.style.left=pctOfDay(nowM)+"%"; b.appendChild(nw); }
+  if(mins(nowM)>=DAY_A+H && mins(nowM)<=DAY_B+H){ var nw=el("span","now"); nw.style.left=pctOfDay(nowM,tdy)+"%"; b.appendChild(nw); }
   /* lista */
   var h=$("homeList"); h.textContent="";
   if(!sheetLoaded){ for(var j=0;j<3;j++){ var r=el("div","sk-row"), m2=el("div");
@@ -954,7 +1254,15 @@ function tradeCard(t){
   var act=el("div","t-actions");
   if(t.src==="sheet" && t.row){ var ed=el("button","linkbtn","Editează"); ed.type="button";
     ed.onclick=function(){ loadSheetRow(t); }; act.appendChild(ed); }
+  if(t.src==="sheet" && t.row && t.res==="BREAK EVEN" && !/BE>/i.test(t.com||"")){
+    ["BE>2R","BE>nu"].forEach(function(v){ var bb=el("button","linkbtn",v); bb.type="button";
+      bb.onclick=function(){ saveBE(t,v,bb); }; act.appendChild(bb); }); }
   if(t.shot && /^https?:\/\//.test(t.shot)){ var a=el("a",null,"Vezi screenshotul"); a.href=t.shot; a.target="_blank"; a.rel="noopener"; act.appendChild(a); }
+  var sp=shotGet(shotKey(t));
+  if(sp){ var ph=el("button","linkbtn","Poza setup"); ph.type="button";
+    var im=el("img","tshot"); im.src=sp; im.alt="Setup"; im.hidden=true; im.loading="lazy";
+    ph.onclick=function(){ im.hidden=!im.hidden; ph.textContent=im.hidden?"Poza setup":"Ascunde poza"; };
+    act.appendChild(ph); c.appendChild(im); }
   var pre=el("pre","disc"); pre.hidden=true; pre.textContent=discord(t);
   var cp=el("button","linkbtn","Text Discord"); cp.type="button";
   cp.onclick=function(){ if(pre.hidden){ pre.hidden=false; cp.textContent="Copiază pentru Discord"; } else copy(pre.textContent,cp,pre,"Copiază pentru Discord"); };
@@ -970,7 +1278,7 @@ function renderCal(){
   var cal=$("cal"); cal.textContent="";
   ["L","Ma","Mi","J","V","S","D"].forEach(function(d){ cal.appendChild(el("div","dow",d)); });
   var lead=(first.getDay()+6)%7; for(var i=0;i<lead;i++) cal.appendChild(el("div","day out"));
-  var free=FREE[calMonth]||[], tdy=todayISO();
+  var free=freeDays(calMonth)||[], tdy=todayISO();
   var W=0,L=0,BE=0,R=0,N=0,days_t=0;
   for(var d=1; d<=days; d++){
     var iso=calMonth+"-"+pad(d), dt=new Date(y,m,d), list=(byDay[iso]||[]).sort(function(a,b){return (a.time||"").localeCompare(b.time||"");});
@@ -1009,13 +1317,103 @@ $("mPrev").onclick=function(){ var y=+calMonth.slice(0,4), m=+calMonth.slice(5,7
 $("mNext").onclick=function(){ var y=+calMonth.slice(0,4), m=+calMonth.slice(5,7); if(m>11){m=0;y++;} calMonth=y+"-"+pad(m+1); renderCal(); };
 
 /* ---------- journal ---------- */
-seg($("fltInst"),["CORE","DAX","GBPUSD","ALL"],function(v){jf.inst=v;jLimit=40;renderJournal();},["DAX+GU","DAX","GU","Toate"],function(){return jf.inst;});
+seg($("fltInst"),["CORE","DAX","GBPUSD","ALL"],function(v){jf.inst=v;jLimit=40;renderJournal();renderCells();},["DAX+GU","DAX","GU","Toate"],function(){return jf.inst;});
 seg($("fltRes"),["","WIN","LOSE","BREAK EVEN"],function(v){jf.res=v;jLimit=40;renderJournal();},["Toate","W","L","BE"],function(){return jf.res;});
 $("fltMonth").onchange=function(){ jf.month=$("fltMonth").value; jLimit=40; renderJournal(); };
 function wilson(w,n){ if(!n) return null; var z=1.645, p=w/n, d=1+z*z/n, c=(p+z*z/(2*n))/d, h=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/d; return [Math.round(100*(c-h)),Math.round(100*(c+h))]; }
 function filtered(){ return all().filter(function(t){
   if(jf.inst==="CORE"&&!isCore(t)) return false; if((jf.inst==="DAX"||jf.inst==="GBPUSD")&&t.inst!==jf.inst) return false;
   if(jf.month&&t.date.slice(0,7)!==jf.month) return false; if(jf.res&&t.res!==jf.res) return false; return true; }); }
+/* ---------- celule: statistică pe felii ---------- */
+var INTERV=["10:15 - 12:00","12:00 - 16:15","16:15 - 16:45","16:45 - 22:00"];
+var btRows={}, totwRows=null, btBusy=false;
+var cf={src:"live",dim:"ziiv"};
+function normIv(x){ x=String(x||"").replace(/\s/g,"").replace(/[–—]/g,"-");
+  for(var i=0;i<INTERV.length;i++) if(INTERV[i].replace(/\s/g,"")===x) return INTERV[i]; return ""; }
+function ivOf(t){ return normIv(t.interval) || (t.time?interval(t.time,t.date):""); }
+function resK(t){ var r=String(t.res||"").toUpperCase().replace(/\s+/g," ").trim();
+  if(r==="WIN"||r==="TP") return "W"; if(r==="LOSE"||r==="LOSS"||r==="SL") return "L";
+  if(r.indexOf("BREAK")===0||r==="BE") return "B"; return ""; }
+function stat(rows){ var W=0,L=0,B=0;
+  (rows||[]).forEach(function(t){ var k=resK(t); if(k==="W")W++; else if(k==="L")L++; else if(k==="B")B++; });
+  var n=W+L+B, d=W+L;
+  return {n:n,W:W,L:L,B:B,wr:(d?W/d:null),ci:wilson(W,d),R:(2*W-L),r:(n?(2*W-L)/n:null)}; }
+function noStars(t){ return String(t.news||"").indexOf("★★★")<0; }
+function cPool(){
+  var inst=(jf.inst==="DAX"||jf.inst==="GBPUSD")?jf.inst:null;
+  var src=cf.src, rows;
+  if(src==="bt") rows=(inst?(btRows[inst]||[]):[].concat(btRows.DAX||[],btRows.GBPUSD||[]));
+  else if(src==="totw") rows=(totwRows||[]).filter(function(t){ return !inst||t.inst===inst; });
+  else rows=all().filter(function(t){ if(inst) return t.inst===inst; return jf.inst==="ALL"?true:isCore(t); });
+  return rows.filter(function(t){ return resK(t) && noStars(t); }); }
+var DIMS={
+  zi:{t:"Zi",k:function(t){ var d=parseISO(t.date); return isNaN(d)?"":ZILE_D[d.getDay()]; },ord:["Luni","Marți","Miercuri","Joi","Vineri"]},
+  iv:{t:"Interval",k:function(t){ return ivOf(t); },ord:INTERV},
+  ziiv:{t:"Zi × interval",k:function(t){ var d=parseISO(t.date); if(isNaN(d)) return ""; return ZILE_D[d.getDay()]+" · "+ivOf(t); },ord:null},
+  liq:{t:"Lichiditate",k:function(t){ return t.liq||""; },ord:null},
+  setup:{t:"Setup",k:function(t){ return t.setup||""; },ord:null},
+  mss:{t:"MSS",k:function(t){ return t.mss||""; },ord:null},
+  dir:{t:"Direcție",k:function(t){ return t.dir==="BUY"?"Long":t.dir==="SELL"?"Short":""; },ord:["Long","Short"]}
+};
+function cellsOf(rows,dim){ var D=DIMS[dim]||DIMS.zi, g={};
+  rows.forEach(function(t){ var k=D.k(t); if(!k) return; (g[k]=g[k]||[]).push(t); });
+  var keys=Object.keys(g);
+  if(D.ord){ keys.sort(function(a,b){ var i=D.ord.indexOf(a), j=D.ord.indexOf(b);
+      return (i<0?99:i)-(j<0?99:j) || a.localeCompare(b,"ro"); }); }
+  else if(dim==="ziiv"){ var oz=DIMS.zi.ord;
+    keys.sort(function(a,b){ var az=a.split(" · ")[0], bz=b.split(" · ")[0];
+      var i=oz.indexOf(az), j=oz.indexOf(bz); if(i!==j) return (i<0?99:i)-(j<0?99:j);
+      return INTERV.indexOf(a.split(" · ")[1])-INTERV.indexOf(b.split(" · ")[1]); }); }
+  else keys.sort(function(a,b){ return stat(g[b]).n-stat(g[a]).n || a.localeCompare(b,"ro"); });
+  return keys.map(function(k){ var st=stat(g[k]); st.k=k; return st; }); }
+function renderCells(){
+  var tb=$("cTbl"); if(!tb) return;
+  paintSeg($("cSrc")); paintSeg($("cDim"));
+  var rows=cPool(), cs=cellsOf(rows,cf.dim), tot=stat(rows);
+  var inst=(jf.inst==="DAX"||jf.inst==="GBPUSD")?jf.inst:(jf.inst==="ALL"?"toate":"DAX+GU");
+  var nm={live:"Live",bt:"Backtest",totw:"TOTW"}[cf.src];
+  $("cN").textContent=nm+" · "+inst+" · "+tot.n;
+  var bt=$("btnBT"); if(bt) bt.hidden=!!(btRows.DAX&&btRows.GBPUSD);
+  tb.textContent="";
+  var hr=el("tr"); [DIMS[cf.dim].t,"n","W/L/BE","WR","Int.90","R/tr"].forEach(function(h){ hr.appendChild(el("th",null,h)); }); tb.appendChild(hr);
+  if(!cs.length){ var tr0=el("tr"), td0=el("td",null, cf.src==="live"?"Niciun trade cu rezultat.":"Apasă pe butonul de mai jos ca să încarci datele.");
+    td0.colSpan=6; tr0.appendChild(td0); tb.appendChild(tr0); return; }
+  cs.forEach(function(c){ var tr=el("tr");
+    var wr=(c.wr==null?"–":Math.round(100*c.wr)+"%");
+    var cls=(c.W+c.L)>=10 ? (c.wr<0.34?"bad":(c.wr>=0.52?"good":"")) : "";
+    [c.k, c.n+(c.n&&c.n<15?" *":""), c.W+"/"+c.L+"/"+c.B, wr, (c.ci?c.ci[0]+"–"+c.ci[1]+"%":"–"), (c.n?fmtR(c.R/c.n):"–")]
+      .forEach(function(v,i){ var td=el("td", i===3?cls : (i===5?rCls(c.R):""), v); tr.appendChild(td); });
+    tb.appendChild(tr); });
+  var trT=el("tr");
+  [ "Total", tot.n, tot.W+"/"+tot.L+"/"+tot.B, (tot.wr==null?"–":Math.round(100*tot.wr)+"%"),
+    (tot.ci?tot.ci[0]+"–"+tot.ci[1]+"%":"–"), (tot.n?fmtR(tot.R/tot.n):"–") ]
+   .forEach(function(v,i){ var td=el("td",i===5?rCls(tot.R):"",v); td.style.fontWeight="600"; trT.appendChild(td); });
+  tb.appendChild(trT); }
+seg($("cSrc"),["live","bt","totw"],function(v){ cf.src=v; renderCells(); },["Live","Backtest","TOTW"],function(){return cf.src;});
+seg($("cDim"),["ziiv","zi","iv","liq","setup","mss","dir"],function(v){ cf.dim=v; renderCells(); },
+    ["Zi × interval","Zi","Interval","Lichiditate","Setup","MSS","Direcție"],function(){return cf.dim;});
+async function loadBT(){
+  if(btBusy) return; var b=$("btnBT"), m=$("btMsg");
+  function say2(t,c){ if(!m) return; m.hidden=false; m.className="msg"+(c?" "+c:""); m.textContent=t; }
+  if(!mcp){ say2("Google Sheets nu e disponibil aici. Setează serverul în Setări.","no"); return; }
+  btBusy=true; if(b){ b.disabled=true; b.textContent="Se încarcă…"; }
+  var cS=COL, cN=COLN;
+  try{
+    var jobs=[["DAX",TABS_SHEET.BT_DAX],["GBPUSD",TABS_SHEET.BT_GBPUSD],["TOTW",TABS_SHEET.TOTW]], i, got=[];
+    for(i=0;i<jobs.length;i++){
+      var res=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:"'"+jobs[i][1]+"'!A6:AZ"},{cache:false});
+      var a0=(res.payload&&res.payload.values)||[];
+      if(a0.length) applyCols(a0[0]);
+      var rows=parseSheet(a0.slice(1),7);
+      if(jobs[i][0]==="TOTW") totwRows=rows; else btRows[jobs[i][0]]=rows;
+      got.push(jobs[i][0]+" "+rows.length);
+    }
+    say2("Încărcat: "+got.join(" · ")+".","ok");
+    if(b){ b.hidden=true; }
+  }catch(e){ say2("Nu am putut citi: "+failText(e),"no"); if(b){ b.disabled=false; b.textContent="Încearcă din nou"; } }
+  finally{ COL=cS; COLN=cN; btBusy=false; renderCells(); } }
+if($("btnBT")) $("btnBT").onclick=loadBT;
+
 function renderJournal(){
   paintSeg($("fltInst")); paintSeg($("fltRes"));
   var months={}; all().forEach(function(t){ months[t.date.slice(0,7)]=1; });
@@ -1081,20 +1479,76 @@ $("fTime").addEventListener("input",function(ev){ var e=$("fTime"); if(ev.inputT
 ["fDate","fTime","fLiq","fSetup","fNews","fCtx","fShot","fCom"].forEach(function(id){ $(id).addEventListener("input",update); $(id).addEventListener("change",update); });
 $("fLiqTxt").addEventListener("input",function(){ liqDirty=true; });
 $("fSetupTxt").addEventListener("input",function(){ setupDirty=true; });
-["fAcct1","fAcct2"].forEach(function(id,i){ $(id).addEventListener("change",function(){ accts[i]=$(id).value.trim()||DEFAULT_ACCTS[i]; saveSettings(); renderAll(); }); });
-["fTg1","fTg2"].forEach(function(id,i){ $(id).addEventListener("change",function(){ var v=parseFloat($(id).value); targets[i]=(v>0?v:10); $(id).value=targets[i]; saveSettings(); renderAll(); }); });
-function showAccts(){ $("fAcct1").value=accts[0]; $("fAcct2").value=accts[1]; $("fTg1").value=targets[0]; $("fTg2").value=targets[1]; renderAccts(); }
-function accNow(i){ var sum=bals[i]||0; trades.forEach(function(x){ if((x.dest||"LIVE")==="LIVE" && x.res && x.createdAt>balAt) sum+=pctOf(x.res); }); return sum; }
-function renderAccts(){ var C=2*Math.PI*46;
-  [1,2].forEach(function(n){ var v=accNow(n-1), tg=+targets[n-1]||10;
-    var e=$("accV"+n); if(e){ e.textContent=fmtPct(v); e.className="accv "+(v>0?"pos":v<0?"neg":""); }
-    var rv=$("ringV"+n); if(rv){ rv.textContent=fmtPct(v); rv.style.color=v>0?(n===1?"#3DDC84":"#C98BFF"):(v<0?"#FF5A4E":"#A6ADB8"); }
-    var nm=$("accN"+n); if(nm) nm.textContent=accts[n-1]||DEFAULT_ACCTS[n-1];
-    var tl=$("accT"+n); if(tl) tl.textContent="din "+tg+"%";
-    var ring=$("ring"+n);
-    if(ring){ var f=Math.max(0,Math.min(1,v/tg));
-      ring.setAttribute("stroke-dasharray",(C*f).toFixed(1)+" "+C.toFixed(1));
-      ring.setAttribute("stroke", v<0 ? "#FF5A4E" : (n===1?"#3DDC84":"#A855F7")); } }); }
+function showAccts(){ paintAccs(); renderAccts(); }
+function accNow(i){ var l=accLive(); return l[i]?accPct(l[i]):0; }
+function renderAccts(){ var box=$("accs"); if(!box) return;
+  var list=accLive(), C=2*Math.PI*46;
+  if(!list.length){ box.dataset.n="1";
+    box.innerHTML='<a class="glass accd none" href="#setari"><b>Niciun cont activ</b><span>Adaugă unul în Setări</span></a>'; return; }
+  box.dataset.n=String(Math.min(list.length,3));
+  box.innerHTML=list.map(function(a,i){
+    var v=accPct(a), tg=+a.target||10, c=ACC_COLORS[i%ACC_COLORS.length], col=(v<0?"#FF5A4E":c);
+    var f=Math.max(0,Math.min(1,v/tg));
+    return '<div class="glass accd"><div class="ring"><svg viewBox="0 0 108 108" aria-hidden="true">'+
+      '<circle cx="54" cy="54" r="46" fill="none" stroke="rgba(120,205,255,.12)" stroke-width="8"/>'+
+      (f>0?('<circle cx="54" cy="54" r="46" fill="none" stroke="'+col+'" stroke-width="8" stroke-linecap="round" '+
+      'stroke-dasharray="'+(C*f).toFixed(1)+' '+C.toFixed(1)+'" style="filter:drop-shadow(0 0 7px '+col+')"/>'):'')+
+      '</svg><div class="mid"><span class="v" style="color:'+(v?col:"var(--t3)")+'">'+fmtPct(v)+'</span>'+
+      '<span class="t">din '+tg+'%</span></div></div><div class="n">'+esc(a.name)+'</div></div>'; }).join(""); }
+
+/* ---------- conturi: administrare în Setări ---------- */
+function dmy(ms){ var d=new Date(+ms||Date.now()); return pad(d.getDate())+"."+pad(d.getMonth()+1)+"."+d.getFullYear(); }
+function isoOf(ms){ var d=new Date(+ms||Date.now()); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+function paintAccs(){ var box=$("accList"); if(!box) return;
+  var live=accLive();
+  box.innerHTML=live.map(function(a,i){ var v=accPct(a), c=ACC_COLORS[i%ACC_COLORS.length];
+    return '<div class="accrow" data-id="'+a.id+'">'+
+      '<div class="accrow-h"><i style="background:'+c+'"></i>'+
+      '<input class="accnm" data-k="name" value="'+esc(a.name)+'" aria-label="Nume cont">'+
+      '<span class="accv '+(v>0?"pos":v<0?"neg":"")+'">'+fmtPct(v)+'</span></div>'+
+      '<div class="accrow-g">'+
+      '<div class="f"><label>Start %</label><input data-k="start" type="number" inputmode="decimal" step="0.5" value="'+a.start+'"></div>'+
+      '<div class="f"><label>Target %</label><input data-k="target" type="number" inputmode="decimal" min="1" step="0.5" value="'+a.target+'"></div>'+
+      '<div class="f"><label>Mărime $</label><input data-k="size" type="number" inputmode="numeric" step="1000" value="'+a.size+'"></div>'+
+      '<div class="f"><label>Numără de la</label><input data-k="from" type="date" value="'+isoOf(a.from)+'"></div>'+
+      '</div>'+
+      '<div class="accrow-a"><span class="accn">'+accN(a)+' execuții</span>'+
+      '<button type="button" class="tiny" data-a="close">Închide contul</button>'+
+      (live.length>1?'<button type="button" class="tiny danger" data-a="del">Șterge</button>':'')+'</div></div>'; }).join("")
+    || '<p class="note" style="margin:0">Niciun cont activ.</p>';
+  var done=accDone(), h=$("accHist");
+  if(h){ h.hidden=!done.length;
+    h.innerHTML=done.length?('<div class="acchd">Istoric</div>'+done.map(function(a){ var v=accPct(a);
+      return '<div class="accold" data-id="'+a.id+'"><div><b>'+esc(a.name)+'</b>'+
+        '<span>'+dmy(a.from)+' – '+dmy(a.to)+(a.why?' · '+esc(a.why):'')+'</span></div>'+
+        '<span class="accv '+(v>0?"pos":v<0?"neg":"")+'">'+fmtPct(v)+'</span>'+
+        '<div class="accold-a"><button type="button" class="tiny" data-a="open">Redeschide</button>'+
+        '<button type="button" class="tiny danger" data-a="del">Șterge</button></div></div>'; }).join("")):""; } }
+function accFind(id){ var l=accAll(), i; for(i=0;i<l.length;i++) if(l[i].id===id) return l[i]; return null; }
+function accCommit(){ saveSettings(); renderAll(); }
+if($("accList")) $("accList").addEventListener("change",function(ev){
+  var el=ev.target, row=el.closest&&el.closest(".accrow"); if(!row) return;
+  var a=accFind(row.dataset.id); if(!a) return; var k=el.dataset.k; if(!k) return;
+  if(k==="name"){ a.name=el.value.trim()||"Cont"; }
+  else if(k==="from"){ var d=parseISO(el.value); if(d&&!isNaN(d)) a.from=d.getTime()+12*3600*1000; }
+  else { var v=parseFloat(el.value); if(k==="target") a.target=(v>0?v:10); else if(k==="size") a.size=(v>0?v:10000); else a.start=(isNaN(v)?0:v); }
+  accCommit(); });
+function accAction(ev){ var b=ev.target.closest&&ev.target.closest("button[data-a]"); if(!b) return;
+  var row=b.closest("[data-id]"); if(!row) return; var a=accFind(row.dataset.id); if(!a) return;
+  var act=b.dataset.a;
+  if(act==="close"){ var why=prompt("De ce se închide „"+a.name+"”?\nex: payout, pierdut, expirat","payout");
+    if(why===null) return; a.closed=true; a.to=Date.now(); a.why=String(why||"").trim(); a.final=accPct(a); }
+  else if(act==="open"){ a.closed=false; a.to=null; a.final=null; a.why=""; }
+  else if(act==="del"){ if(!confirm("Ștergi „"+a.name+"” definitiv? Execuțiile din Sheets rămân.")) return;
+    accounts=accAll().filter(function(x){ return x.id!==a.id; }); }
+  accCommit(); }
+if($("accList")) $("accList").addEventListener("click",accAction);
+if($("accHist")) $("accHist").addEventListener("click",accAction);
+if($("btnAccAdd")) $("btnAccAdd").onclick=function(){
+  var n=prompt("Numele contului nou","Cont nou"); if(n===null) return;
+  var d=new Date(); d.setHours(12,0,0,0);
+  accAll().push(accFix({id:accUid(),name:String(n||"Cont nou").trim()||"Cont nou",start:0,target:10,size:10000,from:d.getTime()}));
+  accCommit(); };
 function resetForm(keepDate){ editing=null; editRow=null; $("btnDirect").textContent="Adaugă în Sheets"; $("btnSave").hidden=false; f.res=""; f.re="0";
   if(!keepDate) $("fDate").value=roDate(todayISO());
   $("fTime").value="";
@@ -1132,7 +1586,7 @@ $("btnDirect").onclick=async function(){ var t=readForm(), b=$("btnDirect");
     var rw=editRow.row, tb=editRow.tab;
     b.disabled=true; fmsg("Salvez rândul "+rw+"…");
     try{
-      await mcp.callTool(SERVER,"edit_values",{spreadsheetId:SHEET,range:"'"+tb+"'!A"+rw+":S"+rw,values:[toRow(ed)]},{cache:false});
+      await mcp.callTool(SERVER,"edit_values",{spreadsheetId:SHEET,range:rowRange(tb,rw),values:[toRow(ed)]},{cache:false});
       fmsg("Salvat pe rândul "+rw+".","ok"); resetForm(false); loadSheet();
     }catch(e){
       var em=String((e&&e.message)||"");
@@ -1145,14 +1599,17 @@ $("btnDirect").onclick=async function(){ var t=readForm(), b=$("btnDirect");
     liqTxt:t.liqTxt,setupTxt:t.setupTxt,shot:t.shot,com:t.com,createdAt:Date.now()};
   var tab=tabOf(data); b.disabled=true; fmsg("Scriu în „"+tab+"”…");
   try{
-    var res=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:"'"+tab+"'!A7:S3000"},{cache:false});
-    var vals=(res.payload&&res.payload.values)||[], last=-1;
-    vals.forEach(function(r,i){ if(r&&String(r[2]||"").trim()) last=i; });
-    var dupIdx=-1; vals.forEach(function(r,i){ if(r && String(r[0]||"").trim()===data.inst && normDate(r[2])===data.date && String(r[14]||"").trim()===data.time) dupIdx=i; });
+    var res=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:"'"+tab+"'!A6:AZ"},{cache:false});
+    var all0=(res.payload&&res.payload.values)||[];
+    if(all0.length) applyCols(all0[0]);
+    var vals=all0.slice(1), cP=ci("PIATA"), cD=ci("DATA"), cO=ci("ORA"), last=-1;
+    vals.forEach(function(r,i){ if(r&&String(r[cD]||"").trim()) last=i; });
+    var dupIdx=-1; vals.forEach(function(r,i){ if(r && String(r[cP]||"").trim()===data.inst && normDate(r[cD])===data.date && String(r[cO]||"").trim()===data.time) dupIdx=i; });
     if(dupIdx>=0){ fmsg("Există deja în „"+tab+"” pe rândul "+(7+dupIdx)+". Nu am scris nimic.","no"); return; }
     var row=7+last+1;
-    await mcp.callTool(SERVER,"update_values",{spreadsheetId:SHEET,range:"'"+tab+"'!A"+row+":S"+row,values:[toRow(data)]},{cache:false});
+    await mcp.callTool(SERVER,"update_values",{spreadsheetId:SHEET,range:rowRange(tab,row),values:[toRow(data)]},{cache:false});
     data.synced=true; data.row=row;
+    if(window.__pendShot){ shotPut(shotKey(data),window.__pendShot); window.__pendShot=null; }
     if(editing){ store.update(editing,data); } else store.add(data);
     fmsg("Adăugat în „"+tab+"” pe rândul "+row+".","ok");
     resetForm(t.dest!=="LIVE");
@@ -1167,6 +1624,7 @@ $("form").addEventListener("submit",function(e){ e.preventDefault(); var t=readF
   if(!t.date||!t.time){ update(); (t.date?$("fTime"):$("fDate")).focus(); return; }
   var data={dest:t.dest,inst:t.inst,dir:t.dir,mss:t.mss,res:t.res,date:t.date,time:t.time,liq:t.liq,setup:t.setup,news:t.news,re:t.re,ctx:t.ctx,
     liqTxt:t.liqTxt,setupTxt:t.setupTxt,shot:t.shot,com:t.com};
+  if(window.__pendShot){ shotPut(shotKey(data),window.__pendShot); window.__pendShot=null; }
   if(editing){ store.update(editing,data); } else { data.synced=false; data.createdAt=Date.now(); store.add(data); }
   resetForm(t.dest!=="LIVE"); $("fTime").focus(); });
 
@@ -1177,9 +1635,18 @@ var store={
   update:function(id,d){ if(db) return db.doc("trades/"+id).update(d).catch(dbErr); trades=trades.map(function(x){return x.id===id?Object.assign({},x,d):x;}); lsSave(); renderAll(); },
   del:function(id){ if(db) return db.doc("trades/"+id).delete().catch(dbErr); trades=trades.filter(function(x){return x.id!==id;}); lsSave(); renderAll(); }
 };
-function lsSave(){ try{ localStorage.setItem(LS,JSON.stringify({trades:trades,accts:accts,bals:bals,balAt:balAt,targets:targets})); }catch(e){} }
-function lsLoad(){ try{ var j=JSON.parse(localStorage.getItem(LS)||"{}"); trades=j.trades||[]; if(j.accts&&j.accts.length===2) accts=j.accts; if(j.bals&&j.bals.length===2){ bals=j.bals; balAt=j.balAt||balAt; } if(j.targets&&j.targets.length===2) targets=j.targets; }catch(e){ trades=[]; } }
-function saveSettings(){ if(db) db.doc("settings/main").set({accts:accts,bals:bals,balAt:balAt,targets:targets}).catch(dbErr); else lsSave(); }
+function lsSave(){ try{ localStorage.setItem(LS,JSON.stringify({trades:trades,accounts:accAll(),free:freeCfg,cfg:cfgX,news:newsCfg})); }catch(e){} }
+function lsLoad(){ try{ var j=JSON.parse(localStorage.getItem(LS)||"{}"); trades=j.trades||[];
+  if(j.accounts&&j.accounts.length) accSet(j.accounts); else accSet(accMigrate(j));
+  if(j.free) freeCfg=j.free; if(j.cfg) cfgSet(j.cfg); if(j.news) newsCfg=j.news; }catch(e){ trades=[]; } }
+function pruneCfg(){
+  var now=Date.now(), k;
+  for(k in newsCfg){ var d=parseISO(k);
+    if(isNaN(d) || (now-d.getTime())>150*864e5) delete newsCfg[k]; }
+  var keys=Object.keys(freeCfg).sort();
+  while(keys.length>30) delete freeCfg[keys.shift()]; }
+function saveSettings(){ pruneCfg(); lsSave();
+  if(db) db.doc("settings/main").set({accounts:accAll(),free:freeCfg,cfg:cfgX,news:newsCfg}).catch(dbErr); }
 function dbErr(e){ $("dbDot").className="bad"; $("dbTxt").textContent="Lista „De trimis” nu s-a salvat ("+(e&&e.code||"eroare")+")."; }
 
 /* ---------- queue ---------- */
@@ -1191,7 +1658,7 @@ function renderQueue(){ var q=$("queue"); q.textContent="";
     var c=el("article","t"+(t.synced?" synced":""));
     var head=el("div","t-head"), l=el("div");
     l.appendChild(el("div","t-title",t.inst+" · "+(t.dir==="SELL"?"Short":"Long")+" · "+roDate(t.date)+" "+t.time));
-    l.appendChild(el("div","t-sub",t.liq+" · "+t.setup+" · MSS "+t.mss.toLowerCase()+(t.re?" · re-entry":"")));
+    l.appendChild(el("div","t-sub",[t.liq,t.setup,(t.mss?"MSS "+String(t.mss).toLowerCase():""),(t.re?"re-entry":"")].filter(Boolean).join(" · ")));
     head.appendChild(l);
     var chips=el("div","chips"), isLive=(t.dest||"LIVE")==="LIVE";
     chips.appendChild(el("span","chip dest",destLabel(t)));
@@ -1240,10 +1707,12 @@ async function loadSheet(){
   if(!mcp){ $("mcpDot").className="bad"; $("mcpTxt").textContent="Google Sheets: indisponibil aici. Setează serverul în Setări → Server."; return; }
   b.disabled=true; b.textContent="Se încarcă…";
   try{
-    var res=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:"'"+TAB+"'!A7:S600"},{cache:false});
-    var vals=(res.payload&&res.payload.values)||[], last=-1;
-    vals.forEach(function(r,i){ if(r&&String(r[2]||"").trim()) last=i; });
-    sheet=parseSheet(vals); sheetLoaded=true;
+    var res=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:"'"+TAB+"'!A6:AZ"},{cache:false});
+    var all0=(res.payload&&res.payload.values)||[];
+    if(all0.length) applyCols(all0[0]);
+    var vals=all0.slice(1), cD=ci("DATA"), last=-1;
+    vals.forEach(function(r,i){ if(r&&String(r[cD]||"").trim()) last=i; });
+    sheet=parseSheet(vals,7); sheetLoaded=true;
     var n=new Date();
     $("mcpDot").className="ok"; $("mcpTxt").textContent="Google Sheets: "+sheet.length+" tradeuri în LIVE · primul rând liber "+(7+last+1)+" · actualizat "+pad(n.getHours())+":"+pad(n.getMinutes());
     $("topDot").className="ok"; $("topTxt").textContent="Sync "+pad(n.getHours())+":"+pad(n.getMinutes());
@@ -1263,12 +1732,14 @@ $("btnPlan").onclick=async function(){
   try{
     var parts=[], lines=[], dupAll=[];
     for(var tab in groups){
-      var res=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:"'"+tab+"'!A7:S3000"},{cache:false});
-      var vals=(res.payload&&res.payload.values)||[], last=-1;
-      vals.forEach(function(r,i){ if(r&&String(r[2]||"").trim()) last=i; });
+      var res=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:"'"+tab+"'!A6:AZ"},{cache:false});
+      var all0=(res.payload&&res.payload.values)||[];
+      if(all0.length) applyCols(all0[0]);
+      var vals=all0.slice(1), cP=ci("PIATA"), cD=ci("DATA"), cO=ci("ORA"), last=-1;
+      vals.forEach(function(r,i){ if(r&&String(r[cD]||"").trim()) last=i; });
       var start=7+last+1, rows=[], ids=[];
       groups[tab].forEach(function(t){
-        var hit=vals.some(function(r){ return r && String(r[0]||"").trim()===t.inst && normDate(r[2])===t.date && String(r[14]||"").trim()===t.time; });
+        var hit=vals.some(function(r){ return r && String(r[cP]||"").trim()===t.inst && normDate(r[cD])===t.date && String(r[cO]||"").trim()===t.time; });
         if(hit) dupAll.push(t); else { rows.push(toRow(t)); ids.push(t.id); } });
       if(rows.length){ parts.push({tab:tab,start:start,rows:rows,ids:ids}); lines.push("„"+tab+"”: "+rows.length+" rând"+(rows.length>1?"uri":"")+" de la r."+start); }
     }
@@ -1283,7 +1754,7 @@ $("btnCancelSync").onclick=function(){ plan=null; $("btnWrite").hidden=true; $("
 $("btnWrite").onclick=async function(){ if(!plan) return; var p=plan, done=[]; $("btnWrite").disabled=true; msg("Scriu în Google Sheets…");
   try{
     for(var i=0;i<p.parts.length;i++){ var q=p.parts[i];
-      await mcp.callTool(SERVER,"update_values",{spreadsheetId:SHEET,range:"'"+q.tab+"'!A"+q.start+":S"+(q.start+q.rows.length-1),values:q.rows},{cache:false});
+      await mcp.callTool(SERVER,"update_values",{spreadsheetId:SHEET,range:"'"+q.tab+"'!A"+q.start+":"+endCol()+(q.start+q.rows.length-1),values:q.rows},{cache:false});
       q.ids.forEach(function(id,k){ store.update(id,{synced:true,row:q.start+k}); });
       done.push("„"+q.tab+"” r."+q.start+(q.rows.length>1?"–"+(q.start+q.rows.length-1):""));
     }
@@ -1294,6 +1765,227 @@ $("btnWrite").onclick=async function(){ if(!plan) return; var p=plan, done=[]; $
   finally{ plan=null; $("btnWrite").disabled=false; $("btnWrite").hidden=true; $("btnCancelSync").hidden=true; $("btnPlan").hidden=false; }
 };
 
+/* ---------- poze pentru setup (doar pe telefon, nu pleacă în Sheets) ---------- */
+var SHK="tradeapp-shots";
+function shotsLoad(){ try{ return JSON.parse(localStorage.getItem(SHK)||"{}"); }catch(e){ return {}; } }
+function shotsWrite(o){ try{ localStorage.setItem(SHK,JSON.stringify(o)); return true; }catch(e){ return false; } }
+function shotsOldest(o){ var ks=Object.keys(o); if(!ks.length) return null;
+  return ks.sort(function(a,b){ return (o[a].t||0)-(o[b].t||0); })[0]; }
+function shotPut(id,data){ var o=shotsLoad(); o[id]={d:data,t:Date.now()};
+  var guard=0;
+  while(Object.keys(o).length>12){ var k=shotsOldest(o); if(!k||k===id) break; delete o[k]; }
+  while(!shotsWrite(o)){ var k2=shotsOldest(o); if(!k2||k2===id||(++guard)>25) return false; delete o[k2]; }
+  return true; }
+function shotGet(id){ var o=shotsLoad(); return o[id]?o[id].d:null; }
+function shotKey(t){ return (t.inst||"")+"|"+(t.date||"")+"|"+(t.time||""); }
+function shotDrop(id){ var o=shotsLoad(); if(o[id]){ delete o[id]; shotsWrite(o); } }
+function shrink(file,cb){
+  var fr=new FileReader();
+  fr.onload=function(){ var img=new Image();
+    img.onload=function(){ var w=img.naturalWidth||img.width, h=img.naturalHeight||img.height, M=1100;
+      if(!w||!h){ cb(null); return; }
+      if(w>M){ h=Math.round(h*M/w); w=M; }
+      try{ var c=document.createElement("canvas"); c.width=w; c.height=h;
+        c.getContext("2d").drawImage(img,0,0,w,h); cb(c.toDataURL("image/jpeg",0.62)); }
+      catch(e){ cb(null); } };
+    img.onerror=function(){ cb(null); };
+    img.src=fr.result; };
+  fr.onerror=function(){ cb(null); };
+  fr.readAsDataURL(file); }
+
+/* ---------- poza de profil ---------- */
+var AVK="tradeapp-avatar";
+function avGet(){ try{ return localStorage.getItem(AVK)||""; }catch(e){ return ""; } }
+function avPaint(){ var d=avGet(), b=$("tbLogo"), p=$("avPrev");
+  if(b){ if(d){ b.classList.add("has"); b.style.setProperty("--av","url("+JSON.stringify(d)+")"); }
+    else { b.classList.remove("has"); b.style.removeProperty("--av"); } }
+  if(p){ p.style.backgroundImage=d?("url("+JSON.stringify(d)+")"):"none"; p.textContent=d?"":"TA"; }
+  if($("btnAvDel")) $("btnAvDel").hidden=!d; }
+function avPick(){ $("avFile").click(); }
+function avSquare(file,cb){
+  var fr=new FileReader();
+  fr.onload=function(){ var img=new Image();
+    img.onload=function(){ var S=200, w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
+      if(!w||!h){ cb(null); return; }
+      var k=Math.min(w,h), sx=(w-k)/2, sy=(h-k)/2;
+      try{ var c=document.createElement("canvas"); c.width=S; c.height=S;
+        c.getContext("2d").drawImage(img,sx,sy,k,k,0,0,S,S); cb(c.toDataURL("image/jpeg",0.82)); }
+      catch(e){ cb(null); } };
+    img.onerror=function(){ cb(null); }; img.src=fr.result; };
+  fr.onerror=function(){ cb(null); }; fr.readAsDataURL(file); }
+if($("tbLogo")) $("tbLogo").onclick=avPick;
+if($("btnAv")) $("btnAv").onclick=avPick;
+if($("btnAvDel")) $("btnAvDel").onclick=function(){ try{ localStorage.removeItem(AVK); }catch(e){} avPaint(); };
+if($("avFile")) $("avFile").addEventListener("change",function(){
+  var f=$("avFile").files&&$("avFile").files[0]; if(!f) return;
+  avSquare(f,function(d){ $("avFile").value="";
+    if(!d){ alert("Poza nu s-a putut citi."); return; }
+    try{ localStorage.setItem(AVK,d); }catch(e){ alert("Nu mai e loc în memoria telefonului. Șterge niște poze de setup din verificare."); return; }
+    avPaint(); }); });
+avPaint();
+
+/* ---------- verificarea înainte de intrare ---------- */
+var kv={inst:"DAX",liq:"HOD",mss:"NORMAL",dir:"",setup:"",shot:null};
+var ovlPane="check";
+LIQS.forEach(function(v){ $("kLiq").appendChild(el("option",null,v)); });
+$("kSetup").appendChild(el("option",null,"— din poză —")).value="";
+SETUPS.forEach(function(v){ $("kSetup").appendChild(el("option",null,v)); });
+function hhmm(){ var d=new Date(); return pad(d.getHours())+":"+pad(d.getMinutes()); }
+function ovlOpen(pane){ ovlPane=pane||"check"; $("ovl").hidden=false; document.body.style.overflow="hidden";
+  if(!$("kTime").value) $("kTime").value=hhmm();
+  paintOvl(); }
+function ovlClose(){ $("ovl").hidden=true; document.body.style.overflow=""; }
+function paintOvl(){ paintSeg($("ovlTab")); paintSeg($("kInst")); paintSeg($("kMss")); paintSeg($("kDir")); paintSeg($("lotInst")); newsPaint();
+  $("paneCheck").hidden=(ovlPane!=="check"); $("paneLot").hidden=(ovlPane!=="lot");
+  $("ovlT").textContent=(ovlPane==="check"?"Înainte de intrare":"Calculator de lot");
+  if(ovlPane==="check") kRender(); else lRender(); }
+seg($("ovlTab"),["check","lot"],function(v){ ovlPane=v; paintOvl(); },["Verificare","Lot"],function(){return ovlPane;});
+seg($("kInst"),["DAX","GBPUSD"],function(v){ kv.inst=v; paintOvl(); },["DAX","GU"],function(){return kv.inst;});
+seg($("kMss"),["NORMAL","AGRESIV"],function(v){ kv.mss=v; kRender(); paintSeg($("kMss")); },["Normal","Agresiv"],function(){return kv.mss;});
+seg($("kDir"),["BUY","SELL"],function(v){ kv.dir=v; kRender(); paintSeg($("kDir")); },["Long","Short"],function(){return kv.dir;});
+seg($("kNewsS"),["───","★","★★","★★★"],function(v){ newsSave({s:v}); },["Fără","★","★★","★★★"],function(){ return newsOf(todayISO()).s; });
+function newsSave(part){ var iso=todayISO(), d=newsOf(iso);
+  if(part.t!=null) d.t=part.t; if(part.s!=null) d.s=part.s; if(part.n!=null) d.n=part.n;
+  if(!d.t.length && d.s==="───" && !d.n) delete newsCfg[iso]; else newsCfg[iso]={t:d.t,s:d.s,n:d.n};
+  saveSettings(); newsPaint(); kRender(); }
+function newsPaint(){ var iso=todayISO(), d=newsOf(iso);
+  if(document.activeElement!==$("kNewsT")) $("kNewsT").value=d.t.join(", ");
+  if(document.activeElement!==$("kNewsN")) $("kNewsN").value=d.n;
+  paintSeg($("kNewsS"));
+  var dd=parseISO(iso);
+  $("kNewsD").textContent=ZILE_D[dd.getDay()]+" "+roDate(iso).slice(0,5)+(d.t.length?(" · "+d.t.length+" or"+(d.t.length>1?"e":"ă")):" · nimic pus"); }
+$("kNewsT").addEventListener("change",function(){ newsSave({t:newsTimes($("kNewsT").value)}); });
+$("kNewsN").addEventListener("change",function(){ newsSave({n:$("kNewsN").value.trim().slice(0,40)}); });
+$("kLiq").addEventListener("change",function(){ kv.liq=$("kLiq").value; kRender(); });
+$("kSetup").addEventListener("change",function(){ kv.setup=$("kSetup").value; kRender(); });
+["kTime","kFvg"].forEach(function(id){ $(id).addEventListener("input",kRender); });
+["kG1","kG2","kG3","kG4"].forEach(function(id){ $(id).addEventListener("change",kRender); });
+$("kTime").addEventListener("input",function(ev){ if(ev.inputType&&ev.inputType.indexOf("delete")===0) return;
+  $("kTime").value=fmtTimeInput($("kTime").value); });
+if($("btnCheck")) $("btnCheck").onclick=function(){ ovlOpen("check"); };
+$("ovlX").onclick=ovlClose; $("ovlBg").onclick=ovlClose;
+document.addEventListener("keydown",function(e){ if(e.key==="Escape" && !$("ovl").hidden) ovlClose(); });
+$("shotBox").addEventListener("click",function(e){ if(e.target.id!=="shotFile") $("shotFile").click(); });
+$("shotFile").addEventListener("change",function(){
+  var f=$("shotFile").files&&$("shotFile").files[0]; if(!f) return;
+  $("shotHint").innerHTML="<b>Se pregătește…</b>";
+  shrink(f,function(d){ $("shotFile").value="";
+    if(!d){ $("shotHint").innerHTML="<b>Poza nu s-a putut citi</b><span>Încearcă din nou</span>"; return; }
+    kv.shot=d; $("shotImg").src=d; $("shotImg").hidden=false; $("shotHint").hidden=true; $("shotDel").hidden=false; }); });
+$("shotDel").onclick=function(ev){ ev.stopPropagation(); kv.shot=null; $("shotImg").hidden=true; $("shotImg").removeAttribute("src");
+  $("shotHint").hidden=false; $("shotHint").innerHTML="<b>Foto setup</b><span>Apasă ca să faci poza</span>"; $("shotDel").hidden=true; };
+
+function kTrade(){ var iso=todayISO();
+  return {id:"__k",dest:"LIVE",inst:kv.inst,instRaw:kv.inst,date:iso,time:$("kTime").value||hhmm(),
+    res:"",dir:kv.dir||"BUY",liq:kv.liq,setup:kv.setup,mss:kv.mss,re:false,news:"───",com:"",ctx:""}; }
+function kGeom(){ var w=[], fvg=parseFloat($("kFvg").value);
+  if($("kFvg").value!==""&&!isNaN(fvg)&&fvg<1) w.push({l:"no",m:"FVG sub 1 punct: setup invalid."});
+  if($("kFvg").value==="") w.push({l:"warn",m:"Nu ai pus mărimea FVG-ului."});
+  if(!kv.dir) w.push({l:"warn",m:"Direcția nu e aleasă."});
+  if(!kv.setup) w.push({l:"warn",m:"Setup-ul nu e ales."});
+  if(!$("kG1").checked) w.push({l:"warn",m:"Neconfirmat: intrarea în jumătatea FVG, în max 30 min."});
+  if(!$("kG2").checked) w.push({l:"warn",m:"Neconfirmat: setup format în max 1H de la preluare."});
+  if(!$("kG3").checked) w.push({l:"warn",m:"Neconfirmat: entry la min 2 puncte de ultimul low/high."});
+  if(!$("kG4").checked) w.push({l:"warn",m:"Neconfirmat: displacement clar."});
+  return w; }
+function kSlices(t){
+  var useBT=!!(btRows[t.inst]&&btRows[t.inst].length);
+  var pool=(useBT?btRows[t.inst]:all().filter(function(x){return x.inst===t.inst;}))
+    .filter(function(x){ return resK(x) && noStars(x); });
+  var d=parseISO(t.date), zi=isNaN(d)?"":ZILE_D[d.getDay()], iv=interval(t.time,t.date);
+  var out=[];
+  function add(lab,f){ var r=pool.filter(f); out.push({k:lab,st:stat(r)}); }
+  add("Lichiditate "+t.liq, function(x){ return x.liq===t.liq; });
+  add(zi+" · "+iv, function(x){ var dd=parseISO(x.date); return !isNaN(dd)&&ZILE_D[dd.getDay()]===zi && ivOf(x)===iv; });
+  if(t.setup) add("Setup "+t.setup, function(x){ return x.setup===t.setup; });
+  add("MSS "+(t.mss==="AGRESIV"?"Agresiv":"Normal"), function(x){ return String(x.mss||"").toUpperCase()===t.mss; });
+  add("Zi + interval + liq", function(x){ var dd=parseISO(x.date);
+    return !isNaN(dd)&&ZILE_D[dd.getDay()]===zi && ivOf(x)===iv && x.liq===t.liq; });
+  return {rows:out, src:(useBT?("backtest "+t.inst):"live"), tot:stat(pool)}; }
+function kRender(){ if($("ovl").hidden) return;
+  var t=kTrade(), w=checks(t).concat(kGeom());
+  var bad=w.filter(function(x){return x.l==="no";}), warn=w.filter(function(x){return x.l==="warn";});
+  var cls=bad.length?"no":(warn.length?"warn":"ok");
+  var txt=bad.length?"INVALID":(warn.length?"VALID cu rezerve":"VALID");
+  var sub=bad.length?(bad.length+" motiv"+(bad.length>1?"e":"")+" de oprire"):(warn.length?(warn.length===1?"1 lucru neconfirmat":(warn.length+" lucruri neconfirmate")):"filtrul Normal, fereastra și setup-ul sunt în regulă");
+  var h='<div class="verd '+cls+'"><div class="vh"><span class="vt">'+txt+'</span><span class="vn">'+esc(sub)+'</span></div>';
+  if(w.length) h+='<ul>'+bad.concat(warn).map(function(x){ return '<li class="'+x.l+'">'+esc(x.m)+'</li>'; }).join("")+'</ul>';
+  h+='</div>';
+  $("kVerdict").innerHTML=h;
+  var sl=kSlices(t), tb=$("kStats"); tb.textContent="";
+  var hr=el("tr"); ["Felie","n","WR","Int.90","R/tr"].forEach(function(x){ hr.appendChild(el("th",null,x)); }); tb.appendChild(hr);
+  sl.rows.forEach(function(r){ var c=r.st, tr=el("tr");
+    var wr=(c.wr==null?"–":Math.round(100*c.wr)+"%");
+    var k=(c.W+c.L)>=10 ? (c.wr<0.34?"bad":(c.wr>=0.52?"good":"")) : "";
+    [r.k, c.n+(c.n&&c.n<15?" *":""), wr, (c.ci?c.ci[0]+"–"+c.ci[1]+"%":"–"), (c.n?fmtR(c.R/c.n):"–")]
+      .forEach(function(v,i){ tr.appendChild(el("td", i===2?k:(i===4?rCls(c.R):""), v)); }); tb.appendChild(tr); });
+  var tt=el("tr"); [ (kv.inst+" tot"), sl.tot.n, (sl.tot.wr==null?"–":Math.round(100*sl.tot.wr)+"%"),
+    (sl.tot.ci?sl.tot.ci[0]+"–"+sl.tot.ci[1]+"%":"–"), (sl.tot.n?fmtR(sl.tot.R/sl.tot.n):"–") ]
+    .forEach(function(v,i){ var td=el("td",i===4?rCls(sl.tot.R):"",v); td.style.fontWeight="600"; tt.appendChild(td); });
+  tb.appendChild(tt);
+  $("kSrc").textContent="Cifrele sunt din "+sl.src+", fără zilele cu ★★★. Sub 15 tradeuri (*) e orientativ. „Zi + interval + liq” e felia cea mai subțire, deci cea mai nesigură."
+    +(btRows[kv.inst]&&btRows[kv.inst].length?"":" Încarcă backtestul din Jurnal → Celule ca să ai eșantion mare."); }
+$("kUse").onclick=function(){
+  var t=kTrade();
+  resetForm(true);
+  f.dest="LIVE"; f.inst=t.inst; buildInst(); f.dir=t.dir; f.mss=t.mss; f.re="0";
+  $("fDate").value=roDate(t.date); $("fTime").value=t.time;
+  if(t.liq) $("fLiq").value=t.liq; if(t.setup) $("fSetup").value=t.setup;
+  if(kv.shot) window.__pendShot=kv.shot;
+  paint(); update(); ovlClose(); location.hash="#adauga"; };
+
+/* ---------- calculator de lot ---------- */
+seg($("lotInst"),["DAX","GBPUSD"],function(v){ kv.inst=v; paintOvl(); },["DAX","GU"],function(){return kv.inst;});
+["lRisk","lSl","lPv"].forEach(function(id){ $(id).addEventListener("input",lCalc); });
+["lRisk","lPv"].forEach(function(id){ $(id).addEventListener("change",function(){
+  var risk=parseFloat($("lRisk").value), pv=parseFloat($("lPv").value), ch=false;
+  if(risk>0 && risk!==cfgX.risk){ cfgX.risk=risk; ch=true; }
+  if(pv>0 && pv!==cfgX.pv[kv.inst]){ cfgX.pv[kv.inst]=pv; ch=true; }
+  if(ch) saveSettings(); }); });
+$("lAcc").addEventListener("change",lCalc);
+function lRender(){ var sel=$("lAcc"), cur=sel.value; sel.textContent="";
+  accLive().forEach(function(a){ var o=el("option",null,a.name+" · $"+a.size); o.value=a.id; sel.appendChild(o); });
+  if(cur) sel.value=cur; if(!sel.value && sel.options.length) sel.selectedIndex=0;
+  if(!$("lRisk").value) $("lRisk").value=cfgX.risk;
+  $("lPv").value=cfgX.pv[kv.inst]||PV_DEF[kv.inst]; lCalc(); }
+function lCalc(){
+  var a=accFind($("lAcc").value)||accLive()[0]||{size:10000};
+  var risk=parseFloat($("lRisk").value), sl=parseFloat($("lSl").value), pv=parseFloat($("lPv").value);
+  var bal=+a.size||10000, rUsd=(risk>0?bal*risk/100:null);
+  var lot=(rUsd!=null && sl>0 && pv>0) ? rUsd/(sl*pv) : null;
+  var o=$("lOut");
+  if(lot==null){ o.innerHTML='<div class="big"><span class="ln">Lot</span><span class="lv" style="color:var(--t3)">–</span></div>'
+    +'<div><span class="ln">Risc</span><span class="lv">'+(rUsd!=null?("$"+Math.round(rUsd)):"–")+'</span></div>'
+    +'<div><span class="ln">Sold</span><span class="lv">$'+bal+'</span></div>'; return; }
+  var lotR=(lot>=1?Math.round(lot*100)/100:Math.round(lot*1000)/1000);
+  o.innerHTML='<div class="big"><span class="ln">Lot</span><span class="lv">'+String(lotR).replace(".",",")+'</span></div>'
+    +'<div><span class="ln">Risc 1R</span><span class="lv">$'+Math.round(rUsd)+'</span></div>'
+    +'<div><span class="ln">TP 2R</span><span class="lv" style="color:var(--win)">$'+Math.round(rUsd*2)+'</span></div>'
+    +'<div><span class="ln">SL</span><span class="lv">'+String(sl).replace(".",",")+' pct</span></div>'
+    +'<div><span class="ln">TP</span><span class="lv">'+String(Math.round(sl*2*100)/100).replace(".",",")+' pct</span></div>'; }
+
+/* ---------- întreținere ---------- */
+function oldSynced(){ var lim=Date.now()-180*864e5;
+  return trades.filter(function(t){ if(!t.synced) return false;
+    var d=parseISO(t.date); return !isNaN(d) && d.getTime()<lim; }); }
+function orphanShots(){ var o=shotsLoad(), keep={};
+  all().forEach(function(t){ keep[shotKey(t)]=1; });
+  trades.forEach(function(t){ keep[shotKey(t)]=1; });
+  return Object.keys(o).filter(function(k){ return !keep[k]; }); }
+function mntPaint(){ var t=$("mntTxt"); if(!t) return;
+  var ns=oldSynced().length, np=Object.keys(shotsLoad()).length, no=orphanShots().length;
+  $("mntDot").className=(ns||no)?"warn":"ok";
+  t.textContent=trades.length+" tradeuri în aplicație ("+ns+" vechi și deja scrise) · "+np+" poze ("+no+" fără trade)"; }
+if($("btnPrune")) $("btnPrune").onclick=function(){
+  var del=oldSynced(), orf=orphanShots();
+  if(!del.length && !orf.length){ var m0=$("mntMsg"); m0.hidden=false; m0.className="msg ok"; m0.textContent="N-ai ce curăța."; return; }
+  if(!confirm("Șterg "+del.length+" tradeuri din aplicație și "+orf.length+" poze. În Google Sheets rămân. Continui?")) return;
+  orf.forEach(shotDrop);
+  del.forEach(function(t){ store.del(t.id); });
+  var m=$("mntMsg"); m.hidden=false; m.className="msg ok";
+  m.textContent="Curățat: "+del.length+" tradeuri și "+orf.length+" poze.";
+  mntPaint(); };
+
 /* ---------- tabs ---------- */
 var TABS=["acasa","jurnal","adauga","calendar","setari"], TITLES={acasa:"Acasă",jurnal:"Jurnal",adauga:"Trade nou",calendar:"Calendar",setari:"Setări"};
 function showTab(){ var h=(location.hash||"").slice(1); if(TABS.indexOf(h)<0) h="acasa"; document.body.dataset.tab=h;
@@ -1302,7 +1994,7 @@ function showTab(){ var h=(location.hash||"").slice(1); if(TABS.indexOf(h)<0) h=
   window.scrollTo(0,0); }
 window.addEventListener("hashchange",showTab);
 
-function renderAll(){ paintThemes(); renderAccts(); kpis(); renderHome(); renderCal(); renderDay(); renderJournal(); renderQueue(); update(); }
+function renderAll(){ paintThemes(); paintFree(); renderAccts(); paintAccs(); mntPaint(); kpis(); renderHome(); renderCal(); renderDay(); renderJournal(); renderCells(); renderQueue(); update(); }
 
 /* ---------- boot ---------- */
 showTab(); resetForm(); renderAll();
@@ -1318,7 +2010,10 @@ showTab(); resetForm(); renderAll();
       trades=s.docs.map(function(d){ var x=d.data()||{}; x.id=d.id; return x; });
       $("dbDot").className="ok"; $("dbTxt").textContent="Lista „De trimis” e salvată în aplicație."; renderAll(); },
       function(e){ clearTimeout(timer); dbErr(e); });
-    db.doc("settings/main").get().then(function(s){ var d=s.exists&&s.data(); if(d&&d.accts&&d.accts.length===2){ accts=d.accts; } if(d&&d.bals&&d.bals.length===2){ bals=d.bals; balAt=d.balAt||balAt; } if(d&&d.targets&&d.targets.length===2){ targets=d.targets; } showAccts(); renderAll(); }).catch(function(){ showAccts(); });
+    db.doc("settings/main").get().then(function(s){ var d=s.exists&&s.data();
+      if(d&&d.accounts&&d.accounts.length) accSet(d.accounts); else if(d&&(d.accts||d.bals)) accSet(accMigrate(d));
+      if(d&&d.free){ freeCfg=d.free; } if(d&&d.cfg){ cfgSet(d.cfg); } if(d&&d.news){ newsCfg=d.news; }
+      showAccts(); renderAll(); }).catch(function(){ showAccts(); });
   } else {
     lsLoad(); showAccts(); $("dbDot").className="bad"; $("dbTxt").textContent="Lista „De trimis” e salvată doar în acest browser."; renderAll();
   }
