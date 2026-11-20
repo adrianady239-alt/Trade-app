@@ -313,6 +313,8 @@ form{display:flex;flex-direction:column;gap:15px}
 .shotbox{display:block;position:relative;border:1px dashed var(--edge-hi);border-radius:var(--r-m);
   min-height:168px;background:radial-gradient(120% 100% at 50% 0%,rgba(120,205,255,.08),transparent 70%),var(--ctl-in);
   cursor:pointer;overflow:hidden}
+.shotbox.small{min-height:104px}
+.shotbox.small .sb-t svg{width:26px;height:26px}
 .shotbox img{display:block;width:100%;max-height:300px;object-fit:cover}
 .sb-t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;color:var(--t3)}
 .sb-t svg{width:34px;height:34px;opacity:.8}
@@ -321,6 +323,41 @@ form{display:flex;flex-direction:column;gap:15px}
   cursor:pointer;display:grid;place-items:center;line-height:1;box-shadow:none;
   background:rgba(0,6,14,.74);border:1px solid var(--edge);color:var(--t1);font-size:13px;backdrop-filter:blur(8px)}
 button.primary.big{min-height:54px;font-size:16px;letter-spacing:-.01em}
+/* cardul „Acum” de pe Acasă */
+.nowc{padding:14px var(--pad) 12px}
+.nowh{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.nowh > div:first-child{flex:1 1 auto;min-width:0}
+.nowt{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);font-weight:700}
+.nows{font-size:13px;color:var(--t1);font-weight:600;margin-top:2px;letter-spacing:-.01em}
+.nowh .seg{flex:0 0 auto;width:118px}
+.nowh .seg button{min-height:32px;font-size:12.5px}
+.nowlist{display:flex;flex-direction:column;gap:1px;border-radius:var(--r-m);overflow:hidden;border:1px solid var(--edge)}
+.nowr{display:grid;grid-template-columns:minmax(0,1fr) 56px 40px;align-items:center;gap:8px;
+  padding:11px 13px;background:var(--ctl-in);font-size:13px;cursor:pointer;border:0;width:100%;
+  text-align:left;min-height:0;box-shadow:none;border-radius:0;transition:background-color .15s var(--ease)}
+.nowr:hover{background:var(--ctl-h)}
+.nowr .nq{color:var(--t2);font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nowr .nw{text-align:right;font-weight:750;font-size:16px;letter-spacing:-.02em;color:var(--t2)}
+.nowr .nw.good{color:var(--win)} .nowr .nw.bad{color:var(--loss)} .nowr .nw.mid{color:var(--warn)}
+.nowr .nn{text-align:right;font-size:10.5px;color:var(--t4)}
+.nowsub{background:rgba(0,6,14,.45);padding:3px 13px 9px;display:flex;flex-wrap:wrap;gap:6px}
+.nowchip{font-size:11px;padding:5px 9px;border-radius:999px;border:1px solid var(--edge);
+  background:var(--ctl);color:var(--t2);white-space:nowrap}
+.nowchip b{font-weight:700;margin-left:6px}
+.nowchip i{font-style:normal;margin-left:6px;font-size:10px;color:var(--t4)}
+.nowchip.few{opacity:.5}
+.nowchip.good{color:var(--win);border-color:rgba(43,232,139,.3)}
+.nowchip.bad{color:var(--loss);border-color:rgba(255,77,94,.3)}
+.nowf{font-size:10.5px;color:var(--t4);margin-top:9px;line-height:1.45}
+.liqlist{display:flex;flex-direction:column;gap:1px;border-radius:var(--r-m);overflow:hidden;border:1px solid var(--edge)}
+.liqr{display:grid;grid-template-columns:minmax(0,1fr) 52px 34px;align-items:center;gap:8px;
+  padding:9px 13px;background:var(--ctl-in);font-size:12.5px}
+.liqr.on{background:var(--ctl-on);box-shadow:inset 3px 0 0 var(--win)}
+.liqr .lq{color:var(--t2);font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.liqr.on .lq{color:var(--t1);font-weight:700}
+.liqr .lw{text-align:right;font-weight:700;font-size:14px;color:var(--t2)}
+.liqr .lw.good{color:var(--win)} .liqr .lw.bad{color:var(--loss)} .liqr .lw.mid{color:var(--warn)}
+.liqr .ln{text-align:right;font-size:10.5px;color:var(--t4)}
 .kverd{border-radius:var(--r-m);padding:11px 14px;font-size:12.5px;line-height:1.45;border:1px solid var(--edge);background:var(--ctl);color:var(--t2)}
 .kverd.ok{background:rgba(43,232,139,.1);border-color:rgba(43,232,139,.28);color:#8DF7C2}
 .kverd.no{background:rgba(255,77,94,.1);border-color:rgba(255,77,94,.28);color:#FF93A0}
@@ -355,7 +392,9 @@ button.primary.big{min-height:54px;font-size:16px;letter-spacing:-.01em}
 .lotout .big{grid-column:1/-1} .lotout .big .lv{font-size:34px;color:var(--win)}
 .tshot{display:block;width:100%;border-radius:var(--r-s);margin:10px 0 0;border:1px solid var(--edge)}
 .seg.wrapseg{flex-wrap:wrap}
-.seg.wrapseg button{flex:0 1 auto;min-height:32px;padding:6px 11px;font-size:12.5px}
+.seg.wrapseg button{flex:0 1 auto;min-height:34px;padding:7px 13px;font-size:13px}
+.seg.off{opacity:.42}
+.seg button:disabled{cursor:default}
 .seg.res button[data-v="WIN"][aria-pressed="true"]{background:linear-gradient(180deg,#48FFAE,#13B96E);color:#002313;border-color:transparent}
 .seg.res button[data-v="LOSE"][aria-pressed="true"]{background:linear-gradient(180deg,#FF8792,#D92B3C);color:#2B0309;border-color:transparent}
 .seg.res button[data-v="BREAK EVEN"][aria-pressed="true"]{background:linear-gradient(180deg,#A8B5C4,#6B7787);color:#070D14;border-color:transparent}
@@ -548,6 +587,15 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
         <div><div class="txt" id="todayT1">—</div><div class="sub" id="todayT2">—</div></div>
         <div class="caps" id="slots" role="img" aria-label="Tradeurile de azi"></div>
       </div>
+    </section>
+
+    <section class="glass nowc" id="nowCard">
+      <div class="nowh">
+        <div><div class="nowt">Verificare rapidă</div><div class="nows" id="nowSub">—</div></div>
+        <div class="seg" id="nowInst" role="group" aria-label="Piață"></div>
+      </div>
+      <div class="nowlist" id="nowList"></div>
+      <div class="nowf" id="nowFoot"></div>
     </section>
 
     <div class="homerow">
@@ -755,24 +803,27 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
     <div class="seg" id="ovlTab" role="group" aria-label="Secțiune"></div>
 
     <div class="ovl-b" id="paneCheck">
-      <label class="shotbox" id="shotBox">
-        <input type="file" accept="image/*" id="shotFile" hidden>
-        <img id="shotImg" alt="Setup" hidden>
-        <span class="sb-t" id="shotHint">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.2A1.2 1.2 0 0 1 4.2 7h2.3l1-1.7a1 1 0 0 1 .9-.5h7.2a1 1 0 0 1 .9.5l1 1.7h2.3A1.2 1.2 0 0 1 21 8.2v9.6a1.2 1.2 0 0 1-1.2 1.2H4.2A1.2 1.2 0 0 1 3 17.8z"/><circle cx="12" cy="12.6" r="3.3"/></svg>
-          <b>Foto setup</b></span>
-        <button type="button" class="sb-x" id="shotDel" hidden aria-label="Șterge poza">✕</button>
-      </label>
-
       <div class="kgrid">
         <div class="f"><label>Piață</label><div class="seg" id="kInst" role="group" aria-label="Piață"></div></div>
         <div class="f"><label>MSS</label><div class="seg" id="kMss" role="group" aria-label="MSS"></div></div>
       </div>
       <div class="f"><label for="kLiq">Lichiditate preluată</label><select id="kLiq"></select></div>
-      <div class="f"><label for="kSetup">Setup <span class="opt">opțional</span></label><select id="kSetup"></select></div>
-
-      <button type="button" class="primary wide big" id="kGo">Verifică</button>
+      <div class="f"><label>Setup <span class="opt">opțional</span></label>
+        <div class="seg wrapseg" id="kGap" role="group" aria-label="Tipul de gap"></div>
+        <div class="seg" id="kLeg" role="group" aria-label="Leg" style="margin-top:8px"></div>
+      </div>
       <div id="kOut"></div>
+      <button type="button" class="ghost wide" id="kGo">Recalculează</button>
+
+      <div class="dash">După intrare</div>
+      <label class="shotbox small" id="shotBox">
+        <input type="file" accept="image/*" id="shotFile" hidden>
+        <img id="shotImg" alt="Setup" hidden>
+        <span class="sb-t" id="shotHint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.2A1.2 1.2 0 0 1 4.2 7h2.3l1-1.7a1 1 0 0 1 .9-.5h7.2a1 1 0 0 1 .9.5l1 1.7h2.3A1.2 1.2 0 0 1 21 8.2v9.6a1.2 1.2 0 0 1-1.2 1.2H4.2A1.2 1.2 0 0 1 3 17.8z"/><circle cx="12" cy="12.6" r="3.3"/></svg>
+          <b>Atașează poza</b></span>
+        <button type="button" class="sb-x" id="shotDel" hidden aria-label="Șterge poza">✕</button>
+      </label>
     </div>
 
     <div class="ovl-b" id="paneLot" hidden>
@@ -911,7 +962,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="20.11.2026 16:22";   /* amprenta versiunii */
+var BUILD="20.11.2026 17:08";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1820,6 +1871,53 @@ $("btnWrite").onclick=async function(){ if(!plan) return; var p=plan, done=[]; $
   finally{ plan=null; $("btnWrite").disabled=false; $("btnWrite").hidden=true; $("btnCancelSync").hidden=true; $("btnPlan").hidden=false; }
 };
 
+/* ---------- cardul „Acum”: winrate pe celula de acum, fără nicio atingere ---------- */
+var nowOpen="";
+function nowPool(inst){
+  var useBT=!!(btRows[inst]&&btRows[inst].length);
+  var p=(useBT?btRows[inst]:all().filter(function(x){return x.inst===inst;}))
+    .filter(function(x){ return resK(x) && noStars(x); });
+  return {rows:p, bt:useBT}; }
+function wrCls(st){ return (st.W+st.L)>=10 ? (st.wr<0.34?"bad":(st.wr>=0.52?"good":"mid")) : ""; }
+function renderNow(){
+  var box=$("nowList"); if(!box) return;
+  var inst=kv.inst||"DAX", iso=todayISO(), d=parseISO(iso);
+  var now=pad(d.getHours?new Date().getHours():0)+":"+pad(new Date().getMinutes());
+  var iv=interval(now,iso);
+  paintSeg($("nowInst"));
+  $("nowSub").textContent=ZILE_D[d.getDay()]+" · "+iv;
+  var P=nowPool(inst), pool=P.rows;
+  var day=ZILE_D[d.getDay()];
+  var base=pool.filter(function(x){ return ivOf(x)===iv; });
+  var ls=LIQS.map(function(L){ return {k:L, st:stat(base.filter(function(x){ return x.liq===L; }))}; })
+    .filter(function(o){ return o.st.n>0; })
+    .sort(function(a,b){ return (b.st.wr||0)-(a.st.wr||0) || b.st.n-a.st.n; });
+  if(!ls.length){ box.innerHTML='<div class="nowr"><span class="nq">Niciun trade în intervalul ăsta</span><span class="nw">–</span><span class="nn"></span></div>';
+    $("nowFoot").textContent=(P.bt?"Backtest ":"Live ")+inst+" · fără ★★★."; return; }
+  var h="";
+  ls.forEach(function(o){ var w=o.st.wr==null?"–":Math.round(100*o.st.wr)+"%";
+    h+='<button type="button" class="nowr" data-liq="'+esc(o.k)+'">'+
+       '<span class="nq">'+esc(o.k)+'</span><span class="nw '+wrCls(o.st)+'">'+w+'</span>'+
+       '<span class="nn">'+o.st.n+'</span></button>';
+    if(nowOpen===o.k){
+      var sub=base.filter(function(x){ return x.liq===o.k; });
+      var sets={}; sub.forEach(function(x){ if(x.setup) (sets[x.setup]=sets[x.setup]||[]).push(x); });
+      var ks=Object.keys(sets).map(function(k){ return {k:k,st:stat(sets[k])}; })
+        .sort(function(a,b){ return b.st.n-a.st.n; });
+      h+='<div class="nowsub">';
+      if(!ks.length) h+='<span class="nowchip">fără setup-uri notate</span>';
+      ks.forEach(function(x){ var ww=x.st.wr==null?"doar BE":Math.round(100*x.st.wr)+"%";
+        h+='<span class="nowchip '+wrCls(x.st)+(x.st.n<5?" few":"")+'">'+esc(x.k)+'<b>'+ww+'</b><i>n'+x.st.n+'</i></span>'; });
+      h+='</div>'; } });
+  box.innerHTML=h;
+  $("nowFoot").textContent=(P.bt?"Backtest ":"Live ")+inst+" · "+pool.length+" tradeuri, fără ★★★ · apasă o lichiditate pentru setup-uri"+
+    (P.bt?"":" · sincronizează backtestul din Jurnal"); }
+seg($("nowInst"),["DAX","GBPUSD"],function(v){ kv.inst=v; kv.setup=kSetupOf(); kvSave(); nowOpen=""; renderNow(); },
+  ["DAX","GU"],function(){ return kv.inst; });
+if($("nowList")) $("nowList").addEventListener("click",function(ev){
+  var b=ev.target.closest&&ev.target.closest(".nowr"); if(!b||!b.dataset.liq) return;
+  nowOpen=(nowOpen===b.dataset.liq)?"":b.dataset.liq; renderNow(); });
+
 /* ---------- poze pentru setup (doar pe telefon, nu pleacă în Sheets) ---------- */
 var SHK="tradeapp-shots";
 var _shots=null;
@@ -1883,15 +1981,26 @@ if($("avFile")) $("avFile").addEventListener("change",function(){
 avPaint();
 
 /* ---------- verificarea înainte de intrare ---------- */
-var kv={inst:"DAX",liq:"HOD",mss:"NORMAL",setup:"",shot:null};
+var kv={inst:"DAX",liq:"HOD",mss:"NORMAL",gap:"",slg:false,setup:"",shot:null};
+var GAPS=["OSG","TCG","TG","3G","3CG","MGS"];
+function kSetupOf(){ if(!kv.gap) return "";
+  if(kv.gap==="MGS") return "MGS";
+  return (kv.slg?"SLG+":"")+kv.gap; }
 var ovlPane="check";
 LIQS.forEach(function(v){ $("kLiq").appendChild(el("option",null,v)); });
-(function(){ var o=el("option",null,"— nu îl folosesc —"); o.value=""; $("kSetup").appendChild(o); })();
-SETUPS.forEach(function(v){ $("kSetup").appendChild(el("option",null,v)); });
+
 function hhmm(){ var d=new Date(); return pad(d.getHours())+":"+pad(d.getMinutes()); }
-function ovlOpen(pane){ ovlPane=pane||"check"; $("ovl").hidden=false; document.body.style.overflow="hidden"; paintOvl(); }
+var KVK="tradeapp-check";
+function kvSave(){ try{ localStorage.setItem(KVK,JSON.stringify({inst:kv.inst,liq:kv.liq,mss:kv.mss,gap:kv.gap,slg:kv.slg})); }catch(e){} }
+function kvLoad(){ try{ var j=JSON.parse(localStorage.getItem(KVK)||"null"); if(!j) return;
+  if(j.inst) kv.inst=j.inst; if(j.liq && LIQS.indexOf(j.liq)>=0) kv.liq=j.liq;
+  if(j.mss) kv.mss=j.mss; if(j.gap!=null) kv.gap=j.gap; kv.slg=!!j.slg; kv.setup=kSetupOf(); }catch(e){} }
+function ovlOpen(pane){ ovlPane=pane||"check"; $("ovl").hidden=false; document.body.style.overflow="hidden";
+  if(ovlPane==="check"){ $("kLiq").value=kv.liq; }
+  paintOvl();
+  if(ovlPane==="check") kVerify(); }
 function ovlClose(){ $("ovl").hidden=true; document.body.style.overflow=""; }
-function paintOvl(){ paintSeg($("ovlTab")); paintSeg($("kInst")); paintSeg($("kMss")); paintSeg($("lotInst"));
+function paintOvl(){ paintSeg($("ovlTab")); paintSeg($("kInst")); paintSeg($("kMss")); paintSeg($("lotInst")); paintSetup();
   $("paneCheck").hidden=(ovlPane!=="check"); $("paneLot").hidden=(ovlPane!=="lot");
   $("ovlT").textContent=(ovlPane==="check"?"Verifică intrarea":"Calculator de lot");
   if(ovlPane==="lot") lRender(); }
@@ -1899,7 +2008,14 @@ seg($("ovlTab"),["check","lot"],function(v){ ovlPane=v; paintOvl(); },["Verifica
 seg($("kInst"),["DAX","GBPUSD"],function(v){ kv.inst=v; paintSeg($("kInst")); kClear(); },["DAX","GU"],function(){return kv.inst;});
 seg($("kMss"),["NORMAL","AGRESIV"],function(v){ kv.mss=v; paintSeg($("kMss")); kClear(); },["Normal","Agresiv"],function(){return kv.mss;});
 $("kLiq").addEventListener("change",function(){ kv.liq=$("kLiq").value; kClear(); });
-$("kSetup").addEventListener("change",function(){ kv.setup=$("kSetup").value; kClear(); });
+seg($("kGap"),[""].concat(GAPS),function(v){ kv.gap=v; if(v==="MGS") kv.slg=false;
+  kv.setup=kSetupOf(); paintSetup(); kClear(); },["—"].concat(GAPS),function(){return kv.gap;});
+seg($("kLeg"),["0","1"],function(v){ if(kv.gap==="MGS") return; kv.slg=(v==="1");
+  kv.setup=kSetupOf(); paintSetup(); kClear(); },["Primul leg","SLG"],function(){return kv.slg?"1":"0";});
+function paintSetup(){ paintSeg($("kGap")); paintSeg($("kLeg"));
+  var off=(!kv.gap || kv.gap==="MGS");
+  $("kLeg").classList.toggle("off",off);
+  Array.prototype.forEach.call($("kLeg").children,function(b){ b.disabled=off; }); }
 if($("btnCheck")) $("btnCheck").onclick=function(){ ovlOpen("check"); };
 $("ovlX").onclick=ovlClose; $("ovlBg").onclick=ovlClose;
 document.addEventListener("keydown",function(e){ if(e.key==="Escape" && !$("ovl").hidden) ovlClose(); });
@@ -1914,7 +2030,7 @@ $("shotDel").onclick=function(ev){ ev.stopPropagation(); ev.preventDefault(); kv
   $("shotImg").hidden=true; $("shotImg").removeAttribute("src"); $("shotHint").hidden=false;
   $("shotHint").innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.2A1.2 1.2 0 0 1 4.2 7h2.3l1-1.7a1 1 0 0 1 .9-.5h7.2a1 1 0 0 1 .9.5l1 1.7h2.3A1.2 1.2 0 0 1 21 8.2v9.6a1.2 1.2 0 0 1-1.2 1.2H4.2A1.2 1.2 0 0 1 3 17.8z"/><circle cx="12" cy="12.6" r="3.3"/></svg><b>Foto setup</b>';
   $("shotDel").hidden=true; };
-function kClear(){ var o=$("kOut"); if(o) o.innerHTML=""; }
+function kClear(){ kvSave(); kVerify(); }
 
 function kTrade(){ return {id:"__k",dest:"LIVE",inst:kv.inst,instRaw:kv.inst,date:todayISO(),time:hhmm(),
   res:"",dir:"BUY",liq:kv.liq,setup:kv.setup,mss:kv.mss,re:false,news:"───",com:"",ctx:""}; }
@@ -1956,6 +2072,17 @@ function kVerify(){
     h+='<div class="kverd '+(vb<40?"no":(vb>=52?"ok":"mid"))+'">'+
       (vb<40?"Sub pragul de lucru de 40%.":(vb>=52?"Peste baza de 52%.":"Între 40% și 52%: se poate, dar nu e dintre cele bune."))+
       ' Cea mai sigură felie cu eșantion: '+vb+'% din '+best.n+'.</div>'; }
+  /* toate lichiditățile pe intervalul de acum — ca să vezi dintr-o privire unde stai */
+  var ls=LIQS.map(function(L){ var st=stat(pool.filter(function(x){ return x.liq===L && ivOf(x)===iv; }));
+      return {k:L,st:st}; }).filter(function(o){ return o.st.n>0; })
+    .sort(function(a,b){ return (b.st.wr||0)-(a.st.wr||0) || b.st.n-a.st.n; });
+  if(ls.length){
+    h+='<div class="dash">Toate lichiditățile în '+iv+'</div><div class="liqlist">';
+    ls.forEach(function(o){ var w=o.st.wr==null?"–":Math.round(100*o.st.wr)+"%";
+      var c=(o.st.W+o.st.L)>=10 ? (o.st.wr<0.34?"bad":(o.st.wr>=0.52?"good":"mid")) : "thin";
+      h+='<div class="liqr'+(o.k===t.liq?" on":"")+'"><span class="lq">'+esc(o.k)+'</span>'+
+         '<span class="lw '+c+'">'+w+'</span><span class="ln">'+o.st.n+'</span></div>'; });
+    h+='</div>'; }
   h+='<p class="note">'+(useBT?("Backtest "+t.inst+" ("+pool.length+" tradeuri)"):("Live "+t.inst+" ("+pool.length+" tradeuri)"))+
      ', fără ★★★. Prag de lucru 40%, bază 52%.'+
      (useBT?'':' Sincronizează backtestul din Jurnal ca să ai eșantion mare.')+'</p>';
@@ -2075,22 +2202,22 @@ function tabNow(){ return document.body.dataset.tab||"acasa"; }
 function onTab(t){ if(tabNow()===t) return true; stale[t]=1; return false; }
 function renderAll(){
   kpis(); renderAccts(); update();
-  if(onTab("acasa")) renderHome();
+  if(onTab("acasa")){ renderHome(); renderNow(); }
   if(onTab("jurnal")){ renderJournal(); renderCells(); btStatus(); }
   if(onTab("calendar")){ renderCal(); renderDay(); }
   if(onTab("adauga")) renderQueue();
   if(onTab("setari")){ paintThemes(); paintFree(); newsPaint(); paintAccs(); mntPaint(); } }
 function flushTab(h){ if(!stale[h]) return; stale[h]=0;
-  if(h==="acasa") renderHome();
+  if(h==="acasa"){ renderHome(); renderNow(); }
   else if(h==="jurnal"){ renderJournal(); renderCells(); btStatus(); }
   else if(h==="calendar"){ renderCal(); renderDay(); }
   else if(h==="adauga") renderQueue();
   else if(h==="setari"){ paintThemes(); paintFree(); newsPaint(); paintAccs(); mntPaint(); } }
 
 /* ---------- boot ---------- */
-btRestore();
+btRestore(); kvLoad();
 showTab(); resetForm();
-kpis(); renderAccts(); update(); renderHome(); renderJournal(); renderCells(); renderCal(); renderDay(); renderQueue();
+kpis(); renderAccts(); update(); renderHome(); renderNow(); renderJournal(); renderCells(); renderCal(); renderDay(); renderQueue();
 paintThemes(); paintFree(); newsPaint(); paintAccs(); mntPaint(); btStatus();
 (async function(){
   var c=window.claude;
