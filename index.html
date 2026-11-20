@@ -554,175 +554,6 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
 .th[aria-pressed="true"] .sw{outline:2px solid var(--win);outline-offset:2px}
 
 
-/* ---------- liquid glass (stil iOS 26) ---------- */
-:root{
-  --lg-blur:blur(30px) saturate(190%) brightness(1.07);
-  --lg-nav:blur(34px) saturate(200%) brightness(1.1);
-  --lg-tint:linear-gradient(177deg,rgba(255,255,255,.09) 0%,rgba(255,255,255,.028) 46%,rgba(255,255,255,.058) 100%);
-  --lg-rim:linear-gradient(145deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.1) 26%,rgba(255,255,255,.02) 56%,rgba(255,255,255,.1) 76%,rgba(255,255,255,.34) 100%);
-  --lg-rim-s:linear-gradient(145deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.07) 34%,rgba(255,255,255,.02) 62%,rgba(255,255,255,.24) 100%);
-  --lg-in:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(255,255,255,.07),inset 0 14px 26px -22px rgba(255,255,255,.5);
-  --lg-sh:0 1px 2px rgba(0,0,0,.42),0 20px 46px -24px rgba(0,0,0,.95);
-  --lg-ease:cubic-bezier(.32,.72,0,1);
-}
-.glass,.card,.topbar{
-  background:var(--lg-tint),var(--surf);
-  border-color:transparent;
-  box-shadow:var(--lg-in),var(--lg-sh);
-  -webkit-backdrop-filter:var(--lg-blur);backdrop-filter:var(--lg-blur)}
-.glass::after,.card::after,.topbar::after,.ovl-card::after,.nav ul::before{content:"";position:absolute;inset:0;
-  border-radius:inherit;padding:1px;pointer-events:none;background:var(--lg-rim);z-index:0;
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude}
-.topbar{position:relative}
-.ovl-card{overflow:hidden;border-color:transparent;
-  background:var(--lg-tint),linear-gradient(180deg,rgba(11,16,23,.82),rgba(6,10,15,.9));
-  box-shadow:var(--lg-in),0 -1px 2px rgba(0,0,0,.5),0 -28px 70px -24px #000;
-  -webkit-backdrop-filter:var(--lg-blur);backdrop-filter:var(--lg-blur)}
-.ovl-bg{background:rgba(0,3,8,.58);-webkit-backdrop-filter:blur(26px) saturate(150%);backdrop-filter:blur(26px) saturate(150%)}
-.nav ul{background:var(--lg-tint),var(--nav-bg);border-color:transparent;position:relative;
-  box-shadow:var(--lg-in),0 1px 2px rgba(0,0,0,.45),0 24px 48px -20px rgba(0,0,0,.95);
-  -webkit-backdrop-filter:var(--lg-nav);backdrop-filter:var(--lg-nav)}
-.nav li,.nav a{position:relative;z-index:1}
-
-button{position:relative;background:var(--lg-tint),var(--ctl);border-color:transparent;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(255,255,255,.05),0 1px 2px rgba(0,0,0,.3);
-  transition:background-color .16s var(--lg-ease),transform .22s var(--lg-ease),
-             box-shadow .22s var(--lg-ease),opacity .12s var(--lg-ease)}
-button::after,.verifbar::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
-  pointer-events:none;background:var(--lg-rim-s);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude}
-button:hover{background:var(--lg-tint),var(--ctl-h)}
-button:active{transform:scale(.965);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 0 18px -6px rgba(255,255,255,.3),0 1px 2px rgba(0,0,0,.3)}
-.primary,.verifbar{box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 -2px 6px -3px rgba(0,0,0,.3),
-  0 1px 2px rgba(0,0,0,.3),0 14px 30px -18px rgba(88,184,175,.6)}
-.primary::after,.verifbar::after{background:linear-gradient(145deg,rgba(255,255,255,.75),rgba(255,255,255,.12) 40%,rgba(255,255,255,.04) 65%,rgba(255,255,255,.3))}
-.verifbar{position:relative;transition:transform .22s var(--lg-ease),box-shadow .22s var(--lg-ease)}
-.verifbar:active{transform:scale(.97)}
-.seg{background:rgba(0,0,0,.26);border-color:transparent;box-shadow:inset 0 1px 2px rgba(0,0,0,.45)}
-.seg button{background:transparent;box-shadow:none}
-.seg button::after{display:none}
-.seg button[aria-pressed="true"]{background:var(--lg-tint),var(--ctl-on);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 1px 3px rgba(0,0,0,.35)}
-.seg button[aria-pressed="true"]::after{display:block;background:var(--lg-rim-s)}
-.ovl-x,.sb-x{background:var(--lg-tint),rgba(255,255,255,.07);border-color:transparent;
-  -webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 8px -2px rgba(0,0,0,.6)}
-.tb-logo{box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 0 0 1px rgba(255,255,255,.12),0 4px 14px -6px rgba(88,184,175,.45)}
-button.tiny{background:transparent;box-shadow:none}
-button.tiny::after{background:linear-gradient(145deg,rgba(255,255,255,.3),rgba(255,255,255,.05) 50%,rgba(255,255,255,.14))}
-.card .list{backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
-.card .list::after{display:none}
-@supports not ((-webkit-mask-composite:xor) or (mask-composite:exclude)){
-  .glass::after,.card::after,.topbar::after,.ovl-card::after,.nav ul::before,button::after,.verifbar::after{
-    background:none;border:1px solid var(--edge);padding:0}
-}
-
-
-/* ---------- liquid glass v2: lentilă pe margine ---------- */
-:root{--lensw:15px;--lensw-s:10px}
-/* banda de lentilă: strânge, luminează și desaturează ce e sub margine, ca sticla groasă.
-   z-index:-1 => stă peste fundalul cardului, sub text. */
-.glass::before,.card::before,.topbar::before,.ovl-card::before,.nav ul::after{
-  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
-  left:auto;right:auto;top:auto;bottom:auto;inset:0;height:auto;background:none;
-  -webkit-mask:
-    linear-gradient(to right,#000,rgba(0,0,0,0) var(--lensw),rgba(0,0,0,0) calc(100% - var(--lensw)),#000),
-    linear-gradient(to bottom,#000,rgba(0,0,0,0) var(--lensw),rgba(0,0,0,0) calc(100% - var(--lensw)),#000);
-  mask:
-    linear-gradient(to right,#000,rgba(0,0,0,0) var(--lensw),rgba(0,0,0,0) calc(100% - var(--lensw)),#000),
-    linear-gradient(to bottom,#000,rgba(0,0,0,0) var(--lensw),rgba(0,0,0,0) calc(100% - var(--lensw)),#000);
-  -webkit-backdrop-filter:blur(5px) brightness(1.5) saturate(1.7) contrast(1.06);
-  backdrop-filter:blur(5px) brightness(1.5) saturate(1.7) contrast(1.06)}
-.topbar::before,.nav ul::after{--lensw:var(--lensw-s)}
-
-/* franjur cromatic pe contur */
-.glass::after,.card::after,.topbar::after,.ovl-card::after,.nav ul::before{
-  background:linear-gradient(142deg,rgba(214,240,255,.74) 0%,rgba(255,255,255,.1) 22%,
-    rgba(255,255,255,.02) 52%,rgba(255,226,210,.16) 74%,rgba(188,234,255,.48) 100%)}
-
-/* butoanele mari: aceeași lentilă, mai subțire */
-.primary::before,button.big::before,.verifbar::before{content:"";position:absolute;inset:0;
-  border-radius:inherit;pointer-events:none;z-index:-1;
-  -webkit-mask:
-    linear-gradient(to right,#000,rgba(0,0,0,0) 9px,rgba(0,0,0,0) calc(100% - 9px),#000),
-    linear-gradient(to bottom,#000,rgba(0,0,0,0) 7px,rgba(0,0,0,0) calc(100% - 7px),#000);
-  mask:
-    linear-gradient(to right,#000,rgba(0,0,0,0) 9px,rgba(0,0,0,0) calc(100% - 9px),#000),
-    linear-gradient(to bottom,#000,rgba(0,0,0,0) 7px,rgba(0,0,0,0) calc(100% - 7px),#000);
-  -webkit-backdrop-filter:blur(3px) brightness(1.35) saturate(1.45);
-  backdrop-filter:blur(3px) brightness(1.35) saturate(1.45)}
-
-/* apăsare gelatinoasă */
-button:active,.verifbar:active{transform:scale(.955);filter:brightness(1.12) saturate(1.08)}
-.card,.topbar,.nav ul,.ovl-card,.verifbar{transform:translateZ(0)}
-
-
-/* ---------- liquid glass v3: reglaje într-un singur loc ---------- */
-:root{
-  --g-blur:20px;            /* intensitatea blurului */
-  --g-sat:160%;             /* saturația din spatele sticlei */
-  --g-op:.12;               /* transparența suprafeței */
-  --g-op-2:.07;             /* transparența comenzilor */
-  --g-edge:rgba(255,255,255,.28);   /* bordura de sticlă */
-  --g-spec:rgba(255,255,255,.42);   /* luciul de sus */
-  --g-lens:16px;            /* lățimea benzii de refracție */
-  --g-sh:0 1px 2px rgba(0,0,0,.35),0 10px 24px -14px rgba(0,0,0,.8),0 28px 60px -30px rgba(0,0,0,.9);
-}
-/* fundalul trebuie să aibă ce refracta, altfel sticla arată a plastic gri */
-.aura i{display:block}
-.aura{opacity:.6;
-  background:
-    radial-gradient(1000px 520px at 12% -10%,var(--c1),transparent 60%),
-    radial-gradient(780px 460px at 98% 4%,var(--c2),transparent 60%),
-    radial-gradient(620px 380px at 92% 46%,var(--c4),transparent 66%),
-    radial-gradient(640px 380px at 4% 82%,var(--c2),transparent 66%),
-    radial-gradient(520px 320px at 70% 96%,var(--c1),transparent 68%)}
-
-.glass,.card,.topbar{
-  background:linear-gradient(177deg,rgba(255,255,255,calc(var(--g-op) + .03)),rgba(255,255,255,var(--g-op)));
-  border:1px solid transparent;box-shadow:inset 0 1px 0 var(--g-spec),inset 0 -1px 0 rgba(255,255,255,.07),var(--g-sh);
-  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
-  backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat))}
-.ovl-card{background:linear-gradient(177deg,rgba(255,255,255,.14),rgba(255,255,255,.09)),rgba(8,12,18,.42);
-  box-shadow:inset 0 1px 0 var(--g-spec),0 -1px 2px rgba(0,0,0,.4),0 -30px 70px -26px rgba(0,0,0,.9);
-  -webkit-backdrop-filter:blur(26px) saturate(var(--g-sat));backdrop-filter:blur(26px) saturate(var(--g-sat))}
-.ovl-bg{background:rgba(0,3,8,.42);-webkit-backdrop-filter:blur(18px) saturate(130%);backdrop-filter:blur(18px) saturate(130%)}
-.nav ul{background:linear-gradient(177deg,rgba(255,255,255,.15),rgba(255,255,255,.09)),rgba(10,16,24,.38);
-  box-shadow:inset 0 1px 0 var(--g-spec),0 1px 2px rgba(0,0,0,.4),0 22px 46px -22px rgba(0,0,0,.9);
-  -webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%)}
-
-/* bordura: lumină pe muchia de sus-stânga, stinsă jos-dreapta */
-.glass::after,.card::after,.topbar::after,.ovl-card::after,.nav ul::before{
-  background:linear-gradient(138deg,var(--g-edge) 0%,rgba(255,255,255,.14) 30%,
-    rgba(255,255,255,.04) 58%,rgba(255,255,255,.1) 80%,rgba(255,255,255,.2) 100%)}
-/* banda de refracție, mai discretă */
-.glass::before,.card::before,.topbar::before,.ovl-card::before,.nav ul::after{
-  --lensw:var(--g-lens);
-  -webkit-backdrop-filter:blur(3px) brightness(1.3) saturate(1.35);
-  backdrop-filter:blur(3px) brightness(1.3) saturate(1.35)}
-
-button{background:linear-gradient(177deg,rgba(255,255,255,calc(var(--g-op-2) + .04)),rgba(255,255,255,var(--g-op-2)));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(255,255,255,.05),0 1px 2px rgba(0,0,0,.25)}
-button:hover{background:linear-gradient(177deg,rgba(255,255,255,.16),rgba(255,255,255,.1))}
-.seg{background:rgba(0,0,0,.2)}
-.seg button[aria-pressed="true"]{background:linear-gradient(177deg,rgba(255,255,255,.18),rgba(255,255,255,.1))}
-
-/* titlu de fereastră: separator fin sub header */
-.ovl-h{padding-bottom:11px;border-bottom:1px solid rgba(255,255,255,.1)}
-
-/* fallback: fără backdrop-filter, suprafețele devin opace ca să rămână lizibile */
-@supports not ((backdrop-filter:blur(10px)) or (-webkit-backdrop-filter:blur(10px))){
-  .glass,.card,.topbar{background:#121A24}
-  .ovl-card{background:#0E151E} .nav ul{background:#101822} .ovl-bg{background:rgba(0,3,8,.9)}
-  .glass::before,.card::before,.topbar::before,.ovl-card::before,.nav ul::after{display:none}
-}
-
-
 /* ---------- Lumină: tema light, aceeași sticlă ---------- */
 html[data-theme="lumina"]{
   color-scheme:light;
@@ -732,9 +563,12 @@ html[data-theme="lumina"]{
   --blue:#1D6FD8;--violet:#6D4ADB;--teal:#17857C;
   --c1:rgba(23,133,124,.3);--c2:rgba(109,74,219,.22);
   --c3:rgba(14,159,110,.26);--c4:rgba(23,133,124,.2);
-  --g-op:.55;--g-op-2:.5;--g-sat:140%;
-  --g-edge:rgba(255,255,255,.95);--g-spec:rgba(255,255,255,.95);
-  --g-sh:0 1px 2px rgba(15,30,50,.1),0 10px 24px -14px rgba(15,30,50,.28),0 28px 60px -30px rgba(15,30,50,.3);
+  --surf:linear-gradient(180deg,rgba(255,255,255,.86),rgba(255,255,255,.7));
+  --surf-sh:inset 0 1px 0 rgba(255,255,255,.9),0 14px 34px -22px rgba(15,30,50,.4);
+  --spec:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent);
+  --inset:inset 0 1px 0 rgba(255,255,255,.8);
+  --ctl:rgba(255,255,255,.72);--ctl-h:rgba(255,255,255,.95);
+  --gl:rgba(23,133,124,.12);--gl2:rgba(23,133,124,.24);
   --edge:rgba(15,30,50,.12);--edge-hi:rgba(23,133,124,.45);
   --sep:rgba(15,30,50,.08);--sep2:rgba(15,30,50,.14);
   --ctl-in:rgba(15,30,50,.07);--ctl-in-f:rgba(15,30,50,.05);
@@ -747,16 +581,6 @@ html[data-theme="lumina"]{
 html[data-theme="lumina"] .ovl-card{background:linear-gradient(177deg,rgba(255,255,255,.7),rgba(255,255,255,.58)),rgba(238,242,247,.5)}
 html[data-theme="lumina"] .ovl-bg{background:rgba(120,135,155,.3)}
 html[data-theme="lumina"] .nav ul{background:linear-gradient(177deg,rgba(255,255,255,.72),rgba(255,255,255,.55)),rgba(255,255,255,.3)}
-html[data-theme="lumina"] .glass::after,html[data-theme="lumina"] .card::after,
-html[data-theme="lumina"] .topbar::after,html[data-theme="lumina"] .ovl-card::after,
-html[data-theme="lumina"] .nav ul::before{
-  background:linear-gradient(138deg,rgba(255,255,255,1) 0%,rgba(255,255,255,.5) 30%,
-    rgba(15,30,50,.07) 60%,rgba(255,255,255,.4) 82%,rgba(255,255,255,.85) 100%)}
-html[data-theme="lumina"] .glass::before,html[data-theme="lumina"] .card::before,
-html[data-theme="lumina"] .topbar::before,html[data-theme="lumina"] .ovl-card::before,
-html[data-theme="lumina"] .nav ul::after{
-  -webkit-backdrop-filter:blur(3px) brightness(1.1) saturate(1.3);
-  backdrop-filter:blur(3px) brightness(1.1) saturate(1.3)}
 html[data-theme="lumina"] button:not(.primary):not(.verifbar):not(.tb-logo):not(.seg button){background:linear-gradient(177deg,rgba(255,255,255,.75),rgba(255,255,255,.52));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 1px 2px rgba(15,30,50,.12)}
 html[data-theme="lumina"] button:not(.primary):not(.verifbar):not(.tb-logo):hover{background:linear-gradient(177deg,#fff,rgba(255,255,255,.7))}
@@ -1254,7 +1078,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="21.11.2026 01:20";   /* amprenta versiunii */
+var BUILD="21.11.2026 02:10";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
