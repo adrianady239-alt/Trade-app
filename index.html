@@ -1020,6 +1020,15 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
       </div>
       <div class="list" id="dayList"></div>
     </div>
+    <div class="card"><h2>Zile libere</h2>
+      <div class="row">
+        <div class="f"><label for="fFreeM">Luna</label><select id="fFreeM"></select></div>
+        <div class="f"><label for="fFreeD">Zilele</label><input id="fFreeD" inputmode="numeric" autocomplete="off" placeholder="13, 17, 19"></div>
+      </div>
+      <button type="button" class="ghost wide" id="btnFree" style="margin-top:10px">Salvează zilele</button>
+      <p class="msg" id="freeMsg" hidden></p>
+      <p class="note">Zilele în care tranzacționezi.</p>
+    </div>
   </section>
 
   <!-- SETARI -->
@@ -1041,15 +1050,6 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
       <div class="acchist" id="accHist" hidden></div>
     </div>
 
-    <div class="card"><h2>Zile libere</h2>
-      <div class="row">
-        <div class="f"><label for="fFreeM">Luna</label><select id="fFreeM"></select></div>
-        <div class="f"><label for="fFreeD">Zilele</label><input id="fFreeD" inputmode="numeric" autocomplete="off" placeholder="13, 17, 19"></div>
-      </div>
-      <button type="button" class="ghost wide" id="btnFree" style="margin-top:10px">Salvează zilele</button>
-      <p class="msg" id="freeMsg" hidden></p>
-      <p class="note">Zilele în care tranzacționezi.</p>
-    </div>
 
     <div class="card"><h2>Aspect</h2>
       <div class="avrow">
@@ -1073,12 +1073,6 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
       <p class="msg" id="shareMsg" hidden></p>
     </div>
 
-    <div class="card"><h2>Întreținere</h2>
-      <div class="status"><div><i id="mntDot"></i><span id="mntTxt">—</span></div></div>
-      <button type="button" class="ghost wide" id="btnPrune" style="margin-top:11px">Curăță coada și pozele vechi</button>
-      <p class="msg" id="mntMsg" hidden></p>
-      <p class="note">Șterge doar din aplicație. Sheets rămâne neatins.</p>
-    </div>
 
     <div class="card"><h2>Reguli</h2>
       <p class="note" style="margin:0;line-height:1.6">Max 2 tradeuri pe zi · stop după 2 pierderi · BE la 1.5R · DAX 10:15–18:00, luni/marți fără 10:15–12:00 · GBPUSD fără 16:15–16:45 · exclus DAX LIQ LOCALA+ și GBPUSD LOD+ · fără ★★★, NFP, CPI, FOMC.</p>
@@ -1260,7 +1254,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="21.11.2026 00:35";   /* amprenta versiunii */
+var BUILD="21.11.2026 01:20";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -2553,13 +2547,13 @@ function renderAll(){
   kpis(); renderAccts(); update();
   if(onTab("acasa")) renderHome();
   if(onTab("jurnal")){ renderJournal(); renderCells(); btStatus(); }
-  if(onTab("calendar")){ renderCal(); renderDay(); }
+  if(onTab("calendar")){ renderCal(); renderDay(); paintFree(); }
   if(onTab("adauga")) renderQueue();
   if(onTab("setari")){ paintThemes(); paintFree(); paintAccs(); mntPaint(); } }
 function flushTab(h){ if(!stale[h]) return; stale[h]=0;
   if(h==="acasa") renderHome();
   else if(h==="jurnal"){ renderJournal(); renderCells(); btStatus(); }
-  else if(h==="calendar"){ renderCal(); renderDay(); }
+  else if(h==="calendar"){ renderCal(); renderDay(); paintFree(); }
   else if(h==="adauga") renderQueue();
   else if(h==="setari"){ paintThemes(); paintFree(); paintAccs(); mntPaint(); } }
 
@@ -2567,7 +2561,12 @@ function flushTab(h){ if(!stale[h]) return; stale[h]=0;
 btRestore(); kvLoad();
 showTab(); resetForm();
 kpis(); renderAccts(); update(); renderHome(); renderJournal(); renderCells(); renderCal(); renderDay(); renderQueue();
-paintThemes(); paintFree(); newsPaint(); paintAccs(); mntPaint(); btStatus();
+paintThemes(); paintFree(); newsPaint(); paintAccs(); btStatus();
+setTimeout(function(){ try{
+  orphanShots().forEach(shotDrop);
+  var old=oldSynced().filter(function(t){ return (Date.now()-(t.createdAt||0))>90*864e5; });
+  if(old.length){ old.forEach(function(t){ store.del(t.id); }); renderAll(); }
+}catch(e){} },3000);
 (async function(){
   var c=window.claude;
   if(c && c.use){
