@@ -12,24 +12,24 @@
   --ink:#06090F;
   --t1:#EDF3FA;--t2:#9FB2C8;--t3:#75899F;--t4:#6E8099;
   --win:#2FE39A;--loss:#FF5E70;--flat:#7D8A9A;--warn:#FFC45C;
-  --blue:#4DA3FF;--violet:#A98CFF;--teal:#2FD8C8;
-  --edge:rgba(255,255,255,.1);--edge-hi:rgba(160,245,238,.42);
-  --gl:rgba(47,216,200,.16);--gl2:rgba(47,216,200,.34);
+  --blue:#4DA3FF;--violet:#A98CFF;--teal:#58B8AF;
+  --edge:rgba(255,255,255,.1);--edge-hi:rgba(150,210,205,.34);
+  --gl:rgba(88,184,175,.12);--gl2:rgba(88,184,175,.24);
   --sep:rgba(255,255,255,.055);--sep2:rgba(255,255,255,.1);
   --surf:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
   --surf-sh:inset 0 1px 0 rgba(255,255,255,.14),0 20px 50px -28px #000;
-  --spec:linear-gradient(90deg,transparent,rgba(190,250,245,.55),transparent);
+  --spec:linear-gradient(90deg,transparent,rgba(190,230,226,.3),transparent);
   --inset:inset 0 1px 0 rgba(255,255,255,.1);
-  --ctl:rgba(255,255,255,.055);--ctl-h:rgba(255,255,255,.1);--ctl-on:rgba(47,216,200,.16);
+  --ctl:rgba(255,255,255,.055);--ctl-h:rgba(255,255,255,.1);--ctl-on:rgba(88,184,175,.14);
   --ctl-in:rgba(0,0,0,.3);--ctl-in-f:rgba(0,0,0,.22);
   --nav-bg:rgba(10,16,24,.78);--day-bg:rgba(255,255,255,.04);
   --sk:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.11),rgba(255,255,255,.05));
-  --c1:rgba(47,216,200,.5);--c2:rgba(122,92,255,.45);--c3:rgba(47,227,154,.35);--c4:rgba(47,216,200,.28);
-  --aura-op:.85;--grain-op:.32;
+  --c1:rgba(70,150,145,.3);--c2:rgba(104,84,170,.26);--c3:rgba(47,227,154,.35);--c4:rgba(88,184,175,.28);
+  --aura-op:.75;--grain-op:.32;
   --font:"Inter",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;--font-num:var(--font);
-  --accent-grad:linear-gradient(180deg,#5BF0E2,#15B5A8);
-  --fs:15px;--hero-fs:64px;--pad:16px;--pad-hero:18px;--gap:11px;
-  --r-s:12px;--r-m:18px;--r-l:26px;--r-p:999px;
+  --accent-grad:linear-gradient(180deg,#6AC4BA,#2F8C85);
+  --fs:14.5px;--hero-fs:50px;--pad:14px;--pad-hero:15px;--gap:9px;
+  --r-s:11px;--r-m:15px;--r-l:20px;--r-p:999px;
   --blur:blur(22px) saturate(150%);
   --ease:cubic-bezier(.22,.61,.36,1);
   color-scheme:dark;
@@ -82,7 +82,7 @@ body{overflow-x:hidden;overscroll-behavior-y:none}
   backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur)}
 .glass::before,.card::before{content:"";position:absolute;top:0;left:14%;right:14%;height:1px;background:var(--spec)}
 .card{padding:var(--pad)}
-.card h2{margin:0 0 13px;font-size:15px;font-weight:600;letter-spacing:-.02em;
+.card h2{margin:0 0 11px;font-size:14.5px;font-weight:600;letter-spacing:-.02em;
   display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .lbl-cap{font-size:11px;font-weight:600;letter-spacing:.17em;color:var(--t3);text-transform:uppercase}
 
@@ -90,9 +90,9 @@ body{overflow-x:hidden;overscroll-behavior-y:none}
 .topbar{display:flex;align-items:center;gap:10px;padding:7px 8px 7px 7px;border-radius:var(--r-p);
   background:var(--surf);border:1px solid var(--edge);box-shadow:var(--inset)}
 .tb-logo{width:36px;height:36px;min-height:0;border-radius:50%;flex:none;display:grid;place-items:center;padding:0;
-  border:0;cursor:pointer;overflow:hidden;background:conic-gradient(from 210deg,#2FD8C8,#7A5CFF,#2FD8C8);
+  border:0;cursor:pointer;overflow:hidden;background:conic-gradient(from 210deg,#58B8AF,#6B5BA8,#58B8AF);
   color:#04131A;font-weight:800;font-size:13px;font-family:inherit;background-size:cover;background-position:center;
-  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 4px 16px -4px rgba(47,216,200,.6)}
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 4px 14px -6px rgba(88,184,175,.4)}
 .tb-logo.has{background-image:var(--av);box-shadow:0 0 14px rgba(120,205,255,.3),0 0 0 1px var(--edge-hi) inset}
 .tb-logo.has #tbInit{display:none}
 .avrow{display:flex;align-items:center;gap:13px}
@@ -114,9 +114,9 @@ body[data-tab="acasa"] h1#viewTitle{display:none}
 /* cardul zilei, cu muchie luminoasă */
 .hero{padding:var(--pad-hero);text-align:center;
   border-color:var(--edge-hi);
-  box-shadow:0 0 22px -4px rgba(90,195,255,.3),0 0 60px -20px rgba(90,195,255,.5) inset,var(--surf-sh)}
-.figure{position:relative;margin-top:9px;display:flex;align-items:baseline;justify-content:center;gap:10px}
-.figure .glow{position:absolute;left:50%;top:-10px;width:230px;height:96px;transform:translateX(-50%);
+  box-shadow:0 0 18px -6px rgba(88,184,175,.22),var(--surf-sh)}
+.figure{position:relative;margin-top:6px;display:flex;align-items:baseline;justify-content:center;gap:10px}
+.figure .glow{position:absolute;left:50%;top:-8px;width:190px;height:76px;transform:translateX(-50%);
   border-radius:50%;background:radial-gradient(ellipse,rgba(47,227,154,.4),transparent 66%);filter:blur(26px)}
 .figure .r{position:relative;font-size:var(--hero-fs);line-height:.9;font-weight:700;letter-spacing:-.045em;
   color:var(--win);text-shadow:0 0 26px rgba(47,227,154,.55)}
@@ -124,7 +124,7 @@ body[data-tab="acasa"] h1#viewTitle{display:none}
 .figure.flat .r{color:var(--t1);text-shadow:0 0 22px rgba(190,220,255,.3)}
 .figure.neg .glow{background:radial-gradient(ellipse,rgba(255,77,94,.36),transparent 66%)}
 .figure.flat .glow{background:radial-gradient(ellipse,rgba(160,200,255,.2),transparent 66%)}
-.hpill{display:inline-flex;align-items:center;gap:7px;margin-top:11px;padding:5px 14px;border-radius:var(--r-p);
+.hpill{display:inline-flex;align-items:center;gap:7px;margin-top:9px;padding:4px 12px;border-radius:var(--r-p);
   font-size:12.5px;font-weight:600;color:var(--win);background:rgba(47,227,154,.12);
   border:1px solid rgba(47,227,154,.3)}
 .figure.neg ~ .hpill{color:var(--loss);background:rgba(255,77,94,.12);border-color:rgba(255,77,94,.3)}
@@ -133,15 +133,15 @@ body[data-tab="acasa"] h1#viewTitle{display:none}
 
 /* banda sesiunii */
 .band{margin-top:15px}
-.band .track{position:relative;height:34px;border-radius:12px;overflow:hidden;
+.band .track{position:relative;height:26px;border-radius:12px;overflow:hidden;
   background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06)}
 .band .segs{position:absolute;inset:0;display:flex}
 .band .segs i{flex:1;border-right:1px solid rgba(255,255,255,.05)}
 .band .segs i:last-child{border-right:0}
-.band .segs i.lon{background:linear-gradient(180deg,rgba(47,216,200,.17),transparent)}
-.band .segs i.ny{background:linear-gradient(180deg,rgba(122,92,255,.2),transparent)}
+.band .segs i.lon{background:linear-gradient(180deg,rgba(88,184,175,.13),transparent)}
+.band .segs i.ny{background:linear-gradient(180deg,rgba(122,92,255,.14),transparent)}
 .band .segs i.dead{background:repeating-linear-gradient(45deg,rgba(255,255,255,.055) 0 5px,transparent 5px 10px)}
-.lgx{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:var(--t3)}
+.lgx{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--t3)}
 .band .closed{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,rgba(0,0,0,.5) 0 5px,transparent 5px 10px)}
 .band .mk{position:absolute;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;border:2px solid #02070D}
 .band .mk.W{background:var(--win);box-shadow:0 0 15px rgba(47,227,154,.95)}
@@ -155,8 +155,8 @@ body[data-tab="acasa"] h1#viewTitle{display:none}
 .band .lg span:first-child{transform:none;left:0}
 .band .lg span:last-child{transform:none;right:0;left:auto}
 
-.state{display:flex;align-items:center;gap:11px;margin-top:14px;padding-top:13px;border-top:1px solid var(--sep2);text-align:left}
-.state .txt{font-size:14.5px;font-weight:650}
+.state{display:flex;align-items:center;gap:10px;margin-top:11px;padding-top:10px;border-top:1px solid var(--sep2);text-align:left}
+.state .txt{font-size:13.5px;font-weight:650}
 .state .sub{font-size:11.5px;color:var(--t3);font-weight:450;margin-top:3px;line-height:1.4}
 .caps{display:flex;gap:6px;flex:none}
 .caps i{width:14px;height:28px;border-radius:7px;display:block;background:var(--ctl);border:1px solid var(--gl2)}
@@ -173,17 +173,17 @@ body[data-tab="acasa"] h1#viewTitle{display:none}
 .accd.none{text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:104px;gap:5px}
 .accd.none b{font-size:13px;color:var(--t2);font-weight:600}
 .accd.none span{font-size:11px;color:var(--t3)}
-.accd{padding:15px 15px 13px;display:block;border-radius:var(--r-m)}
+.accd{padding:12px 13px 11px;display:block;border-radius:var(--r-m)}
 .accd .an{font-size:11px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.accd .av{font-size:29px;font-weight:730;letter-spacing:-.04em;margin:8px 0 11px;line-height:1}
+.accd .av{font-size:25px;font-weight:730;letter-spacing:-.04em;margin:6px 0 9px;line-height:1}
 .accd .ring{position:relative;height:4px;width:auto;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
 .accd .ring i{position:absolute;inset:0 auto 0 0;border-radius:99px;display:block}
-.accd .at{font-size:11px;color:var(--t3);margin-top:8px}
+.accd .at{font-size:11px;color:var(--t3);margin-top:7px}
 .accs[data-n="1"]{grid-template-columns:1fr}
 .accs[data-n="3"]{grid-template-columns:1fr 1fr 1fr;gap:7px}
 
 /* cardul lunii */
-.month{padding:15px var(--pad) 13px}
+.month{padding:12px var(--pad) 11px}
 .mhd{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .mt{font-size:14px;font-weight:600;letter-spacing:-.02em}
 .mv{font-size:20px;font-weight:700;letter-spacing:-.03em}
@@ -261,8 +261,8 @@ a,.nav a,label,.seg,.tbl-wrap{-webkit-tap-highlight-color:transparent}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
     transition-duration:.01ms!important;scroll-behavior:auto!important} }
-.primary{background:var(--accent-grad);color:#02211E;border-color:transparent;font-weight:730;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 12px 30px -12px rgba(47,216,200,.85)}
+.primary{background:var(--accent-grad);color:#06201D;border-color:transparent;font-weight:730;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 10px 24px -14px rgba(88,184,175,.5)}
 .primary:disabled{opacity:.4;cursor:not-allowed}
 .danger{color:var(--loss)}
 .wide{width:100%;min-height:50px;font-size:15.5px;border-radius:var(--r-m)}
@@ -295,10 +295,10 @@ form{display:flex;flex-direction:column;gap:15px}
   border-color:var(--gl2);box-shadow:var(--inset)}
 .seg.big button{min-height:46px;font-size:15px}
 /* iconița Foto de pe Acasă */
-.verifbar{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;min-height:58px;
-  padding:0 18px;border-radius:19px;border:0;cursor:pointer;position:relative;overflow:hidden;
-  background:var(--accent-grad);color:#02211E;font:inherit;font-size:16.5px;font-weight:750;
-  letter-spacing:-.015em;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 14px 34px -14px rgba(47,216,200,.85);
+.verifbar{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:50px;
+  padding:0 16px;border-radius:15px;border:0;cursor:pointer;position:relative;overflow:hidden;
+  background:var(--accent-grad);color:#06201D;font:inherit;font-size:15.5px;font-weight:750;
+  letter-spacing:-.015em;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 12px 26px -16px rgba(88,184,175,.5);
   transition:transform .14s var(--ease)}
 .verifbar:active{transform:scale(.985)}
 .vb-i{display:grid;place-items:center;width:24px;height:24px;flex:none}
@@ -337,6 +337,19 @@ form{display:flex;flex-direction:column;gap:15px}
   cursor:pointer;display:grid;place-items:center;line-height:1;box-shadow:none;
   background:rgba(0,6,14,.74);border:1px solid var(--edge);color:var(--t1);font-size:13px;backdrop-filter:blur(8px)}
 button.primary.big{min-height:54px;font-size:16px;letter-spacing:-.01em}
+.econlist{display:flex;flex-direction:column;gap:1px;margin-top:10px}
+.econr{display:grid;grid-template-columns:22px 46px minmax(0,1fr) 34px 46px;gap:8px;align-items:center;
+  padding:8px 2px;font-size:12px;cursor:pointer;border-top:1px solid var(--sep)}
+.econr input{width:19px;height:19px;min-height:0;padding:0;border:0;background:transparent;
+  accent-color:var(--teal);box-shadow:none}
+.econr .eh{font-weight:650;color:var(--t1)}
+.econr .et{color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.econr .ec{font-size:11px;color:var(--t3);text-align:right}
+.econr .ei{font-size:10px;font-weight:700;text-align:right;color:var(--t3);letter-spacing:.02em}
+.econr .ei.ftmo{color:var(--loss)} .econr .ei.ifr{color:var(--warn)}
+.newsblk{border:1px solid var(--edge);border-radius:var(--r-m);padding:12px;background:var(--ctl);margin:0 0 13px}
+.newsblk[data-on="1"]{border-color:var(--edge-hi)}
+.nbh{font-size:12.5px;font-weight:650;margin-bottom:10px;letter-spacing:-.01em}
 .liqlist{display:flex;flex-direction:column;gap:1px;border-radius:var(--r-m);overflow:hidden;border:1px solid var(--edge)}
 .liqr{display:grid;grid-template-columns:minmax(0,1fr) 52px 34px;align-items:center;gap:8px;
   padding:9px 13px;background:var(--ctl-in);font-size:12.5px}
@@ -507,11 +520,11 @@ button.tiny.danger{color:var(--loss)}
 .nav a svg{width:20px;height:20px}
 .nav a[aria-current="page"]{color:var(--teal)}
 .nav a[aria-current="page"]::after{content:"";position:absolute;bottom:-1px;width:16px;height:2.5px;border-radius:2px;
-  background:var(--teal);box-shadow:0 0 10px rgba(47,216,200,.9)}
+  background:var(--teal);box-shadow:0 0 8px rgba(88,184,175,.55)}
 .nav a.add[aria-current="page"]::after{display:none}
 .nav a.add .plus{width:46px;height:46px;margin-top:-18px;border-radius:50%;display:grid;place-items:center;
-  background:var(--accent-grad);color:#02211E;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 0 22px rgba(47,216,200,.45),0 10px 26px -8px rgba(47,216,200,.8)}
+  background:var(--accent-grad);color:#06201D;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 0 16px rgba(88,184,175,.28),0 8px 20px -8px rgba(88,184,175,.5)}
 .nav a.add .plus svg{width:22px;height:22px}
 
 .nav .badge{position:absolute;top:-16px;right:calc(50% - 30px);min-width:17px;width:auto;height:auto;padding:1px 5px;
@@ -539,6 +552,298 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
 .th .sw{width:40px;height:40px;border-radius:50%;border:1px solid var(--gl2);box-shadow:0 0 14px -3px rgba(0,0,0,.9)}
 .th[aria-pressed="true"]{background:var(--ctl-on);color:var(--t1)}
 .th[aria-pressed="true"] .sw{outline:2px solid var(--win);outline-offset:2px}
+
+
+/* ---------- liquid glass (stil iOS 26) ---------- */
+:root{
+  --lg-blur:blur(30px) saturate(190%) brightness(1.07);
+  --lg-nav:blur(34px) saturate(200%) brightness(1.1);
+  --lg-tint:linear-gradient(177deg,rgba(255,255,255,.09) 0%,rgba(255,255,255,.028) 46%,rgba(255,255,255,.058) 100%);
+  --lg-rim:linear-gradient(145deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.1) 26%,rgba(255,255,255,.02) 56%,rgba(255,255,255,.1) 76%,rgba(255,255,255,.34) 100%);
+  --lg-rim-s:linear-gradient(145deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.07) 34%,rgba(255,255,255,.02) 62%,rgba(255,255,255,.24) 100%);
+  --lg-in:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(255,255,255,.07),inset 0 14px 26px -22px rgba(255,255,255,.5);
+  --lg-sh:0 1px 2px rgba(0,0,0,.42),0 20px 46px -24px rgba(0,0,0,.95);
+  --lg-ease:cubic-bezier(.32,.72,0,1);
+}
+.glass,.card,.topbar{
+  background:var(--lg-tint),var(--surf);
+  border-color:transparent;
+  box-shadow:var(--lg-in),var(--lg-sh);
+  -webkit-backdrop-filter:var(--lg-blur);backdrop-filter:var(--lg-blur)}
+.glass::after,.card::after,.topbar::after,.ovl-card::after,.nav ul::before{content:"";position:absolute;inset:0;
+  border-radius:inherit;padding:1px;pointer-events:none;background:var(--lg-rim);z-index:0;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude}
+.topbar{position:relative}
+.ovl-card{overflow:hidden;border-color:transparent;
+  background:var(--lg-tint),linear-gradient(180deg,rgba(11,16,23,.82),rgba(6,10,15,.9));
+  box-shadow:var(--lg-in),0 -1px 2px rgba(0,0,0,.5),0 -28px 70px -24px #000;
+  -webkit-backdrop-filter:var(--lg-blur);backdrop-filter:var(--lg-blur)}
+.ovl-bg{background:rgba(0,3,8,.58);-webkit-backdrop-filter:blur(26px) saturate(150%);backdrop-filter:blur(26px) saturate(150%)}
+.nav ul{background:var(--lg-tint),var(--nav-bg);border-color:transparent;position:relative;
+  box-shadow:var(--lg-in),0 1px 2px rgba(0,0,0,.45),0 24px 48px -20px rgba(0,0,0,.95);
+  -webkit-backdrop-filter:var(--lg-nav);backdrop-filter:var(--lg-nav)}
+.nav li,.nav a{position:relative;z-index:1}
+
+button{position:relative;background:var(--lg-tint),var(--ctl);border-color:transparent;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(255,255,255,.05),0 1px 2px rgba(0,0,0,.3);
+  transition:background-color .16s var(--lg-ease),transform .22s var(--lg-ease),
+             box-shadow .22s var(--lg-ease),opacity .12s var(--lg-ease)}
+button::after,.verifbar::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
+  pointer-events:none;background:var(--lg-rim-s);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude}
+button:hover{background:var(--lg-tint),var(--ctl-h)}
+button:active{transform:scale(.965);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 0 18px -6px rgba(255,255,255,.3),0 1px 2px rgba(0,0,0,.3)}
+.primary,.verifbar{box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 -2px 6px -3px rgba(0,0,0,.3),
+  0 1px 2px rgba(0,0,0,.3),0 14px 30px -18px rgba(88,184,175,.6)}
+.primary::after,.verifbar::after{background:linear-gradient(145deg,rgba(255,255,255,.75),rgba(255,255,255,.12) 40%,rgba(255,255,255,.04) 65%,rgba(255,255,255,.3))}
+.verifbar{position:relative;transition:transform .22s var(--lg-ease),box-shadow .22s var(--lg-ease)}
+.verifbar:active{transform:scale(.97)}
+.seg{background:rgba(0,0,0,.26);border-color:transparent;box-shadow:inset 0 1px 2px rgba(0,0,0,.45)}
+.seg button{background:transparent;box-shadow:none}
+.seg button::after{display:none}
+.seg button[aria-pressed="true"]{background:var(--lg-tint),var(--ctl-on);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 1px 3px rgba(0,0,0,.35)}
+.seg button[aria-pressed="true"]::after{display:block;background:var(--lg-rim-s)}
+.ovl-x,.sb-x{background:var(--lg-tint),rgba(255,255,255,.07);border-color:transparent;
+  -webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 8px -2px rgba(0,0,0,.6)}
+.tb-logo{box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 0 0 1px rgba(255,255,255,.12),0 4px 14px -6px rgba(88,184,175,.45)}
+button.tiny{background:transparent;box-shadow:none}
+button.tiny::after{background:linear-gradient(145deg,rgba(255,255,255,.3),rgba(255,255,255,.05) 50%,rgba(255,255,255,.14))}
+.card .list{backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
+.card .list::after{display:none}
+@supports not ((-webkit-mask-composite:xor) or (mask-composite:exclude)){
+  .glass::after,.card::after,.topbar::after,.ovl-card::after,.nav ul::before,button::after,.verifbar::after{
+    background:none;border:1px solid var(--edge);padding:0}
+}
+
+
+/* ---------- liquid glass v2: lentilă pe margine ---------- */
+:root{--lensw:15px;--lensw-s:10px}
+/* banda de lentilă: strânge, luminează și desaturează ce e sub margine, ca sticla groasă.
+   z-index:-1 => stă peste fundalul cardului, sub text. */
+.glass::before,.card::before,.topbar::before,.ovl-card::before,.nav ul::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+  left:auto;right:auto;top:auto;bottom:auto;inset:0;height:auto;background:none;
+  -webkit-mask:
+    linear-gradient(to right,#000,rgba(0,0,0,0) var(--lensw),rgba(0,0,0,0) calc(100% - var(--lensw)),#000),
+    linear-gradient(to bottom,#000,rgba(0,0,0,0) var(--lensw),rgba(0,0,0,0) calc(100% - var(--lensw)),#000);
+  mask:
+    linear-gradient(to right,#000,rgba(0,0,0,0) var(--lensw),rgba(0,0,0,0) calc(100% - var(--lensw)),#000),
+    linear-gradient(to bottom,#000,rgba(0,0,0,0) var(--lensw),rgba(0,0,0,0) calc(100% - var(--lensw)),#000);
+  -webkit-backdrop-filter:blur(5px) brightness(1.5) saturate(1.7) contrast(1.06);
+  backdrop-filter:blur(5px) brightness(1.5) saturate(1.7) contrast(1.06)}
+.topbar::before,.nav ul::after{--lensw:var(--lensw-s)}
+
+/* franjur cromatic pe contur */
+.glass::after,.card::after,.topbar::after,.ovl-card::after,.nav ul::before{
+  background:linear-gradient(142deg,rgba(214,240,255,.74) 0%,rgba(255,255,255,.1) 22%,
+    rgba(255,255,255,.02) 52%,rgba(255,226,210,.16) 74%,rgba(188,234,255,.48) 100%)}
+
+/* butoanele mari: aceeași lentilă, mai subțire */
+.primary::before,button.big::before,.verifbar::before{content:"";position:absolute;inset:0;
+  border-radius:inherit;pointer-events:none;z-index:-1;
+  -webkit-mask:
+    linear-gradient(to right,#000,rgba(0,0,0,0) 9px,rgba(0,0,0,0) calc(100% - 9px),#000),
+    linear-gradient(to bottom,#000,rgba(0,0,0,0) 7px,rgba(0,0,0,0) calc(100% - 7px),#000);
+  mask:
+    linear-gradient(to right,#000,rgba(0,0,0,0) 9px,rgba(0,0,0,0) calc(100% - 9px),#000),
+    linear-gradient(to bottom,#000,rgba(0,0,0,0) 7px,rgba(0,0,0,0) calc(100% - 7px),#000);
+  -webkit-backdrop-filter:blur(3px) brightness(1.35) saturate(1.45);
+  backdrop-filter:blur(3px) brightness(1.35) saturate(1.45)}
+
+/* apăsare gelatinoasă */
+button:active,.verifbar:active{transform:scale(.955);filter:brightness(1.12) saturate(1.08)}
+.card,.topbar,.nav ul,.ovl-card,.verifbar{transform:translateZ(0)}
+
+
+/* ---------- liquid glass v3: reglaje într-un singur loc ---------- */
+:root{
+  --g-blur:20px;            /* intensitatea blurului */
+  --g-sat:160%;             /* saturația din spatele sticlei */
+  --g-op:.12;               /* transparența suprafeței */
+  --g-op-2:.07;             /* transparența comenzilor */
+  --g-edge:rgba(255,255,255,.28);   /* bordura de sticlă */
+  --g-spec:rgba(255,255,255,.42);   /* luciul de sus */
+  --g-lens:16px;            /* lățimea benzii de refracție */
+  --g-sh:0 1px 2px rgba(0,0,0,.35),0 10px 24px -14px rgba(0,0,0,.8),0 28px 60px -30px rgba(0,0,0,.9);
+}
+/* fundalul trebuie să aibă ce refracta, altfel sticla arată a plastic gri */
+.aura i{display:block}
+.aura{opacity:.6;
+  background:
+    radial-gradient(1000px 520px at 12% -10%,var(--c1),transparent 60%),
+    radial-gradient(780px 460px at 98% 4%,var(--c2),transparent 60%),
+    radial-gradient(620px 380px at 92% 46%,var(--c4),transparent 66%),
+    radial-gradient(640px 380px at 4% 82%,var(--c2),transparent 66%),
+    radial-gradient(520px 320px at 70% 96%,var(--c1),transparent 68%)}
+
+.glass,.card,.topbar{
+  background:linear-gradient(177deg,rgba(255,255,255,calc(var(--g-op) + .03)),rgba(255,255,255,var(--g-op)));
+  border:1px solid transparent;box-shadow:inset 0 1px 0 var(--g-spec),inset 0 -1px 0 rgba(255,255,255,.07),var(--g-sh);
+  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat))}
+.ovl-card{background:linear-gradient(177deg,rgba(255,255,255,.14),rgba(255,255,255,.09)),rgba(8,12,18,.42);
+  box-shadow:inset 0 1px 0 var(--g-spec),0 -1px 2px rgba(0,0,0,.4),0 -30px 70px -26px rgba(0,0,0,.9);
+  -webkit-backdrop-filter:blur(26px) saturate(var(--g-sat));backdrop-filter:blur(26px) saturate(var(--g-sat))}
+.ovl-bg{background:rgba(0,3,8,.42);-webkit-backdrop-filter:blur(18px) saturate(130%);backdrop-filter:blur(18px) saturate(130%)}
+.nav ul{background:linear-gradient(177deg,rgba(255,255,255,.15),rgba(255,255,255,.09)),rgba(10,16,24,.38);
+  box-shadow:inset 0 1px 0 var(--g-spec),0 1px 2px rgba(0,0,0,.4),0 22px 46px -22px rgba(0,0,0,.9);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%)}
+
+/* bordura: lumină pe muchia de sus-stânga, stinsă jos-dreapta */
+.glass::after,.card::after,.topbar::after,.ovl-card::after,.nav ul::before{
+  background:linear-gradient(138deg,var(--g-edge) 0%,rgba(255,255,255,.14) 30%,
+    rgba(255,255,255,.04) 58%,rgba(255,255,255,.1) 80%,rgba(255,255,255,.2) 100%)}
+/* banda de refracție, mai discretă */
+.glass::before,.card::before,.topbar::before,.ovl-card::before,.nav ul::after{
+  --lensw:var(--g-lens);
+  -webkit-backdrop-filter:blur(3px) brightness(1.3) saturate(1.35);
+  backdrop-filter:blur(3px) brightness(1.3) saturate(1.35)}
+
+button{background:linear-gradient(177deg,rgba(255,255,255,calc(var(--g-op-2) + .04)),rgba(255,255,255,var(--g-op-2)));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(255,255,255,.05),0 1px 2px rgba(0,0,0,.25)}
+button:hover{background:linear-gradient(177deg,rgba(255,255,255,.16),rgba(255,255,255,.1))}
+.seg{background:rgba(0,0,0,.2)}
+.seg button[aria-pressed="true"]{background:linear-gradient(177deg,rgba(255,255,255,.18),rgba(255,255,255,.1))}
+
+/* titlu de fereastră: separator fin sub header */
+.ovl-h{padding-bottom:11px;border-bottom:1px solid rgba(255,255,255,.1)}
+
+/* fallback: fără backdrop-filter, suprafețele devin opace ca să rămână lizibile */
+@supports not ((backdrop-filter:blur(10px)) or (-webkit-backdrop-filter:blur(10px))){
+  .glass,.card,.topbar{background:#121A24}
+  .ovl-card{background:#0E151E} .nav ul{background:#101822} .ovl-bg{background:rgba(0,3,8,.9)}
+  .glass::before,.card::before,.topbar::before,.ovl-card::before,.nav ul::after{display:none}
+}
+
+
+/* ---------- Lumină: tema light, aceeași sticlă ---------- */
+html[data-theme="lumina"]{
+  color-scheme:light;
+  --ink:#EEF2F7;
+  --t1:#0D1620;--t2:#415366;--t3:#5B6E82;--t4:#64778B;
+  --win:#0E9F6E;--loss:#D62B3C;--flat:#64748B;--warn:#B4701A;
+  --blue:#1D6FD8;--violet:#6D4ADB;--teal:#17857C;
+  --c1:rgba(23,133,124,.3);--c2:rgba(109,74,219,.22);
+  --c3:rgba(14,159,110,.26);--c4:rgba(23,133,124,.2);
+  --g-op:.55;--g-op-2:.5;--g-sat:140%;
+  --g-edge:rgba(255,255,255,.95);--g-spec:rgba(255,255,255,.95);
+  --g-sh:0 1px 2px rgba(15,30,50,.1),0 10px 24px -14px rgba(15,30,50,.28),0 28px 60px -30px rgba(15,30,50,.3);
+  --edge:rgba(15,30,50,.12);--edge-hi:rgba(23,133,124,.45);
+  --sep:rgba(15,30,50,.08);--sep2:rgba(15,30,50,.14);
+  --ctl-in:rgba(15,30,50,.07);--ctl-in-f:rgba(15,30,50,.05);
+  --ctl-on:rgba(23,133,124,.18);
+  --nav-bg:rgba(255,255,255,.5);--day-bg:rgba(15,30,50,.05);
+  --sk:linear-gradient(90deg,rgba(15,30,50,.06),rgba(15,30,50,.12),rgba(15,30,50,.06));
+  --accent-grad:linear-gradient(180deg,#1FA096,#13736C);
+  --grain-op:.1;--aura-op:.75;
+}
+html[data-theme="lumina"] .ovl-card{background:linear-gradient(177deg,rgba(255,255,255,.7),rgba(255,255,255,.58)),rgba(238,242,247,.5)}
+html[data-theme="lumina"] .ovl-bg{background:rgba(120,135,155,.3)}
+html[data-theme="lumina"] .nav ul{background:linear-gradient(177deg,rgba(255,255,255,.72),rgba(255,255,255,.55)),rgba(255,255,255,.3)}
+html[data-theme="lumina"] .glass::after,html[data-theme="lumina"] .card::after,
+html[data-theme="lumina"] .topbar::after,html[data-theme="lumina"] .ovl-card::after,
+html[data-theme="lumina"] .nav ul::before{
+  background:linear-gradient(138deg,rgba(255,255,255,1) 0%,rgba(255,255,255,.5) 30%,
+    rgba(15,30,50,.07) 60%,rgba(255,255,255,.4) 82%,rgba(255,255,255,.85) 100%)}
+html[data-theme="lumina"] .glass::before,html[data-theme="lumina"] .card::before,
+html[data-theme="lumina"] .topbar::before,html[data-theme="lumina"] .ovl-card::before,
+html[data-theme="lumina"] .nav ul::after{
+  -webkit-backdrop-filter:blur(3px) brightness(1.1) saturate(1.3);
+  backdrop-filter:blur(3px) brightness(1.1) saturate(1.3)}
+html[data-theme="lumina"] button:not(.primary):not(.verifbar):not(.tb-logo):not(.seg button){background:linear-gradient(177deg,rgba(255,255,255,.75),rgba(255,255,255,.52));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 1px 2px rgba(15,30,50,.12)}
+html[data-theme="lumina"] button:not(.primary):not(.verifbar):not(.tb-logo):hover{background:linear-gradient(177deg,#fff,rgba(255,255,255,.7))}
+html[data-theme="lumina"] .primary,html[data-theme="lumina"] .verifbar{background:var(--accent-grad);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 1px 2px rgba(15,30,50,.2),0 12px 26px -16px rgba(23,133,124,.6)}
+html[data-theme="lumina"] .tb-logo{background:conic-gradient(from 210deg,#17857C,#6D4ADB,#17857C);color:#F2FBFA}
+html[data-theme="lumina"] .seg{background:rgba(15,30,50,.07)}
+html[data-theme="lumina"] .seg button[aria-pressed="true"]{background:rgba(255,255,255,.9)}
+html[data-theme="lumina"] .primary,html[data-theme="lumina"] .verifbar{color:#F2FBFA}
+html[data-theme="lumina"] .band{background:rgba(15,30,50,.07)}
+html[data-theme="lumina"] .band .segs i{border-right-color:rgba(15,30,50,.07)}
+html[data-theme="lumina"] .band .segs i.dead{background:repeating-linear-gradient(45deg,rgba(15,30,50,.1) 0 5px,transparent 5px 10px)}
+html[data-theme="lumina"] .ovl-h{border-bottom-color:rgba(15,30,50,.1)}
+html[data-theme="lumina"] .ovl-x,html[data-theme="lumina"] .sb-x{background:rgba(255,255,255,.75);color:var(--t2)}
+
+
+/* ---------- Terminal: plat, mono, linii subțiri ---------- */
+html[data-theme="terminal"]{
+  --ink:#000000;
+  --t1:#F2F4F6;--t2:#9AA3AC;--t3:#747D85;--t4:#747D85;
+  --win:#3DDC72;--loss:#FF5247;--flat:#7D8A9A;--warn:#E8D44D;
+  --blue:#5AA9FF;--violet:#B07CFF;--teal:#C9EC3A;
+  --accent-grad:linear-gradient(180deg,#D6F03E,#A9C215);
+  --c1:rgba(0,0,0,0);--c2:rgba(0,0,0,0);--c3:rgba(0,0,0,0);--c4:rgba(0,0,0,0);
+  --aura-op:0;--grain-op:0;
+  --r-s:0px;--r-m:0px;--r-l:0px;--r-p:0px;
+  --edge:rgba(255,255,255,.12);--edge-hi:rgba(201,236,58,.5);
+  --sep:rgba(255,255,255,.08);--sep2:rgba(255,255,255,.12);
+  --ctl-in:rgba(255,255,255,.04);--ctl-on:rgba(201,236,58,.16);
+  --nav-bg:#000;--day-bg:rgba(255,255,255,.04);
+  --font-num:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --pad:15px;--gap:0px}
+html[data-theme="terminal"] .glass,html[data-theme="terminal"] .card,
+html[data-theme="terminal"] .topbar,html[data-theme="terminal"] .nav ul,
+html[data-theme="terminal"] .ovl-card{
+  background:#0A0A0A;border:0;border-top:1px solid rgba(255,255,255,.1);
+  border-bottom:1px solid rgba(255,255,255,.1);box-shadow:none;
+  -webkit-backdrop-filter:none;backdrop-filter:none}
+html[data-theme="terminal"] .ovl-bg{background:rgba(0,0,0,.84);-webkit-backdrop-filter:none;backdrop-filter:none}
+html[data-theme="terminal"] .glass::before,html[data-theme="terminal"] .card::before,
+html[data-theme="terminal"] .topbar::before,html[data-theme="terminal"] .ovl-card::before,
+html[data-theme="terminal"] .nav ul::after,html[data-theme="terminal"] .glass::after,
+html[data-theme="terminal"] .card::after,html[data-theme="terminal"] .topbar::after,
+html[data-theme="terminal"] .ovl-card::after,html[data-theme="terminal"] .nav ul::before,
+html[data-theme="terminal"] button::after,html[data-theme="terminal"] .verifbar::after{display:none}
+html[data-theme="terminal"] .verifbar,html[data-theme="terminal"] .nav ul,html[data-theme="terminal"] .topbar{border-radius:0}
+html[data-theme="terminal"] .nav{padding:0 0 env(safe-area-inset-bottom,0px)}
+html[data-theme="terminal"] .nav ul{max-width:none;border-bottom:0}
+html[data-theme="terminal"] .tb-logo{background:linear-gradient(180deg,#D6F03E,#A9C215);color:#141A02;border-radius:0}
+html[data-theme="terminal"] button:not(.primary):not(.verifbar):not(.tb-logo){background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);box-shadow:none}
+html[data-theme="terminal"] .lbl-cap,html[data-theme="terminal"] .hint,
+html[data-theme="terminal"] .note{font-family:var(--font-num)}
+html[data-theme="terminal"] .primary,html[data-theme="terminal"] .verifbar{color:#141A02;box-shadow:none}
+
+/* ---------- Editorial: fără cutii, tipografie mare ---------- */
+html[data-theme="editorial"]{
+  --ink:#000000;
+  --t1:#FFFFFF;--t2:#A6ADB4;--t3:#787F86;--t4:#787F86;
+  --win:#2FD968;--loss:#FF5247;--flat:#7D8A9A;--warn:#F2C14E;
+  --blue:#5AA9FF;--violet:#B07CFF;--teal:#2FD968;
+  --accent-grad:linear-gradient(180deg,#2FD968,#149B45);
+  --c1:rgba(0,0,0,0);--c2:rgba(0,0,0,0);--c3:rgba(0,0,0,0);--c4:rgba(0,0,0,0);
+  --aura-op:0;--grain-op:0;
+  --r-s:10px;--r-m:12px;--r-l:0px;--r-p:999px;
+  --hero-fs:74px;--fs:15px;--pad:0px;--gap:12px;
+  --edge:rgba(255,255,255,.14);--sep:rgba(255,255,255,.1);--sep2:rgba(255,255,255,.16);
+  --nav-bg:rgba(0,0,0,.82);--ctl-in:rgba(255,255,255,.05)}
+html[data-theme="editorial"] .glass,html[data-theme="editorial"] .card,
+html[data-theme="editorial"] .topbar,html[data-theme="editorial"] .ovl-card{
+  background:transparent;border:0;border-bottom:1px solid rgba(255,255,255,.1);
+  box-shadow:none;padding:4px 0 20px;-webkit-backdrop-filter:none;backdrop-filter:none}
+html[data-theme="editorial"] .ovl-card{background:#000;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));border:0}
+html[data-theme="editorial"] .ovl-bg{background:rgba(0,0,0,.8);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+html[data-theme="editorial"] .nav ul{background:rgba(0,0,0,.86);border:0;border-top:1px solid rgba(255,255,255,.1);
+  box-shadow:none;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+html[data-theme="editorial"] .glass::before,html[data-theme="editorial"] .card::before,
+html[data-theme="editorial"] .topbar::before,html[data-theme="editorial"] .ovl-card::before,
+html[data-theme="editorial"] .nav ul::after,html[data-theme="editorial"] .glass::after,
+html[data-theme="editorial"] .card::after,html[data-theme="editorial"] .topbar::after,
+html[data-theme="editorial"] .ovl-card::after,html[data-theme="editorial"] .nav ul::before{display:none}
+html[data-theme="editorial"] .card h2{font-size:13px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--t3)}
+html[data-theme="editorial"] .topbar{border-radius:0;border-bottom:0;padding:2px 0 10px}
+html[data-theme="editorial"] .tb-logo{background:conic-gradient(from 210deg,#2FD968,#149B45,#2FD968);color:#03200F}
+html[data-theme="editorial"] button:not(.primary):not(.verifbar):not(.tb-logo){background:rgba(255,255,255,.07);box-shadow:none}
+html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{color:#03200F;box-shadow:none}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 </style>
@@ -701,6 +1006,18 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
     </div>
     <div class="card daypanel" id="dayPanel">
       <h3 id="dayTitle">Alege o zi</h3>
+      <div class="newsblk" id="newsBlk" hidden>
+        <div class="nbh">Știri economice</div>
+        <div class="row">
+          <div class="f"><label for="kNewsT">Ore (ora României)</label><input id="kNewsT" inputmode="numeric" autocomplete="off" placeholder="15:30, 17:00"></div>
+          <div class="f"><label for="kNewsN">Care</label><input id="kNewsN" autocomplete="off" placeholder="CPI, NFP…"></div>
+        </div>
+        <div class="seg" id="kNewsS" role="group" aria-label="Impact" style="margin-top:9px"></div>
+        <button type="button" class="ghost wide" id="btnEcon" style="margin-top:10px">Adu știrile zilei</button>
+        <p class="msg" id="econMsg" hidden></p>
+        <div class="econlist" id="econList"></div>
+        <p class="note" style="margin-top:9px"><b>FTMO</b> (roșu): ±2 min fără ordine, SL, TP sau modificări. <b>IF</b>: dacă ești în poziție, risc max 0.5% și RR max 1:3. Doar astea două îți dau restricții. Propunerea vine din calendarul Forex Factory — <b>confirmă pe linia violet din indicatorul FTMO News</b>.</p>
+      </div>
       <div class="list" id="dayList"></div>
     </div>
   </section>
@@ -710,14 +1027,44 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
     <div class="card"><h2>Conexiune</h2>
       <div class="status">
         <div><i id="mcpDot"></i><span id="mcpTxt">Google Sheets: se verifică…</span></div>
-        <div><i id="dbDot"></i><span id="dbTxt">Se încarcă lista „De trimis”…</span></div>
+        <div><i id="dbDot"></i><span id="dbTxt">Se încarcă tradeurile…</span></div>
       </div>
-      <button type="button" class="ghost wide" id="btnReload" style="margin-top:14px">Încarcă din Sheets</button>
-      <p class="note" style="margin-top:12px">Versiunea instalată: <b id="buildTxt">—</b> · <button type="button" class="tiny" id="btnVer">Caută versiune nouă</button></p>
+      <button type="button" class="ghost wide" id="btnReload" style="margin-top:12px">Încarcă din Sheets</button>
+      <p class="note" style="margin-top:11px">Versiunea <b id="buildTxt">—</b> · <button type="button" class="tiny" id="btnVer">Caută versiune nouă</button></p>
       <p class="msg" id="verMsg" hidden></p>
     </div>
+
+    <div class="card"><h2>Conturi</h2>
+      <div class="accmgr" id="accList"></div>
+      <button type="button" class="ghost wide" id="btnAccAdd" style="margin-top:11px">Adaugă cont</button>
+      <p class="note">+2% la TP, −1% la SL, 0 la BE, doar pe Live. Contul închis se îngheață și trece în istoric.</p>
+      <div class="acchist" id="accHist" hidden></div>
+    </div>
+
+    <div class="card"><h2>Zile libere</h2>
+      <div class="row">
+        <div class="f"><label for="fFreeM">Luna</label><select id="fFreeM"></select></div>
+        <div class="f"><label for="fFreeD">Zilele</label><input id="fFreeD" inputmode="numeric" autocomplete="off" placeholder="13, 17, 19"></div>
+      </div>
+      <button type="button" class="ghost wide" id="btnFree" style="margin-top:10px">Salvează zilele</button>
+      <p class="msg" id="freeMsg" hidden></p>
+      <p class="note">Zilele în care tranzacționezi.</p>
+    </div>
+
+    <div class="card"><h2>Aspect</h2>
+      <div class="avrow">
+        <div class="avprev" id="avPrev">TA</div>
+        <div class="actions" style="flex:1">
+          <button type="button" class="ghost wide" id="btnAv">Alege poza de profil</button>
+          <button type="button" class="ghost wide danger" id="btnAvDel" hidden>Șterge poza</button>
+        </div>
+      </div>
+      <div class="themes" id="themeList" style="margin-top:13px"></div>
+      <p class="note">Poza și tema se salvează doar pe acest dispozitiv.</p>
+    </div>
+
     <div class="card"><h2>Partajare</h2>
-      <p class="hint" style="margin:-4px 0 12px">Oricine deschide linkul poate citi <b>și scrie</b> în foaia ta. Linkul folosește un cod separat de parola ta și îl poți anula oricând.</p>
+      <p class="hint" style="margin:-4px 0 11px">Cine are linkul poate <b>citi și scrie</b> în foaia ta. Cod separat de parolă, anulabil oricând.</p>
       <div class="actions">
         <button type="button" class="primary wide" id="btnShare">Creează link și copiază</button>
         <button type="button" class="ghost wide" id="btnShareCopy" hidden>Copiază linkul din nou</button>
@@ -725,50 +1072,14 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
       </div>
       <p class="msg" id="shareMsg" hidden></p>
     </div>
-    <div class="card"><h2>Poză de profil</h2>
-      <div class="avrow">
-        <div class="avprev" id="avPrev">TA</div>
-        <div class="actions" style="flex:1">
-          <button type="button" class="ghost wide" id="btnAv">Alege poza</button>
-          <button type="button" class="ghost wide danger" id="btnAvDel" hidden>Șterge poza</button>
-        </div>
-      </div>
-      <p class="note">Se salvează doar pe acest dispozitiv, nu în Google Sheets.</p>
-    </div>
-    <div class="card"><h2>Temă</h2>
-      <div class="themes" id="themeList"></div>
-      <p class="note">Se salvează doar pe acest dispozitiv.</p>
-    </div>
-    <div class="card"><h2>Conturi</h2>
-      <div class="accmgr" id="accList"></div>
-      <button type="button" class="ghost wide" id="btnAccAdd" style="margin-top:12px">Adaugă cont</button>
-      <p class="note">Procentul crește automat după fiecare execuție pe Live (+2% la TP, −1% la SL, 0 la BE). Când închizi un cont, procentul se îngheață și contul trece în istoric. Pe Acasă apar doar conturile active.</p>
-      <div class="acchist" id="accHist" hidden></div>
-    </div>
-    <div class="card"><h2>Știrile zilei</h2>
-      <div class="row">
-        <div class="f"><label for="kNewsT">Ore (ora României)</label><input id="kNewsT" inputmode="numeric" autocomplete="off" placeholder="15:30, 17:00"></div>
-        <div class="f"><label for="kNewsN">Care</label><input id="kNewsN" autocomplete="off" placeholder="CPI, NFP…"></div>
-      </div>
-      <div class="seg" id="kNewsS" role="group" aria-label="Impact" style="margin-top:10px"></div>
-      <p class="note" id="kNewsD">—</p>
-      <p class="note">Din indicatorul FTMO News, linia violet. Se salvează pe ziua de azi. La ±2 minute de o oră pusă aici, verificarea dă INVALID. La ★★★, zi fără trading.</p>
-    </div>
-    <div class="card"><h2>Zile libere</h2>
-      <div class="row">
-        <div class="f"><label for="fFreeM">Luna</label><select id="fFreeM"></select></div>
-        <div class="f"><label for="fFreeD">Zilele</label><input id="fFreeD" inputmode="numeric" autocomplete="off" placeholder="13, 17, 19"></div>
-      </div>
-      <button type="button" class="ghost wide" id="btnFree" style="margin-top:11px">Salvează zilele</button>
-      <p class="msg" id="freeMsg" hidden></p>
-      <p class="note">Zilele în care tranzacționezi. Dacă luna e goală, aplicația nu mai spune „zi de job”.</p>
-    </div>
+
     <div class="card"><h2>Întreținere</h2>
       <div class="status"><div><i id="mntDot"></i><span id="mntTxt">—</span></div></div>
-      <button type="button" class="ghost wide" id="btnPrune" style="margin-top:12px">Curăță coada și pozele vechi</button>
+      <button type="button" class="ghost wide" id="btnPrune" style="margin-top:11px">Curăță coada și pozele vechi</button>
       <p class="msg" id="mntMsg" hidden></p>
-      <p class="note">Șterge din aplicație tradeurile deja scrise în Sheets mai vechi de 180 de zile și pozele rămase fără trade. Rândurile din Google Sheets rămân neatinse.</p>
+      <p class="note">Șterge doar din aplicație. Sheets rămâne neatins.</p>
     </div>
+
     <div class="card"><h2>Reguli</h2>
       <p class="note" style="margin:0;line-height:1.6">Max 2 tradeuri pe zi · stop după 2 pierderi · BE la 1.5R · DAX 10:15–18:00, luni/marți fără 10:15–12:00 · GBPUSD fără 16:15–16:45 · exclus DAX LIQ LOCALA+ și GBPUSD LOD+ · fără ★★★, NFP, CPI, FOMC.</p>
     </div>
@@ -871,6 +1182,7 @@ html[data-theme="violet"]{--ink:#06040D;--c1:rgba(130,80,255,.55);--c2:rgba(200,
     if(tool==="get_values"){ var j=await call("get",{range:args.range}); onRev(j.rev); return {payload:{values:j.values||[]}}; }
     if(tool==="update_values"){ var u=await call("update",{range:args.range,values:args.values}); return {payload:u}; }
     if(tool==="edit_values"){ var e2=await call("edit",{range:args.range,values:args.values}); return {payload:e2}; }
+    if(tool==="calendar"){ var c=await call("calendar",{}); return {payload:c}; }
     throw {code:"tool_error",message:"Tool necunoscut: "+tool}; } };
 
   async function refresh(){
@@ -948,7 +1260,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="20.11.2026 22:02";   /* amprenta versiunii */
+var BUILD="21.11.2026 00:35";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -992,7 +1304,10 @@ var THEMES=[
   {id:"magenta", n:"Magenta", d:"roz și violet",   sw:"linear-gradient(135deg,#FF2DB4,#7846FF 60%,#2DDCFF)"},
   {id:"smarald", n:"Smarald", d:"verde adânc",     sw:"linear-gradient(135deg,#50F0AA,#059AA0 60%,#04100F)"},
   {id:"auriu",   n:"Auriu",   d:"chihlimbar, sobru",sw:"linear-gradient(135deg,#FFDC82,#C8781E 60%,#0C0803)"},
-  {id:"violet",  n:"Violet",  d:"mov profund",     sw:"linear-gradient(135deg,#C850FF,#8250FF 60%,#0A0716)"}
+  {id:"violet",  n:"Violet",  d:"mov profund",     sw:"linear-gradient(135deg,#C850FF,#8250FF 60%,#0A0716)"},
+  {id:"lumina",  n:"Lumină",  d:"sticlă pe alb",   sw:"linear-gradient(135deg,#FFFFFF,#DCE7EC 55%,#17857C)"},
+  {id:"terminal",n:"Terminal",d:"plat, mono, lime", sw:"linear-gradient(135deg,#D6F03E,#1A1A1A 55%,#000000)"},
+  {id:"editorial",n:"Editorial",d:"fără cutii, text mare",sw:"linear-gradient(135deg,#FFFFFF,#2FD968 55%,#000000)"}
 ];
 function loadThemeFont(t){ if(!t.font) return; var id="thf-"+t.id; if(document.getElementById(id)) return;
   var l=document.createElement("link"); l.id=id; l.rel="stylesheet";
@@ -1368,6 +1683,7 @@ function renderCal(){
   if(!sheetLoaded) pill("LIVE","neîncărcat");
 }
 function renderDay(){
+  newsPaint();
   var list=$("dayList"); list.textContent="";
   if(!selDay){ $("dayTitle").textContent="Alege o zi din calendar"; return; }
   var d=parseISO(selDay), A=all().filter(function(t){return t.date===selDay;}).sort(function(a,b){return (a.time||"").localeCompare(b.time||"");});
@@ -2044,21 +2360,23 @@ $("kGo").onclick=kVerify;
 
 /* ---------- știrile zilei (Setări) ---------- */
 if($("kNewsS")){
-  seg($("kNewsS"),["───","★","★★","★★★"],function(v){ newsSave({s:v}); },["Fără","★","★★","★★★"],function(){ return newsOf(todayISO()).s; });
+  seg($("kNewsS"),["───","★","★★","★★★"],function(v){ newsSave({s:v}); },["Fără","★","★★","★★★"],function(){ return newsOf(newsDay()).s; });
   $("kNewsT").addEventListener("change",function(){ newsSave({t:newsTimes($("kNewsT").value)}); });
   $("kNewsN").addEventListener("change",function(){ newsSave({n:$("kNewsN").value.trim().slice(0,40)}); }); }
-function newsSave(part){ var iso=todayISO(), d=newsOf(iso);
+function newsDay(){ return selDay || todayISO(); }
+function newsSave(part){ var iso=newsDay(), d=newsOf(iso);
   if(part.t!=null) d.t=part.t; if(part.s!=null) d.s=part.s; if(part.n!=null) d.n=part.n;
   if(!d.t.length && d.s==="───" && !d.n) delete newsCfg[iso]; else newsCfg[iso]={t:d.t,s:d.s,n:d.n};
   saveSettings(); newsPaint(); }
+var newsShown="";
 function newsPaint(){ if(!$("kNewsS")) return;
-  var iso=todayISO(), d=newsOf(iso);
-  if(document.activeElement!==$("kNewsT")) $("kNewsT").value=d.t.join(", ");
-  if(document.activeElement!==$("kNewsN")) $("kNewsN").value=d.n;
+  var iso=newsDay(), d=newsOf(iso), moved=(iso!==newsShown); newsShown=iso;
+  $("newsBlk").hidden=!selDay;
+  if(moved || document.activeElement!==$("kNewsT")) $("kNewsT").value=d.t.join(", ");
+  if(moved || document.activeElement!==$("kNewsN")) $("kNewsN").value=d.n;
   paintSeg($("kNewsS"));
-  var dd=parseISO(iso);
-  $("kNewsD").textContent=ZILE_D[dd.getDay()]+" "+roDate(iso).slice(0,5)+" · "+
-    (d.t.length?(d.t.join(", ")+(d.s!=="───"?" · "+d.s:"")):(d.s!=="───"?d.s:"nimic pus")); }
+  var h=$("newsBlk"); if(h) h.dataset.on=(d.t.length||d.s!=="───")?"1":"0";
+  if(typeof econPaint==="function") econPaint(); }
 
 /* ---------- calculator de lot ---------- */
 seg($("lotInst"),["DAX","GBPUSD"],function(v){ kv.inst=v; paintOvl(); },["DAX","GU"],function(){return kv.inst;});
@@ -2120,6 +2438,54 @@ async function pullSettings(){
   finally{ pullBusy=false; } }
 window.__onRev=function(){ pullSettings(); };
 document.addEventListener("visibilitychange",function(){ if(!document.hidden) pullSettings(); });
+
+/* ---------- calendar economic (prin Apps Script) ---------- */
+var econCache=null, econBusy=false;
+var FTMO_RE=/(federal funds rate|fomc|non-?farm|unemployment rate|average hourly earnings|advance gdp|cpi y\/y|official bank rate|mpc official bank rate votes|bank rate)/i;
+function econStars(im,ftmo){ if(ftmo||im==="High") return "★★★"; return im==="Medium"?"★★":"★"; }
+function econFor(iso){
+  if(!econCache) return [];
+  return econCache.filter(function(e){
+    var d=new Date(e.d); if(isNaN(d)) return false;
+    return (d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()))===iso;
+  }).map(function(e){ var d=new Date(e.d);
+    return {h:pad(d.getHours())+":"+pad(d.getMinutes()), t:e.t, c:e.c, i:e.i, f:FTMO_RE.test(e.t)};
+  }).sort(function(a,b){ return a.h.localeCompare(b.h); });
+}
+function econPaint(){
+  var box=$("econList"); if(!box) return;
+  var list=econFor(newsDay());
+  if(!econCache || !list.length){ box.innerHTML=""; return; }
+  box.innerHTML=list.map(function(e,i){
+    return '<label class="econr"><input type="checkbox" data-i="'+i+'"'+((e.f||e.i==="High")?" checked":"")+'>'+
+      '<span class="eh">'+e.h+'</span><span class="et">'+esc(e.t)+'</span>'+
+      '<span class="ec">'+e.c+'</span><span class="ei '+(e.f?"ftmo":"ifr")+'">'+(e.f?"FTMO":"IF")+'</span></label>';
+  }).join("")+'<button type="button" class="ghost wide" id="btnEconUse" style="margin-top:9px">Pune bifatele în zi</button>';
+  $("btnEconUse").onclick=function(){
+    var pick=[], sel=box.querySelectorAll('input[type=checkbox]');
+    for(var i=0;i<sel.length;i++) if(sel[i].checked) pick.push(list[i]);
+    if(!pick.length){ newsSave({t:[],n:"",s:"───"}); econPaint(); return; }
+    var hrs=pick.map(function(e){return e.h;}).filter(function(v,i,a){return a.indexOf(v)===i;});
+    var nm=pick.map(function(e){return e.t.replace(/\s*\(.*?\)\s*/g," ").trim();}).join(", ").slice(0,60);
+    var st=pick.some(function(e){return e.f||e.i==="High";})?"★★★":"★★";
+    newsSave({t:hrs,n:nm,s:st}); econPaint(); };
+}
+async function econLoad(){
+  if(econBusy) return; var m=$("econMsg"), b=$("btnEcon");
+  function say4(t,c){ if(!m) return; m.hidden=false; m.className="msg"+(c?" "+c:""); m.textContent=t; }
+  if(!mcp){ say4("Nu e legătura cu serverul.","no"); return; }
+  econBusy=true; if(b){ b.disabled=true; b.textContent="Se caută…"; }
+  try{
+    var r=await mcp.callTool(SERVER,"calendar",{},{cache:false});
+    var pl=r.payload||{};
+    if(!pl.ok) throw new Error(pl.error||"server");
+    econCache=pl.events||[];
+    var n=econFor(newsDay()).length;
+    say4(n?(n+" restricți"+(n>1?"i":"e")+" pe ziua asta. Bifează ce intră."):"Nicio restricție FTMO sau IF pe ziua asta.", n?"ok":"");
+    econPaint();
+  }catch(e){ say4("Nu am putut aduce calendarul: "+failText(e),"no"); }
+  finally{ econBusy=false; if(b){ b.disabled=false; b.textContent=econCache?"Reîmprospătează":"Adu știrile zilei"; } } }
+if($("btnEcon")) $("btnEcon").onclick=econLoad;
 
 /* ---------- versiune / cache ---------- */
 function hardReload(){
@@ -2189,13 +2555,13 @@ function renderAll(){
   if(onTab("jurnal")){ renderJournal(); renderCells(); btStatus(); }
   if(onTab("calendar")){ renderCal(); renderDay(); }
   if(onTab("adauga")) renderQueue();
-  if(onTab("setari")){ paintThemes(); paintFree(); newsPaint(); paintAccs(); mntPaint(); } }
+  if(onTab("setari")){ paintThemes(); paintFree(); paintAccs(); mntPaint(); } }
 function flushTab(h){ if(!stale[h]) return; stale[h]=0;
   if(h==="acasa") renderHome();
   else if(h==="jurnal"){ renderJournal(); renderCells(); btStatus(); }
   else if(h==="calendar"){ renderCal(); renderDay(); }
   else if(h==="adauga") renderQueue();
-  else if(h==="setari"){ paintThemes(); paintFree(); newsPaint(); paintAccs(); mntPaint(); } }
+  else if(h==="setari"){ paintThemes(); paintFree(); paintAccs(); mntPaint(); } }
 
 /* ---------- boot ---------- */
 btRestore(); kvLoad();
