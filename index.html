@@ -979,9 +979,15 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
   async function call(action,params){
     var c=cfg(); if(!c.url) throw {code:"no_server",message:"Setează serverul în Setări."};
     var r;
+    var ac=(typeof AbortController!=="undefined")?new AbortController():null;
+    var to=ac?setTimeout(function(){ ac.abort(); },30000):0;
     try{ r=await fetch(c.url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      signal:ac?ac.signal:undefined,
       body:JSON.stringify(Object.assign({action:action,token:c.token},params||{}))}); }
-    catch(e){ throw {code:"server_unavailable",message:String(e)}; }
+    catch(e){ if(to) clearTimeout(to);
+      if(e && e.name==="AbortError") throw {code:"timeout",message:"Serverul a durat prea mult (peste 30 s)."};
+      throw {code:"server_unavailable",message:String(e)}; }
+    if(to) clearTimeout(to);
     var j; try{ j=await r.json(); }catch(e){ throw {code:"server_unavailable",message:"Răspuns invalid de la server."}; }
     if(!j.ok) throw {code:j.code||"tool_error",message:j.error||""};
     return j;
@@ -1078,7 +1084,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="21.11.2026 02:10";   /* amprenta versiunii */
+var BUILD="21.11.2026 11:50";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1933,6 +1939,7 @@ var FAIL={needs_reauth:"Verifică Setări → Server.",
   approval_required:"Google Sheets are nevoie de aprobarea ta. Apasă din nou și permite.",
   blocked_by_policy:"Organizația blochează acest tool Google Sheets.",
   server_unavailable:"Google Sheets nu răspunde acum. Încearcă din nou peste puțin.",
+  timeout:"Serverul a durat prea mult. Încearcă din nou.",
   not_granted:"Pagina nu are acces la conectori în această vizualizare.", capability_disabled:"Conectorii nu sunt disponibili în această vizualizare."};
 function failText(e){ var c=e&&e.code; if(c==="tool_error") return "Google Sheets a refuzat cererea: "+(e.message||""); return FAIL[c]||("Eroare Google Sheets ("+(c||"necunoscută")+")."); }
 function mcpFail(e){ var t=failText(e); if(e&&(e.code==="server_unavailable"||e.code==="upstream_error")) t+=" Verifică foaia înainte să reîncerci: scrierea poate să fi trecut."; msg(t,"no"); }
@@ -2299,7 +2306,9 @@ async function econLoad(){
     if(!pl.ok) throw new Error(pl.error||"server");
     econCache=pl.events||[];
     var n=econFor(newsDay()).length;
-    say4(n?(n+" restricți"+(n>1?"i":"e")+" pe ziua asta. Bifează ce intră."):"Nicio restricție FTMO sau IF pe ziua asta.", n?"ok":"");
+    var vechi=pl.stale?(" Sursa nu răspunde acum — date salvate"+(pl.at?(" la "+new Date(pl.at).toLocaleString("ro-RO")):"")+"."):"";
+    say4((n?(n+" restricți"+(n>1?"i":"e")+" pe ziua asta. Bifează ce intră."):"Nicio restricție FTMO sau IF pe ziua asta.")+vechi,
+         pl.stale?"warn":(n?"ok":""));
     econPaint();
   }catch(e){ say4("Nu am putut aduce calendarul: "+failText(e),"no"); }
   finally{ econBusy=false; if(b){ b.disabled=false; b.textContent=econCache?"Reîmprospătează":"Adu știrile zilei"; } } }
