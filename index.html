@@ -1088,7 +1088,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="23.11.2026 18:20";   /* amprenta versiunii */
+var BUILD="23.11.2026 18:40";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1098,7 +1098,8 @@ function newsTimes(str){ var out=[];
   String(str||"").split(/[^0-9:]+/).forEach(function(x){ var m=x.match(/^(\d{1,2}):(\d{2})$/);
     if(m && +m[1]<24 && +m[2]<60) out.push(pad(+m[1])+":"+m[2]); });
   return out.filter(function(v,i,a){ return a.indexOf(v)===i; }).sort(); }
-function cfgSet(c){ c=c||{}; cfgX.risk=(+c.risk>0?+c.risk:1);
+var RISK_MAX=2;   /* IF: max 1.5% pe trade; peste 2% e sigur o greșeală de tastare */
+function cfgSet(c){ c=c||{}; cfgX.risk=(+c.risk>0 && +c.risk<=RISK_MAX?+c.risk:1);
   cfgX.pv={DAX:(+(c.pv&&c.pv.DAX)>0?+c.pv.DAX:PV_DEF.DAX), GBPUSD:(+(c.pv&&c.pv.GBPUSD)>0?+c.pv.GBPUSD:PV_DEF.GBPUSD)};
   cfgX.acc=c.acc||null; }
 function esc(x){ return String(x==null?"":x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
@@ -1235,8 +1236,8 @@ function $(id){return document.getElementById(id);}
 function el(tag,cls,txt){ var e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; }
 function pad(n){return (n<10?"0":"")+n;}
 function todayISO(){var d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
-function parseISO(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
-function roDate(s){var p=s.split("-");return p[2]+"."+p[1]+"."+p[0];}
+function parseISO(s){var p=String(s||"").split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
+function roDate(s){var p=String(s||"").split("-"); if(p.length<3) return "—"; return p[2]+"."+p[1]+"."+p[0];}
 function mins(t){var p=(t||"0:0").split(":");return +p[0]*60+ +p[1];}
 function fmtR(v){ return (v>0?"+":"")+(Math.round(v*100)/100)+"R"; }
 function rCls(v){ return v>0?"pos":v<0?"neg":""; }
@@ -1357,7 +1358,7 @@ function parseSheet(vals,start){ var out=[]; start=start||7;
       date:date, res:g(c.r), dir:g(c.b), liq:g(c.l), setup:g(c.s), mss:g(c.m), re:!!g(c.re), ses:g(c.se),
       news:g(c.n), time:g(c.o), interval:g(c.i), shot:g(c.sh), com:g(c.cm), ctx:g(c.cm)}); });
   return out; }
-function all(){ var q=trades.filter(function(t){return !t.synced && (t.dest||"LIVE")==="LIVE";}).map(function(t){ var x=Object.assign({},t); x.key="q:"+t.id; x.src="queue"; return x; });
+function all(){ var q=trades.filter(function(t){return !t.synced && (t.dest||"LIVE")==="LIVE" && /^\d{4}-\d{2}-\d{2}$/.test(t.date||"");}).map(function(t){ var x=Object.assign({},t); x.key="q:"+t.id; x.src="queue"; return x; });
   return sheet.concat(q); }
 function isCore(t){ return CORE.indexOf(t.inst)>=0; }
 
@@ -1960,7 +1961,11 @@ var FAIL={needs_reauth:"Verifică Setări → Server.",
   server_unavailable:"Google Sheets nu răspunde acum. Încearcă din nou peste puțin.",
   timeout:"Serverul a durat prea mult. Încearcă din nou.",
   not_granted:"Pagina nu are acces la conectori în această vizualizare.", capability_disabled:"Conectorii nu sunt disponibili în această vizualizare."};
-function failText(e){ var c=e&&e.code; if(c==="tool_error") return "Google Sheets a refuzat cererea: "+(e.message||""); return FAIL[c]||("Eroare Google Sheets ("+(c||"necunoscută")+")."); }
+function failText(e){ var c=e&&e.code; if(c==="tool_error"){ var m=String(e.message||"");
+    if(/validare|validation/i.test(m)){ var cell=(m.match(/celula\s+([A-Z]+\d+)|cell\s+([A-Z]+\d+)/i)||[]); cell=cell[1]||cell[2]||"";
+      return "Foaia are o regulă de validare (listă) care nu acceptă valoarea"+(cell?" din "+cell:"")+". Adaugă valoarea în lista de validare a coloanei (Date → Validarea datelor) sau spune-i lui Claude. Detalii: "+m; }
+    if(/nepermis/i.test(m)) return "Serverul (Apps Script) nu are foaia în lista ALLOWED sau nu e publicată versiunea nouă. Detalii: "+m;
+    return "Google Sheets a refuzat cererea: "+m; } return FAIL[c]||("Eroare Google Sheets ("+(c||"necunoscută")+")."); }
 function mcpFail(e){ var t=failText(e); if(e&&(e.code==="server_unavailable"||e.code==="upstream_error")) t+=" Verifică foaia înainte să reîncerci: scrierea poate să fi trecut."; msg(t,"no"); }
 async function loadSheet(){
   var b=$("btnReload");
@@ -2228,7 +2233,8 @@ function newsPaint(){ if(!$("kNewsS")) return;
 seg($("lotInst"),["DAX","GBPUSD"],function(v){ kv.inst=v; paintOvl(); },["DAX","GU"],function(){return kv.inst;});
 ["lRisk","lSl","lPv"].forEach(function(id){ $(id).addEventListener("input",lCalc); });
 ["lRisk","lPv"].forEach(function(id){ $(id).addEventListener("change",function(){
-  var risk=parseFloat($("lRisk").value), pv=parseFloat($("lPv").value), ch=false;
+  var risk=numIn($("lRisk").value), pv=numIn($("lPv").value), ch=false;
+  if(risk>RISK_MAX){ $("lRisk").value=cfgX.risk; lCalc(); return; }
   if(risk>0 && risk!==cfgX.risk){ cfgX.risk=risk; ch=true; }
   if(pv>0 && pv!==cfgX.pv[kv.inst]){ cfgX.pv[kv.inst]=pv; ch=true; }
   if(ch) saveSettings(); }); });
@@ -2238,9 +2244,11 @@ function lRender(){ var sel=$("lAcc"), cur=sel.value; sel.textContent="";
   if(cur) sel.value=cur; if(!sel.value && sel.options.length) sel.selectedIndex=0;
   if(!$("lRisk").value) $("lRisk").value=cfgX.risk;
   $("lPv").value=cfgX.pv[kv.inst]||PV_DEF[kv.inst]; lCalc(); }
+function numIn(v){ return parseFloat(String(v==null?"":v).replace(",",".")); }
 function lCalc(){
   var a=accFind($("lAcc").value)||accLive()[0]||{size:10000};
-  var risk=parseFloat($("lRisk").value), sl=parseFloat($("lSl").value), pv=parseFloat($("lPv").value);
+  var risk=numIn($("lRisk").value), sl=numIn($("lSl").value), pv=numIn($("lPv").value);
+  if(risk>RISK_MAX){ $("lOut").innerHTML='<div class="big"><span class="ln">Risc</span><span class="lv" style="color:var(--no,#ff5c7a)">max '+RISK_MAX+'%</span></div><div><span class="ln">Ai scris</span><span class="lv">'+risk+'%</span></div>'; return; }
   var bal=+a.size||10000, rUsd=(risk>0?bal*risk/100:null);
   var lot=(rUsd!=null && sl>0 && pv>0) ? rUsd/(sl*pv) : null;
   var o=$("lOut");
