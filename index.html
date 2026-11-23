@@ -791,7 +791,8 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
         <div class="calc" id="calc"></div>
         <div class="actions">
           <button type="button" class="primary wide" id="btnDirect">Adaugă în Sheets</button>
-          <button type="submit" class="ghost wide" id="btnSave">Salvează la „De trimis”</button>
+          <button type="button" class="ghost wide" id="btnGU">Backtest GU</button>
+          <button type="submit" class="ghost wide" id="btnSave" hidden>Salvează la „De trimis”</button>
         </div>
         <p class="msg" id="formMsg" hidden></p>
       </form>
@@ -1078,13 +1079,14 @@ var DEFAULT_ACCTS=["Cont Live - Ftmo 10k","Cont Challenge - IF 10k"];
 
 var DESTS={LIVE:{label:"Live",insts:INSTS,hint:"Se scrie în „🔆LIVE - Executii”. Apare în calendar și în jurnal."},
   TOTW:{label:"Trades of the week",insts:["DAX","GBPUSD"],hint:"Se scrie în „📊 TRADES OF THE  WEEK” (în afara eșantionului)."},
-  BT:{label:"Backtest",insts:["DAX","GBPUSD","UK100"],hint:"Se scrie în foaia de backtest a instrumentului: DAX (500), GBPUSD (500) sau UK100."}};
-var TABS_SHEET={LIVE:"🔆LIVE - Executii",TOTW:"📊 TRADES OF THE  WEEK",BT_DAX:"DAX (500)",BT_GBPUSD:"GBPUSD (500)",BT_UK100:"UK100"};
+  BT:{label:"Backtest",insts:["DAX","GBPUSD","UK100"],hint:"Se scrie în foaia de backtest a instrumentului: DAX (500), GBPUSD (500) sau UK100."},
+  GUL:{label:"GU Locale",insts:["GBPUSD"],liqs:["LIQ LOCALA","LIQ LOCALA+"],hint:"Backtest separat: se scrie în „GU - Locale”. Doar GBPUSD, doar LIQ LOCALA / LIQ LOCALA+."}};
+var TABS_SHEET={LIVE:"🔆LIVE - Executii",TOTW:"📊 TRADES OF THE  WEEK",BT_DAX:"DAX (500)",BT_GBPUSD:"GBPUSD (500)",BT_UK100:"UK100",GUL:"GU - Locale"};
 function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst]:TABS_SHEET[d]; }
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="21.11.2026 11:50";   /* amprenta versiunii */
+var BUILD="23.11.2026 17:30";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1243,10 +1245,20 @@ function seg(elm,opts,onPick,labels,getVal){ elm.textContent="";
     b.onclick=function(){ onPick(v); }; elm.appendChild(b); });
   elm._get=getVal; }
 function paintSeg(elm){ var v=elm._get(); Array.prototype.forEach.call(elm.children,function(b){ b.setAttribute("aria-pressed", b.dataset.v===v); }); }
-seg($("sDest"),["LIVE","TOTW","BT"],function(v){ f.dest=v; buildInst(); paint(); update(); },["Live","TOTW","Backtest"],function(){return f.dest;});
+seg($("sDest"),["LIVE","TOTW","BT","GUL"],function(v){ f.dest=v; buildInst(); paint(); update(); },["Live","TOTW","Backtest","GU Locale"],function(){return f.dest;});
+function liqOpts(){ return DESTS[f.dest].liqs||LIQS; }
+function buildLiq(){ var sel=$("fLiq"); if(!sel) return; var want=liqOpts(), cur=sel.value;
+  if(sel.options.length===want.length && Array.prototype.every.call(sel.options,function(o,i){return o.value===want[i];})) return;
+  sel.textContent=""; want.forEach(function(v){ sel.appendChild(el("option",null,v)); });
+  sel.value=(want.indexOf(cur)>=0?cur:want[0]); }
+function gulHint(){ var st=stat((gulRows||[]).filter(function(t){ return resK(t) && noStars(t); }));
+  if(!st.n) return " Încă niciun trade sincronizat aici.";
+  return " Până acum: n "+st.n+" · "+st.W+"/"+st.L+"/"+st.B+" · WR "+(st.wr==null?"–":Math.round(100*st.wr)+"%")+
+    (st.ci?" ("+st.ci[0]+"–"+st.ci[1]+"%)":"")+" · "+fmtR(st.r)+"/tr"+(st.n<15?" · orientativ":"")+"."; }
 function buildInst(){ var opts=DESTS[f.dest].insts; if(opts.indexOf(f.inst)<0) f.inst=opts[0];
   seg($("sInst"),opts,function(v){f.inst=v;paint();update();},null,function(){return f.inst;});
-  $("destHint").textContent=DESTS[f.dest].hint;
+  buildLiq();
+  $("destHint").textContent=DESTS[f.dest].hint+(f.dest==="GUL"?gulHint():"");
   Array.prototype.forEach.call(document.querySelectorAll(".disc-only"),function(e){ e.hidden=f.dest!=="LIVE"; }); }
 buildInst();
 seg($("sRe"),["0","1"],function(v){f.re=v;paint();update();},["Fără re-entry","RE-ENTRY"],function(){return f.re;});
@@ -1254,9 +1266,8 @@ seg($("sDir"),["BUY","SELL"],function(v){f.dir=v;paint();update();},["Long","Sho
 seg($("sMss"),["NORMAL","AGRESIV"],function(v){f.mss=v;paint();update();},["Normal","Agresiv"],function(){return f.mss;});
 seg($("sRes"),["","WIN","LOSE","BREAK EVEN"],function(v){f.res=v;paint();update();},["—","TP","SL","BE"],function(){return f.res;});
 function paint(){ ["sDest","sInst","sDir","sMss","sRes","sRe"].forEach(function(id){ paintSeg($(id)); }); }
-LIQS.forEach(function(v){ $("fLiq").appendChild(el("option",null,v)); });
 SETUPS.forEach(function(v){ $("fSetup").appendChild(el("option",null,v)); });
-$("fLiq").value="LIQ LOCALA"; $("fSetup").value="SLG+OSG";
+$("fLiq").value="LIQ LOCALA"; $("fSetup").value="SLG+OSG"; buildLiq();
 
 /* ---------- derived values ---------- */
 function liqDisc(l){ l=l||""; var plus=/\+$/.test(l), b=l.replace("+","");
@@ -1529,7 +1540,7 @@ function filtered(){ return all().filter(function(t){
   if(jf.month&&t.date.slice(0,7)!==jf.month) return false; if(jf.res&&t.res!==jf.res) return false; return true; }); }
 /* ---------- celule: statistică pe felii ---------- */
 var INTERV=["10:15 - 12:00","12:00 - 16:15","16:15 - 16:45","16:45 - 22:00"];
-var btRows={}, totwRows=null, btBusy=false;
+var btRows={}, totwRows=null, gulRows=null, btBusy=false;
 var cf={src:"live",dim:"ziiv"};
 function normIv(x){ x=String(x||"").replace(/\s/g,"").replace(/[–—]/g,"-");
   for(var i=0;i<INTERV.length;i++) if(INTERV[i].replace(/\s/g,"")===x) return INTERV[i]; return ""; }
@@ -1547,6 +1558,7 @@ function cPool(){
   var src=cf.src, rows;
   if(src==="bt") rows=(inst?(btRows[inst]||[]):[].concat(btRows.DAX||[],btRows.GBPUSD||[]));
   else if(src==="totw") rows=(totwRows||[]).filter(function(t){ return !inst||t.inst===inst; });
+  else if(src==="gul") rows=(gulRows||[]);
   else rows=all().filter(function(t){ if(inst) return t.inst===inst; return jf.inst==="ALL"?true:isCore(t); });
   return rows.filter(function(t){ return resK(t) && noStars(t); }); }
 var DIMS={
@@ -1571,7 +1583,7 @@ function cellsOf(rows,dim){ var D=DIMS[dim]||DIMS.zi, g={};
   return keys.map(function(k){ var st=stat(g[k]); st.k=k; return st; }); }
 var _cellKey="";
 function dataVer(){ return sheet.length+"|"+trades.length+"|"+
-  ((btRows.DAX&&btRows.DAX.length)||0)+"|"+((btRows.GBPUSD&&btRows.GBPUSD.length)||0)+"|"+((totwRows&&totwRows.length)||0); }
+  ((btRows.DAX&&btRows.DAX.length)||0)+"|"+((btRows.GBPUSD&&btRows.GBPUSD.length)||0)+"|"+((totwRows&&totwRows.length)||0)+"|"+((gulRows&&gulRows.length)||0); }
 function renderCells(force){
   var tb=$("cTbl"); if(!tb) return;
   var key=cf.src+"|"+cf.dim+"|"+jf.inst+"|"+dataVer();
@@ -1580,7 +1592,7 @@ function renderCells(force){
   paintSeg($("cSrc")); paintSeg($("cDim"));
   var rows=cPool(), cs=cellsOf(rows,cf.dim), tot=stat(rows);
   var inst=(jf.inst==="DAX"||jf.inst==="GBPUSD")?jf.inst:(jf.inst==="ALL"?"toate":"DAX+GU");
-  var nm={live:"Live",bt:"Backtest",totw:"TOTW"}[cf.src];
+  var nm={live:"Live",bt:"Backtest",totw:"TOTW",gul:"GU Locale"}[cf.src]; if(cf.src==="gul") inst="GBPUSD · LIQ LOCALA/+";
   $("cN").textContent=nm+" · "+inst+" · "+tot.n;
   tb.textContent="";
   var hr=el("tr"); [DIMS[cf.dim].t,"n","W/L/BE","WR","Int.90","R/tr"].forEach(function(h){ hr.appendChild(el("th",null,h)); }); tb.appendChild(hr);
@@ -1597,7 +1609,7 @@ function renderCells(force){
     (tot.ci?tot.ci[0]+"–"+tot.ci[1]+"%":"–"), (tot.n?fmtR(tot.R/tot.n):"–") ]
    .forEach(function(v,i){ var td=el("td",i===5?rCls(tot.R):"",v); td.style.fontWeight="600"; trT.appendChild(td); });
   tb.appendChild(trT); }
-seg($("cSrc"),["live","bt","totw"],function(v){ cf.src=v; renderCells(); },["Live","Backtest","TOTW"],function(){return cf.src;});
+seg($("cSrc"),["live","bt","totw","gul"],function(v){ cf.src=v; renderCells(); },["Live","Backtest","TOTW","GU Locale"],function(){return cf.src;});
 seg($("cDim"),["ziiv","zi","iv","liq","setup","mss","dir"],function(v){ cf.dim=v; renderCells(); },
     ["Zi × interval","Zi","Interval","Lichiditate","Setup","MSS","Direcție"],function(){return cf.dim;});
 /* ---------- copia locală a backtestului (sincronizată cu Sheets) ---------- */
@@ -1606,20 +1618,21 @@ function btSlim(r){ return {inst:r.inst,instRaw:r.instRaw,date:r.date,time:r.tim
   res:r.res,dir:r.dir,liq:r.liq,setup:r.setup,mss:r.mss,re:!!r.re,ses:r.ses,news:r.news}; }
 function btSave(){
   try{ localStorage.setItem(BTK,JSON.stringify({v:1,at:btAt,
-    dax:(btRows.DAX||[]).map(btSlim), gu:(btRows.GBPUSD||[]).map(btSlim), totw:(totwRows||[]).map(btSlim)})); }
+    dax:(btRows.DAX||[]).map(btSlim), gu:(btRows.GBPUSD||[]).map(btSlim), totw:(totwRows||[]).map(btSlim), gul:(gulRows||[]).map(btSlim)})); }
   catch(e){}
 }
 function btRestore(){
   try{ var j=JSON.parse(localStorage.getItem(BTK)||"null"); if(!j||j.v!==1) return false;
-    btRows.DAX=j.dax||[]; btRows.GBPUSD=j.gu||[]; totwRows=j.totw||[]; btAt=j.at||0;
-    return !!(btRows.DAX.length||btRows.GBPUSD.length); }catch(e){ return false; }
+    btRows.DAX=j.dax||[]; btRows.GBPUSD=j.gu||[]; totwRows=j.totw||[]; gulRows=j.gul||[]; btAt=j.at||0;
+    return !!(btRows.DAX.length||btRows.GBPUSD.length||gulRows.length); }catch(e){ return false; }
 }
-function btCount(){ return ((btRows.DAX&&btRows.DAX.length)||0)+((btRows.GBPUSD&&btRows.GBPUSD.length)||0); }
-function btStatus(){ var e=$("btStat"); if(!e) return;
+function btCount(){ return ((btRows.DAX&&btRows.DAX.length)||0)+((btRows.GBPUSD&&btRows.GBPUSD.length)||0)+((gulRows&&gulRows.length)||0); }
+function btStatus(){ if(typeof f!=="undefined" && f.dest==="GUL" && $("destHint")) $("destHint").textContent=DESTS.GUL.hint+gulHint();
+  var e=$("btStat"); if(!e) return;
   if(!btCount()){ e.textContent="Backtest nesincronizat."; return; }
   var d=btAt?new Date(btAt):null;
   e.textContent="Backtest local: DAX "+((btRows.DAX||[]).length)+" · GU "+((btRows.GBPUSD||[]).length)+
-    " · TOTW "+((totwRows||[]).length)+(d?(" · "+pad(d.getDate())+"."+pad(d.getMonth()+1)+" "+pad(d.getHours())+":"+pad(d.getMinutes())):""); }
+    " · TOTW "+((totwRows||[]).length)+" · GU Locale "+((gulRows||[]).length)+(d?(" · "+pad(d.getDate())+"."+pad(d.getMonth()+1)+" "+pad(d.getHours())+":"+pad(d.getMinutes())):""); }
 async function loadBT(silent){
   if(btBusy) return false; var b=$("btnBT"), m=$("btMsg");
   function say2(t,c){ if(silent||!m) return; m.hidden=false; m.className="msg"+(c?" "+c:""); m.textContent=t; }
@@ -1627,13 +1640,16 @@ async function loadBT(silent){
   btBusy=true; if(b && !silent){ b.disabled=true; b.textContent="Se sincronizează…"; }
   var cS=COL, cN=COLN, ok=false;
   try{
-    var jobs=[["DAX",TABS_SHEET.BT_DAX],["GBPUSD",TABS_SHEET.BT_GBPUSD],["TOTW",TABS_SHEET.TOTW]], i, got=[];
+    var jobs=[["DAX",TABS_SHEET.BT_DAX],["GBPUSD",TABS_SHEET.BT_GBPUSD],["TOTW",TABS_SHEET.TOTW],["GUL",TABS_SHEET.GUL]], i, got=[];
     for(i=0;i<jobs.length;i++){
-      var res=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:"'"+jobs[i][1]+"'!A6:AZ"},{cache:false});
+      var res;
+      try{ res=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:"'"+jobs[i][1]+"'!A6:AZ"},{cache:false}); }
+      catch(eG){ if(jobs[i][0]==="GUL"){ got.push("GU Locale: "+failText(eG)); continue; } throw eG; }
       var a0=(res.payload&&res.payload.values)||[];
       if(a0.length) applyCols(a0[0]);
       var rows=parseSheet(a0.slice(1),7);
-      if(jobs[i][0]==="TOTW") totwRows=rows; else btRows[jobs[i][0]]=rows;
+      if(jobs[i][0]==="GUL") rows=rows.filter(function(t){ return t.inst==="GBPUSD"; });
+      if(jobs[i][0]==="TOTW") totwRows=rows; else if(jobs[i][0]==="GUL") gulRows=rows; else btRows[jobs[i][0]]=rows;
       got.push(jobs[i][0]+" "+rows.length);
     }
     btAt=Date.now(); btSave(); ok=true;
@@ -1781,7 +1797,7 @@ if($("btnAccAdd")) $("btnAccAdd").onclick=function(){
   var d=new Date(); d.setHours(12,0,0,0);
   accAll().push(accFix({id:accUid(),name:String(n||"Cont nou").trim()||"Cont nou",start:0,target:10,size:10000,from:d.getTime()}));
   accCommit(); };
-function resetForm(keepDate){ editing=null; editRow=null; $("btnDirect").textContent="Adaugă în Sheets"; $("btnSave").hidden=false; f.res=""; f.re="0";
+function resetForm(keepDate){ editing=null; editRow=null; $("btnDirect").textContent="Adaugă în Sheets"; $("btnSave").hidden=true; $("btnGU").hidden=false; f.res=""; f.re="0";
   if(!keepDate) $("fDate").value=roDate(todayISO());
   $("fTime").value="";
   $("fCtx").value=""; $("fShot").value=""; $("fCom").value=""; $("fNews").value="───";
@@ -1790,7 +1806,7 @@ function loadForm(t){ editing=t.id; f.dest=t.dest||"LIVE"; f.inst=t.inst; buildI
   $("fDate").value=roDate(t.date); $("fTime").value=t.time; $("fLiq").value=t.liq; $("fSetup").value=t.setup; $("fNews").value=t.news||"───";
   $("fCtx").value=t.ctx||""; $("fShot").value=t.shot||""; $("fCom").value=t.com||"";
   $("fLiqTxt").value=t.liqTxt||liqDisc(t.liq); $("fSetupTxt").value=t.setupTxt||setupDisc(t.setup); liqDirty=!!t.liqTxt; setupDirty=!!t.setupTxt;
-  $("formTitle").textContent="Editezi tradeul"; $("formHead").hidden=false; $("btnSave").textContent="Salvează modificările"; $("btnNew").hidden=false; paint(); update();
+  $("formTitle").textContent="Editezi tradeul"; $("formHead").hidden=false; $("btnSave").hidden=false; $("btnGU").hidden=true; $("btnSave").textContent="Salvează modificările"; $("btnNew").hidden=false; paint(); update();
   $("form").scrollIntoView({behavior:"smooth",block:"start"}); }
 function loadSheetRow(t){
   resetForm(true); editRow={row:t.row, tab:TAB, inst:t.inst, instRaw:t.instRaw};
@@ -1801,7 +1817,7 @@ function loadSheetRow(t){
   liqDirty=false; setupDirty=false;
   $("formTitle").textContent="Editezi rândul "+t.row+" din Sheets";
   $("formHead").hidden=false; $("btnNew").hidden=false;
-  $("btnDirect").textContent="Salvează modificările"; $("btnSave").hidden=true;
+  $("btnDirect").textContent="Salvează modificările"; $("btnSave").hidden=true; $("btnGU").hidden=true;
   paint(); update();
   location.hash="#adauga";
   setTimeout(function(){ $("form").scrollIntoView({behavior:"smooth",block:"start"}); },60); }
@@ -1829,6 +1845,7 @@ $("btnDirect").onclick=async function(){ var t=readForm(), b=$("btnDirect");
   }
   var data={dest:t.dest,inst:t.inst,dir:t.dir,mss:t.mss,res:t.res,date:t.date,time:t.time,liq:t.liq,setup:t.setup,news:t.news,re:t.re,ctx:t.ctx,
     liqTxt:t.liqTxt,setupTxt:t.setupTxt,shot:t.shot,com:t.com,createdAt:Date.now()};
+  if(data.dest==="GUL" && (data.inst!=="GBPUSD" || DESTS.GUL.liqs.indexOf(data.liq)<0)){ fmsg("„GU - Locale” primește doar GBPUSD cu LIQ LOCALA / LIQ LOCALA+.","no"); return; }
   var tab=tabOf(data); b.disabled=true; fmsg("Scriu în „"+tab+"”…");
   try{
     var res=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:"'"+tab+"'!A6:AZ"},{cache:false});
@@ -1844,6 +1861,7 @@ $("btnDirect").onclick=async function(){ var t=readForm(), b=$("btnDirect");
     if(window.__pendShot){ shotPut(shotKey(data),window.__pendShot); window.__pendShot=null; }
     if(editing){ store.update(editing,data); } else store.add(data);
     fmsg("Adăugat în „"+tab+"” pe rândul "+row+".","ok");
+    if(data.dest==="GUL" && data.res){ gulRows=(gulRows||[]).concat([btSlim(data)]); btSave(); btStatus(); renderCells(true); }
     resetForm(t.dest!=="LIVE");
     if(t.dest==="LIVE") loadSheet();
   }catch(e){ var c=e&&e.code;
@@ -1852,6 +1870,14 @@ $("btnDirect").onclick=async function(){ var t=readForm(), b=$("btnDirect");
   }
   finally{ b.disabled=false; }
 };
+$("btnGU").onclick=async function(){
+  var liq=$("fLiq").value;
+  if(DESTS.GUL.liqs.indexOf(liq)<0){ fmsg("Backtest GU primește doar LIQ LOCALA / LIQ LOCALA+. Ai ales "+liq+".","no"); return; }
+  if(!f.res){ fmsg("Pune rezultatul (TP / SL / BE) înainte de Backtest GU.","no"); return; }
+  var pd=f.dest, pi=f.inst, g=$("btnGU"); g.disabled=true;
+  f.dest="GUL"; f.inst="GBPUSD"; buildInst(); $("fLiq").value=liq; paint(); update();
+  try{ await $("btnDirect").onclick(); }
+  finally{ g.disabled=false; f.dest=pd; f.inst=pi; buildInst(); paint(); } };
 $("form").addEventListener("submit",function(e){ e.preventDefault(); var t=readForm();
   if(!t.date||!t.time){ update(); (t.date?$("fTime"):$("fDate")).focus(); return; }
   var data={dest:t.dest,inst:t.inst,dir:t.dir,mss:t.mss,res:t.res,date:t.date,time:t.time,liq:t.liq,setup:t.setup,news:t.news,re:t.re,ctx:t.ctx,
@@ -1996,7 +2022,9 @@ $("btnWrite").onclick=async function(){ if(!plan) return; var p=plan, done=[]; $
   try{
     for(var i=0;i<p.parts.length;i++){ var q=p.parts[i];
       await mcp.callTool(SERVER,"update_values",{spreadsheetId:SHEET,range:"'"+q.tab+"'!A"+q.start+":"+endCol()+(q.start+q.rows.length-1),values:q.rows},{cache:false});
-      q.ids.forEach(function(id,k){ store.update(id,{synced:true,row:q.start+k}); });
+      q.ids.forEach(function(id,k){ store.update(id,{synced:true,row:q.start+k});
+        var tq=trades.filter(function(x){return x.id===id;})[0]; if(tq && tq.dest==="GUL" && tq.res) gulRows=(gulRows||[]).concat([btSlim(tq)]); });
+      if(q.tab===TABS_SHEET.GUL){ btSave(); btStatus(); renderCells(true); }
       done.push("„"+q.tab+"” r."+q.start+(q.rows.length>1?"–"+(q.start+q.rows.length-1):""));
     }
     p.dups.forEach(function(t){ store.update(t.id,{synced:true}); });
