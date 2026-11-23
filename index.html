@@ -791,7 +791,7 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
         <div class="calc" id="calc"></div>
         <div class="actions">
           <button type="button" class="primary wide" id="btnDirect">Adaugă în Sheets</button>
-          <button type="submit" class="ghost wide" id="btnSave">Salvează la „De trimis”</button>
+          <button type="submit" class="ghost wide" id="btnSave" hidden>Salvează la „De trimis”</button>
         </div>
         <p class="msg" id="formMsg" hidden></p>
       </form>
@@ -1085,7 +1085,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="23.11.2026 17:45";   /* amprenta versiunii */
+var BUILD="23.11.2026 17:55";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1796,7 +1796,7 @@ if($("btnAccAdd")) $("btnAccAdd").onclick=function(){
   var d=new Date(); d.setHours(12,0,0,0);
   accAll().push(accFix({id:accUid(),name:String(n||"Cont nou").trim()||"Cont nou",start:0,target:10,size:10000,from:d.getTime()}));
   accCommit(); };
-function resetForm(keepDate){ editing=null; editRow=null; $("btnDirect").textContent="Adaugă în Sheets"; $("btnSave").hidden=false; f.res=""; f.re="0";
+function resetForm(keepDate){ editing=null; editRow=null; $("btnDirect").textContent="Adaugă în Sheets"; $("btnSave").hidden=true; f.res=""; f.re="0";
   if(!keepDate) $("fDate").value=roDate(todayISO());
   $("fTime").value="";
   $("fCtx").value=""; $("fShot").value=""; $("fCom").value=""; $("fNews").value="───";
@@ -1805,7 +1805,7 @@ function loadForm(t){ editing=t.id; f.dest=t.dest||"LIVE"; f.inst=t.inst; buildI
   $("fDate").value=roDate(t.date); $("fTime").value=t.time; $("fLiq").value=t.liq; $("fSetup").value=t.setup; $("fNews").value=t.news||"───";
   $("fCtx").value=t.ctx||""; $("fShot").value=t.shot||""; $("fCom").value=t.com||"";
   $("fLiqTxt").value=t.liqTxt||liqDisc(t.liq); $("fSetupTxt").value=t.setupTxt||setupDisc(t.setup); liqDirty=!!t.liqTxt; setupDirty=!!t.setupTxt;
-  $("formTitle").textContent="Editezi tradeul"; $("formHead").hidden=false; $("btnSave").textContent="Salvează modificările"; $("btnNew").hidden=false; paint(); update();
+  $("formTitle").textContent="Editezi tradeul"; $("formHead").hidden=false; $("btnSave").hidden=false; $("btnSave").textContent="Salvează modificările"; $("btnNew").hidden=false; paint(); update();
   $("form").scrollIntoView({behavior:"smooth",block:"start"}); }
 function loadSheetRow(t){
   resetForm(true); editRow={row:t.row, tab:TAB, inst:t.inst, instRaw:t.instRaw};
