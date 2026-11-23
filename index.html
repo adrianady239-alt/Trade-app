@@ -1058,7 +1058,10 @@ function applyCols(hdr){
   var m={}, i;
   for(i=0;i<hdr.length;i++){ var k=normH(hdr[i]); if(k && m[k]==null) m[k]=i; }
   if(m[normH("DATA")]==null || m[normH("PIATA")]==null) return false;
-  COL=m; COLN=Math.max(hdr.length,19); return true; }
+  /* lățimea de scriere = ultima coloană a tradeului (COMENTARII), nu tot antetul:
+     tabelul lateral SETUP din U:Z nu trebuie atins */
+  var last=18; HEAD.forEach(function(n){ var k=m[normH(n)]; if(k!=null && k>last) last=k; });
+  COL=m; COLN=last+1; return true; }
 function ci(name){ if(COL){ var i=COL[normH(name)]; if(i!=null) return i; } return HEAD.indexOf(name); }
 function colL(x){ var o=""; while(x>0){ var r=(x-1)%26; o=String.fromCharCode(65+r)+o; x=(x-r-1)/26; } return o; }
 function endCol(){ return colL(COLN); }
@@ -1079,13 +1082,13 @@ var DEFAULT_ACCTS=["Cont Live - Ftmo 10k","Cont Challenge - IF 10k"];
 var DESTS={LIVE:{label:"Live",insts:INSTS,hint:"Se scrie în „🔆LIVE - Executii”. Apare în calendar și în jurnal."},
   TOTW:{label:"Trades of the week",insts:["DAX","GBPUSD"],hint:"Se scrie în „📊 TRADES OF THE  WEEK” (în afara eșantionului)."},
   BT:{label:"Backtest",insts:["DAX","GBPUSD","UK100"],hint:"Se scrie în foaia de backtest a instrumentului: DAX (500), GBPUSD (500) sau UK100."},
-  GUL:{label:"GU Locale",insts:["GBPUSD"],liqs:["LIQ LOCALA","LIQ LOCALA+"],hint:"Backtest separat: se scrie în „GU - Locale”. Doar GBPUSD, doar LIQ LOCALA / LIQ LOCALA+."}};
+  GUL:{label:"GU Locale",insts:["GBPUSD"],hint:"Backtest separat: se scrie în „GU - Locale”. Doar GBPUSD."}};
 var TABS_SHEET={LIVE:"🔆LIVE - Executii",TOTW:"📊 TRADES OF THE  WEEK",BT_DAX:"DAX (500)",BT_GBPUSD:"GBPUSD (500)",BT_UK100:"UK100",GUL:"GU - Locale"};
 function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst]:TABS_SHEET[d]; }
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="23.11.2026 17:55";   /* amprenta versiunii */
+var BUILD="23.11.2026 18:20";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1591,7 +1594,7 @@ function renderCells(force){
   paintSeg($("cSrc")); paintSeg($("cDim"));
   var rows=cPool(), cs=cellsOf(rows,cf.dim), tot=stat(rows);
   var inst=(jf.inst==="DAX"||jf.inst==="GBPUSD")?jf.inst:(jf.inst==="ALL"?"toate":"DAX+GU");
-  var nm={live:"Live",bt:"Backtest",totw:"TOTW",gul:"GU Locale"}[cf.src]; if(cf.src==="gul") inst="GBPUSD · LIQ LOCALA/+";
+  var nm={live:"Live",bt:"Backtest",totw:"TOTW",gul:"GU Locale"}[cf.src]; if(cf.src==="gul") inst="GBPUSD";
   $("cN").textContent=nm+" · "+inst+" · "+tot.n;
   tb.textContent="";
   var hr=el("tr"); [DIMS[cf.dim].t,"n","W/L/BE","WR","Int.90","R/tr"].forEach(function(h){ hr.appendChild(el("th",null,h)); }); tb.appendChild(hr);
@@ -1844,7 +1847,6 @@ $("btnDirect").onclick=async function(){ var t=readForm(), b=$("btnDirect");
   }
   var data={dest:t.dest,inst:t.inst,dir:t.dir,mss:t.mss,res:t.res,date:t.date,time:t.time,liq:t.liq,setup:t.setup,news:t.news,re:t.re,ctx:t.ctx,
     liqTxt:t.liqTxt,setupTxt:t.setupTxt,shot:t.shot,com:t.com,createdAt:Date.now()};
-  if(data.dest==="GUL" && (data.inst!=="GBPUSD" || DESTS.GUL.liqs.indexOf(data.liq)<0)){ fmsg("„GU - Locale” primește doar GBPUSD cu LIQ LOCALA / LIQ LOCALA+.","no"); return; }
   var tab=tabOf(data); b.disabled=true; fmsg("Scriu în „"+tab+"”…");
   try{
     var res=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:"'"+tab+"'!A6:AZ"},{cache:false});
