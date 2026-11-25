@@ -837,6 +837,7 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
           <div class="f"><label for="kNewsN">Care</label><input id="kNewsN" autocomplete="off" placeholder="CPI, NFP…"></div>
         </div>
         <div class="seg" id="kNewsS" role="group" aria-label="Impact" style="margin-top:9px"></div>
+        <p class="note" id="kNewsInfo" style="margin-top:7px"></p>
         <button type="button" class="ghost wide" id="btnEcon" style="margin-top:10px">Adu știrile zilei</button>
         <p class="msg" id="econMsg" hidden></p>
         <div class="econlist" id="econList"></div>
@@ -899,7 +900,7 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
 
 
     <div class="card"><h2>Reguli</h2>
-      <p class="note" style="margin:0;line-height:1.6">Max 2 tradeuri pe zi · stop după 2 pierderi · BE la 1.5R · DAX 10:15–18:00, luni/marți fără 10:15–12:00 · GBPUSD fără 16:15–16:45 · exclus DAX LIQ LOCALA+ și GBPUSD LOD+ · fără ★★★, NFP, CPI, FOMC.</p>
+      <p class="note" style="margin:0;line-height:1.6">Max 2 tradeuri pe zi · stop după 2 pierderi · BE la 1.5R · DAX 10:15–18:00, luni/marți fără 10:15–12:00 · GBPUSD fără 16:15–16:45 · exclus DAX LIQ LOCALA+ și GBPUSD LOD+ · fără NFP, CPI, FOMC, bank holiday (USD / GBP / EUR). Celelalte ★★★: avertisment.</p>
     </div>
   </section>
 </div>
@@ -1088,11 +1089,15 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="23.11.2026 18:40";   /* amprenta versiunii */
+var BUILD="25.11.2026 19:30";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
 var newsCfg={};   /* "2026-11-20": {t:["15:30","17:00"], s:"★★★", n:"CPI"} */
+/* INVALID de la știri doar pentru NFP, CPI, FOMC (decizie) și bank holiday — cerut 25.11.2026 */
+var HARD_RE=/(non-?farm|\bnfp\b|payroll|\bcpi\b|consumer price|fomc|federal funds rate|bank holiday|holiday)/i;
+function newsHard(n){ return HARD_RE.test(String(n||"").replace(/fomc[^,]*minutes/ig,"")); }
+function newsFtmo(n){ return (typeof FTMO_RE!=="undefined") && FTMO_RE.test(String(n||"")); }
 function newsOf(iso){ var d=newsCfg[iso]; return d?{t:(d.t||[]),s:(d.s||"───"),n:(d.n||"")}:{t:[],s:"───",n:""}; }
 function newsTimes(str){ var out=[];
   String(str||"").split(/[^0-9:]+/).forEach(function(x){ var m=x.match(/^(\d{1,2}):(\d{2})$/);
@@ -1330,11 +1335,17 @@ function checks(t){ var w=[];
     if(t.liq==="LOD+") w.push({l:"no",m:"GBPUSD LOD+ e exclus din filtrul Normal (33%, n 12)."}); }
   if(t.mss==="AGRESIV") w.push({l:"warn",m:"MSS Agresiv."});
   var NW=newsOf(t.date), st=(t.news&&t.news!=="───")?t.news:NW.s, nn=NW.n?(" ("+NW.n+")"):"";
-  if(st==="★★★") w.push({l:"no",m:"Știre ★★★"+nn+": zi fără trading."});
-  else if(st==="★★") w.push({l:"warn",m:"Știre ★★"+nn+" azi."});
+  var hard=newsHard(NW.n), ftmo=newsFtmo(NW.n), ore=NW.t.length?(" la "+NW.t.join(", ")):"";
+  if(st==="★★★"){
+    if(hard) w.push({l:"no",m:"Știre ★★★"+nn+ore+": NFP / CPI / FOMC / bank holiday — zi fără trading."});
+    else if(!NW.n) w.push({l:"warn",m:"Știre ★★★ fără nume"+ore+". Dacă e NFP / CPI / FOMC / bank holiday, nu intra. Scrie numele în Calendar → Știri."});
+    else w.push({l:"warn",m:"Știre ★★★"+nn+ore+". Nu e NFP / CPI / FOMC / bank holiday: se poate tranzacționa."+
+      (ftmo?" FTMO: blocat ±2 min.":" FTMO: liber.")+" IF: dacă ești în poziție la știre, risc 0.5% și RR ≤1:3."}); }
+  else if(st==="★★") w.push({l:"warn",m:"Știre ★★"+nn+ore+". IF: dacă ești în poziție la știre, risc 0.5% și RR ≤1:3."});
   if(NW.t.length){ var mm=mins(t.time), near=null, best=1e9;
     NW.t.forEach(function(x){ var dd=Math.abs(mins(x)-mm); if(dd<best){ best=dd; near=x; } });
-    if(best<=2) w.push({l:"no",m:"Restricție FTMO: ești la "+best+" min de știrea de la "+near+". Fără ordine, SL, TP sau modificări, 2 minute înainte și după."});
+    if(best<=2 && (ftmo||hard)) w.push({l:"no",m:"Restricție FTMO: ești la "+best+" min de știrea de la "+near+". Fără ordine, SL, TP sau modificări, 2 minute înainte și după."});
+    else if(best<=2) w.push({l:"warn",m:"Știrea de la "+near+" e acum (±"+best+" min). Nu e pe lista FTMO; IF: risc 0.5%, RR ≤1:3."});
     else if(best<=15) w.push({l:"warn",m:"Știre la "+near+", adică peste "+best+" min."}); }
   var txt=((t.com||"")+" "+(t.ctx||"")).toLowerCase();
   if(BAD_WORDS.some(function(b){return new RegExp("(^|[^a-zăâîșț])"+b).test(txt);})) w.push({l:"no",m:"Comentariu „mic / înghesuit / forțat / întârziat / cherry pick”: live 0W / 8L / 1BE."});
@@ -2226,6 +2237,11 @@ function newsPaint(){ if(!$("kNewsS")) return;
   if(moved || document.activeElement!==$("kNewsT")) $("kNewsT").value=d.t.join(", ");
   if(moved || document.activeElement!==$("kNewsN")) $("kNewsN").value=d.n;
   paintSeg($("kNewsS"));
+  if($("kNewsInfo")){ var hd=newsHard(d.n), ft=newsFtmo(d.n);
+    $("kNewsInfo").textContent = d.s==="───" ? "" :
+      (d.s+" "+(d.n||"fără nume")+(d.t.length?" · "+d.t.join(", "):"")+" — "+
+       (hd?"NFP / CPI / FOMC / bank holiday: zi fără trading (INVALID).":
+        "se poate tranzacționa"+(ft?"; FTMO blocat ±2 min":"; FTMO liber")+"; IF: în poziție risc 0.5%, RR ≤1:3.")); }
   var h=$("newsBlk"); if(h) h.dataset.on=(d.t.length||d.s!=="───")?"1":"0";
   if(typeof econPaint==="function") econPaint(); }
 
