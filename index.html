@@ -363,6 +363,23 @@ button.primary.big{min-height:54px;font-size:16px;letter-spacing:-.01em}
 .kverd.ok{background:rgba(47,227,154,.1);border-color:rgba(47,227,154,.28);color:#8DF7C2}
 .kverd.no{background:rgba(255,77,94,.1);border-color:rgba(255,77,94,.28);color:#FF93A0}
 .kverd.mid{background:rgba(255,194,74,.09);border-color:rgba(255,194,74,.26);color:#FFD27A}
+.daycard{padding:12px var(--pad) 11px}
+.dayhd{display:flex;gap:6px;margin-bottom:10px}
+.dayhd .seg{flex:1;min-width:0}
+.dayhd .seg button{min-height:32px;padding:6px 4px;font-size:12.5px}
+.dayl{display:flex;flex-direction:column;gap:1px;border-radius:var(--r-m);overflow:hidden;border:1px solid var(--edge)}
+.dayr{display:grid;grid-template-columns:34px minmax(0,1fr) 44px 36px;align-items:center;gap:9px;
+  padding:10px 12px;background:var(--ctl-in)}
+.dayr .dd{font-size:12.5px;font-weight:650;color:var(--t2)}
+.dayr .dbar{position:relative;height:7px;border-radius:999px;background:var(--ctl);overflow:hidden}
+.dayr .dbar b{position:absolute;left:40%;top:0;bottom:0;width:1.5px;background:rgba(255,255,255,.3);z-index:2}
+.dayr .dbar i{display:block;height:100%;border-radius:999px;background:var(--flat);transition:width .3s ease}
+.dayr .dbar i.good{background:var(--win)} .dayr .dbar i.bad{background:var(--loss)} .dayr .dbar i.mid{background:var(--warn)}
+.dayr .dw{text-align:right;font-size:14.5px;font-weight:700;color:var(--t2);letter-spacing:-.02em}
+.dayr .dw.good{color:var(--win)} .dayr .dw.bad{color:var(--loss)} .dayr .dw.mid{color:var(--warn)}
+.dayr .dn{text-align:right;font-size:10.5px;color:var(--t4);font-weight:550}
+.dayr.thin .dw{opacity:.55}
+.dayfoot{font-size:11px;color:var(--t4);margin-top:10px;line-height:1.45}
 .kiv{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);font-weight:600;margin-top:4px}
 .kstop{border-radius:var(--r-m);padding:13px 14px;background:rgba(255,77,94,.11);border:1px solid rgba(255,77,94,.3)}
 .kstop b{font-size:17px;font-weight:750;color:var(--loss);letter-spacing:-.02em}
@@ -723,6 +740,16 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
         <div><div class="mn">Tradeuri</div><div class="mvv" id="heroN">0</div></div>
         <div><div class="mn">Dolari</div><div class="mvv" id="heroUsd">$0</div></div>
       </div>
+    </div>
+
+    <div class="sec"><span>Win rate pe zile</span></div>
+    <div class="glass daycard">
+      <div class="dayhd">
+        <div class="seg" id="hInst" role="group" aria-label="Piață"></div>
+        <div class="seg" id="hSrc" role="group" aria-label="Sursă"></div>
+      </div>
+      <div class="dayl" id="dayList"></div>
+      <div class="dayfoot" id="dayFoot"></div>
     </div>
 
     <a class="pending-row" href="#adauga" id="pendRow" hidden><b id="kPend">0</b> <span id="pendTxt">tradeuri netrimise</span><span>Trimite în Sheets</span></a>
@@ -1089,7 +1116,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="25.11.2026 19:30";   /* amprenta versiunii */
+var BUILD="27.11.2026 22:30";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1451,6 +1478,7 @@ function renderHome(){
     m.title=(t.instRaw||t.inst)+" "+t.time; b.appendChild(m); });
   var nowM=pad(d.getHours())+":"+pad(d.getMinutes());
   if(mins(nowM)>=DAY_A+H && mins(nowM)<=DAY_B+H){ var nw=el("span","now"); nw.style.left=pctOfDay(nowM,tdy)+"%"; b.appendChild(nw); }
+  renderDays();
   /* lista */
   var h=$("homeList"); h.textContent="";
   if(!sheetLoaded){ for(var j=0;j<3;j++){ var r=el("div","sk-row"), m2=el("div");
@@ -1626,6 +1654,43 @@ function renderCells(force){
 seg($("cSrc"),["live","bt","totw","gul"],function(v){ cf.src=v; renderCells(); },["Live","Backtest","TOTW","GU Locale"],function(){return cf.src;});
 seg($("cDim"),["ziiv","zi","iv","liq","setup","mss","dir"],function(v){ cf.dim=v; renderCells(); },
     ["Zi × interval","Zi","Interval","Lichiditate","Setup","MSS","Direcție"],function(){return cf.dim;});
+/* ---------- Acasă: win rate pe zile ---------- */
+var HFK="tradeapp-hf", hf={inst:"DAX",src:"bt"};
+try{ var _h=JSON.parse(localStorage.getItem(HFK)||"null"); if(_h&&_h.inst&&_h.src) hf=_h; }catch(e){}
+function hPool(){
+  var rows;
+  if(hf.src==="bt") rows=(btRows[hf.inst]||[]);
+  else if(hf.src==="totw") rows=(totwRows||[]).filter(function(t){ return t.inst===hf.inst; });
+  else rows=all().filter(function(t){ return t.inst===hf.inst; });
+  return (rows||[]).filter(function(t){ return resK(t) && noStars(t); }); }
+function renderDays(){
+  var box=$("dayList"); if(!box) return;
+  paintSeg($("hInst")); paintSeg($("hSrc"));
+  var rows=hPool(), cs=cellsOf(rows,"zi"), tot=stat(rows), m={};
+  cs.forEach(function(c){ m[c.k]=c; });
+  box.textContent="";
+  DIMS.zi.ord.forEach(function(d){
+    var c=m[d]||{n:0,W:0,L:0,B:0,wr:null,R:0}, dec=c.W+c.L,
+        pct=(c.wr==null?0:Math.round(100*c.wr)),
+        cls=(dec>=10)?(pct<34?"bad":(pct>=52?"good":"mid")):"";
+    var r=el("div","dayr"+(dec&&dec<10?" thin":""));
+    r.appendChild(el("span","dd",d.slice(0,3)));
+    var tr=el("span","dbar"), fi=el("i","f"+(cls?" "+cls:""));
+    fi.style.width=(c.wr==null?0:Math.max(2,Math.min(100,pct)))+"%";
+    tr.appendChild(fi); tr.appendChild(el("b")); r.appendChild(tr);
+    r.appendChild(el("span","dw"+(cls?" "+cls:""), c.wr==null?"–":pct+"%"));
+    r.appendChild(el("span","dn", c.n?("n"+c.n):"–"));
+    box.appendChild(r); });
+  var f=$("dayFoot"); if(!f) return;
+  if(!tot.n){ f.textContent=(hf.src==="bt"||hf.src==="totw")
+      ? "Fără date. Sincronizează backtestul din Jurnal → Celule."
+      : "Niciun trade cu rezultat pe "+hf.inst+"."; return; }
+  f.textContent="Total "+tot.n+" · WR "+(tot.wr==null?"–":Math.round(100*tot.wr)+"%")+
+    " · "+fmtR(tot.R/tot.n)+"/trade. Fără ★★★. Linia din bară = 40% (prag de lucru). Sub 10 decise = orientativ."; }
+seg($("hInst"),["DAX","GBPUSD"],function(v){ hf.inst=v; hfSave(); renderDays(); },["DAX","GU"],function(){return hf.inst;});
+seg($("hSrc"),["bt","totw","live"],function(v){ hf.src=v; hfSave(); renderDays(); },["Backtest","TOTW","Live"],function(){return hf.src;});
+function hfSave(){ try{ localStorage.setItem(HFK,JSON.stringify(hf)); }catch(e){} }
+
 /* ---------- copia locală a backtestului (sincronizată cu Sheets) ---------- */
 var BTK="tradeapp-bt", btAt=0;
 function btSlim(r){ return {inst:r.inst,instRaw:r.instRaw,date:r.date,time:r.time,interval:r.interval,
@@ -1672,7 +1737,7 @@ async function loadBT(silent){
   finally{ COL=cS; COLN=cN; btBusy=false; btStatus();
     if(b) b.textContent=btCount()?"Resincronizează backtestul":"Sincronizează backtestul";
     if(b) b.disabled=false;
-    renderCells(true); if($("ovl") && !$("ovl").hidden && ovlPane==="check" && $("kOut").innerHTML) kVerify(); }
+    renderCells(true); renderDays(); if($("ovl") && !$("ovl").hidden && ovlPane==="check" && $("kOut").innerHTML) kVerify(); }
   return ok; }
 if($("btnBT")) $("btnBT").onclick=function(){ loadBT(false); };
 
@@ -1877,8 +1942,28 @@ $("btnDirect").onclick=async function(){ var t=readForm(), b=$("btnDirect");
     if(data.dest==="GUL" && data.res){ gulRows=(gulRows||[]).concat([btSlim(data)]); btSave(); btStatus(); renderCells(true); }
     resetForm(t.dest!=="LIVE");
     if(t.dest==="LIVE") loadSheet();
-  }catch(e){ var c=e&&e.code;
-    fmsg(failText(e)+((c==="server_unavailable"||c==="upstream_error")?" L-am pus la „De trimis”; la trimitere duplicatele se sar.":" Tradeul nu s-a scris. L-am pus la „De trimis”."),"no");
+  }catch(e){ var c=e&&e.code, curatat=false;
+    /* o scriere respinsă de validare lasă rândul pe jumătate: îl verific și îl curăț */
+    if(typeof row==="number"){
+      try{
+        var chk=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:rowRange(tab,row)},{cache:false});
+        var got=((chk.payload&&chk.payload.values)||[])[0]||[], full=toRow(data);
+        var complet=full.every(function(v,i){ return String(v==null?"":v).trim()===String(got[i]==null?"":got[i]).trim(); });
+        var gol=!got.some(function(v){ return String(v==null?"":v).trim(); });
+        if(complet){
+          data.synced=true; data.row=row;
+          if(window.__pendShot){ shotPut(shotKey(data),window.__pendShot); window.__pendShot=null; }
+          if(editing){ store.update(editing,data); } else store.add(data);
+          fmsg("Adăugat în „"+tab+"” pe rândul "+row+".","ok");
+          resetForm(t.dest!=="LIVE"); if(t.dest==="LIVE") loadSheet();
+          return; }
+        if(!gol){
+          await mcp.callTool(SERVER,"update_values",{spreadsheetId:SHEET,range:rowRange(tab,row),
+            values:[full.map(function(){ return ""; })]},{cache:false});
+          curatat=true; }
+      }catch(e2){}
+    }
+    fmsg(failText(e)+((c==="server_unavailable"||c==="upstream_error")?" L-am pus la „De trimis”; la trimitere duplicatele se sar.":" Tradeul nu s-a scris. L-am pus la „De trimis”.")+(curatat?" Rândul "+row+", scris pe jumătate, l-am șters.":""),"no");
     data.synced=false; if(editing) store.update(editing,data); else store.add(data);
   }
   finally{ b.disabled=false; }
@@ -2039,7 +2124,31 @@ $("btnWrite").onclick=async function(){ if(!plan) return; var p=plan, done=[]; $
     p.dups.forEach(function(t){ store.update(t.id,{synced:true}); });
     msg("Scris: "+done.join(" · ")+".","ok");
     loadSheet();
-  }catch(e){ mcpFail(e); if(done.length) msg("Scris doar: "+done.join(" · ")+". Restul nu: "+failText(e),"no"); }
+  }catch(e){ mcpFail(e);
+    /* blocul respins poate rămâne scris pe jumătate: păstrez rândurile complete, le curăț pe cele parțiale */
+    var repar="";
+    try{
+      var q2=p.parts[i];
+      if(q2){
+        var rg="'"+q2.tab+"'!A"+q2.start+":"+endCol()+(q2.start+q2.rows.length-1);
+        var chk2=await mcp.callTool(SERVER,"get_values",{spreadsheetId:SHEET,range:rg},{cache:false});
+        var got2=(chk2.payload&&chk2.payload.values)||[], rest=[], sters=0, bune=0;
+        for(var k=0;k<q2.rows.length;k++){
+          var want=q2.rows[k], have=got2[k]||[];
+          var eg=want.every(function(v,j){ return String(v==null?"":v).trim()===String(have[j]==null?"":have[j]).trim(); });
+          var vid=!have.some(function(v){ return String(v==null?"":v).trim(); });
+          if(eg){ store.update(q2.ids[k],{synced:true,row:q2.start+k}); bune++; rest.push(want); }
+          else if(vid){ rest.push(want.map(function(){ return ""; })); }
+          else { rest.push(want.map(function(){ return ""; })); sters++; }
+        }
+        if(sters) await mcp.callTool(SERVER,"update_values",{spreadsheetId:SHEET,range:rg,values:rest},{cache:false});
+        if(bune) done.push("„"+q2.tab+"” r."+q2.start+" ("+bune+")");
+        if(sters) repar=" Am șters "+sters+" rând"+(sters>1?"uri":"")+" scris"+(sters>1?"e":"")+" pe jumătate.";
+      }
+    }catch(e3){}
+    if(done.length) msg("Scris doar: "+done.join(" · ")+". Restul nu: "+failText(e)+repar,"no");
+    else if(repar) msg(failText(e)+repar,"no");
+    loadSheet(); }
   finally{ plan=null; $("btnWrite").disabled=false; $("btnWrite").hidden=true; $("btnCancelSync").hidden=true; $("btnPlan").hidden=false; }
 };
 
