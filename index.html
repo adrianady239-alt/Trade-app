@@ -1116,7 +1116,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="27.11.2026 22:30";   /* amprenta versiunii */
+var BUILD="27.11.2026 22:55";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1396,7 +1396,10 @@ function parseSheet(vals,start){ var out=[]; start=start||7;
       date:date, res:g(c.r), dir:g(c.b), liq:g(c.l), setup:g(c.s), mss:g(c.m), re:!!g(c.re), ses:g(c.se),
       news:g(c.n), time:g(c.o), interval:g(c.i), shot:g(c.sh), com:g(c.cm), ctx:g(c.cm)}); });
   return out; }
-function all(){ var q=trades.filter(function(t){return !t.synced && (t.dest||"LIVE")==="LIVE" && /^\d{4}-\d{2}-\d{2}$/.test(t.date||"");}).map(function(t){ var x=Object.assign({},t); x.key="q:"+t.id; x.src="queue"; return x; });
+function all(){ var seen={};
+  sheet.forEach(function(t){ seen[(t.inst||"")+"|"+(t.date||"")+"|"+(t.time||"")]=1; });
+  var q=trades.filter(function(t){return !t.synced && (t.dest||"LIVE")==="LIVE" && /^\d{4}-\d{2}-\d{2}$/.test(t.date||"")
+      && !seen[(t.inst||"")+"|"+(t.date||"")+"|"+(t.time||"")];}).map(function(t){ var x=Object.assign({},t); x.key="q:"+t.id; x.src="queue"; return x; });
   return sheet.concat(q); }
 function isCore(t){ return CORE.indexOf(t.inst)>=0; }
 
@@ -1419,6 +1422,8 @@ function kpis(){ var A=all(), tdy=todayISO(), mo=tdy.slice(0,7), a=0, b=0, w=0, 
   $("kTodayUsd").textContent=usdOf(a)+" azi";
   $("kMonth").textContent=fmtR(b); $("kMonth").className="mv "+rCls(b);
   $("kWr").textContent=(w+l)?Math.round(100*w/(w+l))+"%":"–";
+  var nAzi=A.filter(function(t){ return isCore(t)&&t.date===tdy; }).length;
+  if($("kSlotsPill")) $("kSlotsPill").textContent=nAzi+" / 2 tradeuri";
   var p=trades.filter(function(t){return !t.synced;}).length;
   $("kPend").textContent=p; $("tabCnt").textContent=p; $("tabCnt").dataset.n=p;
   $("pendRow").hidden=!p; $("pendTxt").textContent=(p===1?"trade netrimis":"tradeuri netrimise");
@@ -2074,6 +2079,12 @@ async function loadSheet(){
     var vals=all0.slice(1), cD=ci("DATA"), last=-1;
     vals.forEach(function(r,i){ if(r&&String(r[cD]||"").trim()) last=i; });
     sheet=parseSheet(vals,7); sheetLoaded=true;
+    /* tradeurile din coadă care există deja în foaie se marchează singure ca trimise */
+    (function(){ var seen={};
+      sheet.forEach(function(t){ seen[(t.inst||"")+"|"+(t.date||"")+"|"+(t.time||"")]=t.row||true; });
+      trades.filter(function(t){ return !t.synced; }).forEach(function(t){
+        var hit=seen[(t.inst||"")+"|"+(t.date||"")+"|"+(t.time||"")];
+        if(hit) store.update(t.id,{synced:true,row:(typeof hit==="number"?hit:t.row)}); }); })();
     var n=new Date();
     $("mcpDot").className="ok"; $("mcpTxt").textContent="Google Sheets: "+sheet.length+" tradeuri în LIVE · primul rând liber "+(7+last+1)+" · actualizat "+pad(n.getHours())+":"+pad(n.getMinutes());
     $("topDot").className="ok"; $("topTxt").textContent="Sync "+pad(n.getHours())+":"+pad(n.getMinutes());
