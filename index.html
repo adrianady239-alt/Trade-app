@@ -946,6 +946,7 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
       </div>
       <div class="f"><label for="kLiq">Lichiditate preluată</label><select id="kLiq"></select></div>
       <div class="f"><label>Interval</label><div class="seg" id="kIv" role="group" aria-label="Interval orar"></div></div>
+      <div class="f"><label>Zi</label><div class="seg" id="kZi" role="group" aria-label="Ziua săptămânii"></div></div>
       <div class="f"><label>Setup <span class="opt">opțional</span></label>
         <div class="seg wrapseg" id="kGap" role="group" aria-label="Tipul de gap"></div>
         <div class="seg" id="kLeg" role="group" aria-label="Leg" style="margin-top:8px"></div>
@@ -1071,6 +1072,8 @@ var LUNI=["IANUARIE","FEBRUARIE","MARTIE","APRILIE","MAI","IUNIE","IULIE","AUGUS
 var LUNI_D=["Ianuarie","Februarie","Martie","Aprilie","Mai","Iunie","Iulie","August","Septembrie","Octombrie","Noiembrie","Decembrie"];
 var ZILE=["DUMINICA","LUNI","MARTI","MIERCURI","JOI","VINERI","SAMBATA"];
 var ZILE_D=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];
+var ZILE_ORD=["Luni","Marți","Miercuri","Joi","Vineri"], ZILE_SC=["Lu","Ma","Mi","Jo","Vi"];
+function ziOf(t){ var d=parseISO(t&&t.date); return isNaN(d)?"":ZILE_D[d.getDay()]; }
 var FREE={"2026-11":[13,17,19,23,25,27]};   /* implicit; se poate schimba din Setări */
 var freeCfg={};
 function freeDays(key){ var a=freeCfg[key]; return (a&&a.length)?a:(FREE[key]||null); }
@@ -1116,7 +1119,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="27.11.2026 22:55";   /* amprenta versiunii */
+var BUILD="28.11.2026 12:10";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -2236,11 +2239,13 @@ LIQS.forEach(function(v){ $("kLiq").appendChild(el("option",null,v)); });
 
 function hhmm(){ var d=new Date(); return pad(d.getHours())+":"+pad(d.getMinutes()); }
 var KVK="tradeapp-check";
-function kvSave(){ try{ localStorage.setItem(KVK,JSON.stringify({inst:kv.inst,liq:kv.liq,mss:kv.mss,gap:kv.gap,slg:kv.slg,iv:kv.iv})); }catch(e){} }
+function kvSave(){ try{ localStorage.setItem(KVK,JSON.stringify({inst:kv.inst,liq:kv.liq,mss:kv.mss,gap:kv.gap,slg:kv.slg,iv:kv.iv,zi:kv.zi})); }catch(e){} }
 function kvLoad(){ try{ var j=JSON.parse(localStorage.getItem(KVK)||"null"); if(!j) return;
   if(j.inst) kv.inst=j.inst; if(j.liq && LIQS.indexOf(j.liq)>=0) kv.liq=j.liq;
   if(j.mss) kv.mss=j.mss; if(j.gap!=null) kv.gap=j.gap; kv.slg=!!j.slg;
-  if(j.iv!=null && (j.iv==="" || INTERV.indexOf(j.iv)>=0)) kv.iv=j.iv; kv.setup=kSetupOf(); }catch(e){} }
+  if(j.iv!=null && (j.iv==="" || INTERV.indexOf(j.iv)>=0)) kv.iv=j.iv;
+  if(j.zi!=null && (j.zi==="" || ZILE_ORD.indexOf(j.zi)>=0)) kv.zi=j.zi;
+  kv.setup=kSetupOf(); }catch(e){} }
 function ovlOpen(pane){ ovlPane=pane||"check"; $("ovl").hidden=false; document.body.style.overflow="hidden";
   if(ovlPane==="check"){ $("kLiq").value=kv.liq; }
   paintOvl();
@@ -2259,9 +2264,11 @@ seg($("kGap"),[""].concat(GAPS),function(v){ kv.gap=v; if(v==="MGS") kv.slg=fals
   kv.setup=kSetupOf(); paintSetup(); kClear(); },["—"].concat(GAPS),function(){return kv.gap;});
 seg($("kIv"),["","10:15 - 12:00","12:00 - 16:15","16:45 - 22:00"],function(v){ kv.iv=v; paintSeg($("kIv")); kClear(); },
   ["Acum","10:15","12:00","16:45"],function(){return kv.iv;});
+seg($("kZi"),[""].concat(ZILE_ORD),function(v){ kv.zi=v; paintSeg($("kZi")); kClear(); },
+  ["Azi"].concat(ZILE_SC),function(){return kv.zi||"";});
 seg($("kLeg"),["0","1"],function(v){ if(kv.gap==="MGS") return; kv.slg=(v==="1");
   kv.setup=kSetupOf(); paintSetup(); kClear(); },["Primul leg","SLG"],function(){return kv.slg?"1":"0";});
-function paintSetup(){ paintSeg($("kGap")); paintSeg($("kLeg")); paintSeg($("kIv"));
+function paintSetup(){ paintSeg($("kGap")); paintSeg($("kLeg")); paintSeg($("kIv")); paintSeg($("kZi"));
   var off=(!kv.gap || kv.gap==="MGS");
   $("kLeg").classList.toggle("off",off);
   Array.prototype.forEach.call($("kLeg").children,function(b){ b.disabled=off; }); }
@@ -2295,25 +2302,26 @@ function wrCard(lab,st,hint){
     (hint?'<span class="wrh">'+esc(hint)+'</span>':'')+'</div>'+
     '<div class="wrv">'+wr+'</div><div class="wrm">'+esc(sub)+'</div></div>'; }
 function kVerify(){
-  var t=kTrade(), iv=kv.iv||interval(t.time,t.date), d=parseISO(t.date), zi=ZILE_D[d.getDay()];
+  var t=kTrade(), iv=kv.iv||interval(t.time,t.date), d=parseISO(t.date), zi=kv.zi||ZILE_D[d.getDay()];
+  var ziOk=function(x){ return ziOf(x)===zi; };
   var useBT=!!(btRows[t.inst]&&btRows[t.inst].length);
   var pool=(useBT?btRows[t.inst]:all().filter(function(x){return x.inst===t.inst;}))
     .filter(function(x){ return resK(x) && noStars(x); });
   function sub(f){ return stat(pool.filter(f)); }
-  var sLiq=sub(function(x){ return x.liq===t.liq; });
-  var sSetLiq=t.setup?sub(function(x){ return x.liq===t.liq && x.setup===t.setup; }):null;
-  var sLiqIv=sub(function(x){ return x.liq===t.liq && ivOf(x)===iv; });
-  var sFull=sub(function(x){ return x.liq===t.liq && ivOf(x)===iv &&
+  var sLiq=sub(function(x){ return x.liq===t.liq && ziOk(x); });
+  var sSetLiq=t.setup?sub(function(x){ return x.liq===t.liq && x.setup===t.setup && ziOk(x); }):null;
+  var sLiqIv=sub(function(x){ return x.liq===t.liq && ivOf(x)===iv && ziOk(x); });
+  var sFull=sub(function(x){ return x.liq===t.liq && ivOf(x)===iv && ziOk(x) &&
     String(x.mss||"").toUpperCase()===t.mss && (!t.setup || x.setup===t.setup); });
   var h='';
   var w=checks(t), bad=w.filter(function(x){return x.l==="no";});
   if(bad.length) h+='<div class="kstop"><b>INVALID</b><ul>'+bad.map(function(x){return '<li>'+esc(x.m)+'</li>';}).join("")+'</ul></div>';
-  h+='<div class="kiv">'+zi+' · '+iv+(kv.iv?' · ales':' · acum '+t.time)+'</div>';
+  h+='<div class="kiv">'+zi+(kv.zi?' · ales':'')+' · '+iv+(kv.iv?' · ales':' · acum '+t.time)+'</div>';
   h+='<div class="wrs">';
-  h+=wrCard("Lichiditate "+t.liq, sLiq);
-  if(sSetLiq) h+=wrCard(t.setup+" pe "+t.liq, sSetLiq);
-  h+=wrCard(t.liq+" în "+iv, sLiqIv);
-  h+=wrCard((t.setup?t.setup+" + ":"")+t.liq+" · MSS "+(t.mss==="AGRESIV"?"agresiv":"normal")+" · "+iv, sFull, "intrarea ta");
+  h+=wrCard("Lichiditate "+t.liq+" · "+zi, sLiq);
+  if(sSetLiq) h+=wrCard(t.setup+" pe "+t.liq+" · "+zi, sSetLiq);
+  h+=wrCard(t.liq+" în "+iv+" · "+zi, sLiqIv);
+  h+=wrCard((t.setup?t.setup+" + ":"")+t.liq+" · MSS "+(t.mss==="AGRESIV"?"agresiv":"normal")+" · "+iv+" · "+zi, sFull, "intrarea ta");
   h+='</div>';
   var best=sFull.n>=10?sFull:(sSetLiq&&sSetLiq.n>=10?sSetLiq:(sLiqIv.n>=10?sLiqIv:sLiq));
   if(best.n>=10 && best.wr!=null){
@@ -2322,15 +2330,25 @@ function kVerify(){
       (vb<40?"Sub pragul de lucru de 40%.":(vb>=52?"Peste baza de 52%.":"Între 40% și 52%: se poate, dar nu e dintre cele bune."))+
       ' Cea mai sigură felie cu eșantion: '+vb+'% din '+best.n+'.</div>'; }
   /* toate lichiditățile pe intervalul de acum — ca să vezi dintr-o privire unde stai */
-  var ls=LIQS.map(function(L){ var st=stat(pool.filter(function(x){ return x.liq===L && ivOf(x)===iv; }));
+  var ls=LIQS.map(function(L){ var st=stat(pool.filter(function(x){ return x.liq===L && ivOf(x)===iv && ziOk(x); }));
       return {k:L,st:st}; }).filter(function(o){ return o.st.n>0; })
     .sort(function(a,b){ var ra=(a.st.W+a.st.L)>=10?0:1, rb=(b.st.W+b.st.L)>=10?0:1;
       return ra-rb || (b.st.wr||0)-(a.st.wr||0) || b.st.n-a.st.n; });
   if(ls.length){
-    h+='<div class="dash">Toate lichiditățile în '+iv+'</div><div class="liqlist">';
+    h+='<div class="dash">Toate lichiditățile · '+zi+' · '+iv+'</div><div class="liqlist">';
     ls.forEach(function(o){ var w=o.st.wr==null?"–":Math.round(100*o.st.wr)+"%";
       var c=(o.st.W+o.st.L)>=10 ? (o.st.wr<0.34?"bad":(o.st.wr>=0.52?"good":"mid")) : "thin";
       h+='<div class="liqr'+(o.k===t.liq?" on":"")+(((o.st.W+o.st.L)<10)?" few":"")+'"><span class="lq">'+esc(o.k)+'</span>'+
+         '<span class="lw '+c+'">'+w+'</span><span class="ln">'+o.st.n+'</span></div>'; });
+    h+='</div>'; }
+  /* aceeași combinație, pe fiecare zi a săptămânii */
+  var baza=pool.filter(function(x){ return x.liq===t.liq && (!t.setup || x.setup===t.setup); });
+  var zl=ZILE_ORD.map(function(Z){ return {k:Z,st:stat(baza.filter(function(x){ return ziOf(x)===Z; }))}; });
+  if(zl.some(function(o){ return o.st.n>0; })){
+    h+='<div class="dash">'+(t.setup?t.setup+" pe ":"")+esc(t.liq)+' · pe zile</div><div class="liqlist">';
+    zl.forEach(function(o){ var dec=o.st.W+o.st.L, w=(o.st.n===0?"–":(o.st.wr==null?"BE":Math.round(100*o.st.wr)+"%"));
+      var c=dec>=10 ? (o.st.wr<0.34?"bad":(o.st.wr>=0.52?"good":"mid")) : "thin";
+      h+='<div class="liqr'+(o.k===zi?" on":"")+((dec<10)?" few":"")+'"><span class="lq">'+esc(o.k)+'</span>'+
          '<span class="lw '+c+'">'+w+'</span><span class="ln">'+o.st.n+'</span></div>'; });
     h+='</div>'; }
   h+='<p class="note">'+(useBT?("Backtest "+t.inst+" ("+pool.length+" tradeuri)"):("Live "+t.inst+" ("+pool.length+" tradeuri)"))+
