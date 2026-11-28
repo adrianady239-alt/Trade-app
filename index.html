@@ -1144,7 +1144,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="28.11.2026 13:55";   /* amprenta versiunii */
+var BUILD="28.11.2026 14:25";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1382,7 +1382,7 @@ function checks(t){ var w=[];
   var H=shiftFor(t.date);
   if(!t.simz && H) w.push({l:"warn",m:"Săptămână cu ora schimbată: fereastra e cu o oră mai devreme."});
   if(!core) w.push({l:"no",m:t.inst+" e în afara algoritmului (doar DAX și GBPUSD)."});
-  if(t.inst==="DAX"){ if(m>=18*60+H) w.push({l:"no",m:"DAX după 18:00."});
+  if(t.inst==="DAX"){ if(m>=22*60+H) w.push({l:"no",m:"DAX după 22:00."});
     if(m<10*60+15+H) w.push({l:"warn",m:"DAX înainte de deschiderea ferestrei."});
     if((dow===1||dow===2)&&m>=10*60+15+H&&m<12*60+H) w.push({l:"no",m:"DAX luni/marți în 10:15–12:00 (38% WR, n 77)."});
     if(t.liq==="LIQ LOCALA+") w.push({l:"no",m:"DAX LIQ LOCALA+ e exclus din filtrul Normal (25%, n 15)."}); }
@@ -2378,8 +2378,10 @@ function wrCard(lab,st,hint){
     '<div class="wrtop"><div class="wrl">'+esc(lab)+'</div>'+
     (hint?'<span class="wrh">'+esc(hint)+'</span>':'')+'</div>'+
     '<div class="wrv">'+wr+'</div><div class="wrm">'+esc(sub)+'</div></div>'; }
+/* într-o zi aleasă folosim începutul intervalului: tot intervalul e de analizat,
+   nu doar mijlocul, altfel 16:45–22:00 pe DAX pică mereu pe regula de după 18:00 */
 function ivMid(iv){ var m=String(iv||"").match(/^(\d{2}):(\d{2})\s*-\s*(\d{2}):(\d{2})$/); if(!m) return null;
-  var a=+m[1]*60+ +m[2], b=+m[3]*60+ +m[4], c=Math.round((a+b)/2); return pad(Math.floor(c/60))+":"+pad(c%60); }
+  return m[1]+":"+m[2]; }
 function kVerify(){
   var t=kTrade();
   if(kv.zi && kv.iv){ var mid=ivMid(kv.iv); if(mid) t.time=mid; }
