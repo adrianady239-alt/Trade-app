@@ -136,12 +136,18 @@ body[data-tab="acasa"] h1#viewTitle{display:none}
 .band .track{position:relative;height:26px;border-radius:12px;overflow:hidden;
   background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06)}
 .band .segs{position:absolute;inset:0;display:flex}
-.band .segs i{flex:1;border-right:1px solid rgba(255,255,255,.05)}
+.band .segs i{border-right:1px solid rgba(255,255,255,.05)}
+/* latimile urmeaza durata reala a intervalelor pe scara 10:15-22:00 (705 min) */
+.band .segs i.s1{flex:0 0 14.894%} .band .segs i.s2{flex:0 0 36.170%}
+.band .segs i.s3{flex:0 0 4.255%}  .band .segs i.s4{flex:0 0 44.681%}
 .band .segs i:last-child{border-right:0}
 .band .segs i.lon{background:linear-gradient(180deg,rgba(88,184,175,.13),transparent)}
 .band .segs i.ny{background:linear-gradient(180deg,rgba(122,92,255,.14),transparent)}
 .band .segs i.dead{background:repeating-linear-gradient(45deg,rgba(255,255,255,.055) 0 5px,transparent 5px 10px)}
-.lgx{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--t3)}
+.lgx{position:relative;height:14px;margin-top:6px;font-size:11px;color:var(--t3)}
+.lgx span{position:absolute;top:0;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lgx .p0{left:0} .lgx .p1{left:14.894%;transform:translateX(-50%)}
+.lgx .p2{left:55.319%;transform:translateX(-50%)} .lgx .p3{right:0}
 .band .closed{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,rgba(0,0,0,.5) 0 5px,transparent 5px 10px)}
 .band .mk{position:absolute;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;border:2px solid #02070D}
 .band .mk.W{background:var(--win);box-shadow:0 0 15px rgba(47,227,154,.95)}
@@ -174,6 +180,34 @@ body[data-tab="acasa"] h1#viewTitle{display:none}
 .accd.none b{font-size:13px;color:var(--t2);font-weight:600}
 .accd.none span{font-size:11px;color:var(--t3)}
 .accd{padding:12px 13px 11px;display:block;border-radius:var(--r-m)}
+/* calitatea combinatiei lichiditate + setup */
+#kOut.swap{animation:kswap .18s ease-out}
+@keyframes kswap{from{opacity:.35;transform:translateY(3px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#kOut.swap{animation:none}}
+.qual{display:flex;align-items:center;gap:12px;margin:12px 0 2px;padding:13px 15px;border-radius:16px;
+  border:1px solid var(--edge);position:relative;overflow:hidden;
+  background:var(--ctl),var(--surf);-webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%)}
+.qual:before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,color-mix(in srgb,var(--qc) 13%,transparent),transparent 58%)}
+.qual .qs{position:relative;margin-left:auto;font-size:26px;letter-spacing:2px;line-height:1;white-space:nowrap;
+  color:var(--qc);text-shadow:0 0 14px color-mix(in srgb,var(--qc) 55%,transparent)}
+.qual .qb{position:relative;display:flex;flex-direction:column;gap:3px;min-width:0;flex:1 1 auto}
+.qual .qw{font-size:23px;font-weight:730;letter-spacing:-.03em;line-height:1;color:var(--qc)}
+.qual .qt{font-size:10.5px;color:var(--t4);line-height:1.3}
+.qual .ql{position:relative;font-size:9px;font-weight:650;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--t4);opacity:.8;white-space:nowrap}
+.qual[data-q="1"]{--qc:#C8803C} .qual[data-q="2"]{--qc:#BFC8D6} .qual[data-q="3"]{--qc:#E9B949}
+.qual[data-q="3"]{border-color:color-mix(in srgb,#E9B949 42%,var(--edge))}
+.qual.thin{--qc:var(--t3)} .qual.thin .qs{text-shadow:none}
+.qual.none{--qc:var(--t3)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.arisk{position:relative;margin-top:7px;padding-top:7px;border-top:1px solid var(--sep)}
+.arisk i{display:block;height:3px;border-radius:999px;background:var(--win);transition:width .3s ease}
+.arisk span{display:block;margin-top:4px;font-size:9.5px;line-height:1.25;color:var(--t4);font-variant-numeric:tabular-nums}
+.arisk:before{content:"";position:absolute;left:0;right:0;top:7px;height:3px;border-radius:999px;background:var(--ctl)}
+.arisk i{position:relative;z-index:1}
+.arisk.warm i{background:var(--warn)} .arisk.warm span{color:var(--warn)}
+.arisk.hot i{background:var(--loss)} .arisk.hot span{color:var(--loss)}
 .accd .an{font-size:11px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .accd .av{font-size:25px;font-weight:730;letter-spacing:-.04em;margin:6px 0 9px;line-height:1}
 .accd .ring{position:relative;height:4px;width:auto;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
@@ -306,7 +340,8 @@ form{display:flex;flex-direction:column;gap:15px}
 
 /* fereastra de verificare */
 .ovl{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center}
-.ovl-bg{position:absolute;inset:0;background:rgba(0,3,8,.66);backdrop-filter:blur(5px)}
+.ovl-bg{position:absolute;inset:0;background:#02050A;
+  -webkit-backdrop-filter:blur(22px) saturate(120%);backdrop-filter:blur(22px) saturate(120%)}
 .ovl-card{position:relative;width:100%;max-width:520px;max-height:94vh;display:flex;flex-direction:column;
   background:var(--surf);border:1px solid var(--edge);border-radius:var(--r-l) var(--r-l) 0 0;
   box-shadow:0 -24px 60px -20px #000;padding:14px var(--pad) calc(14px + env(safe-area-inset-bottom,0px))}
@@ -492,7 +527,6 @@ td.pos{color:var(--win)} td.neg{color:var(--loss)}
   background:var(--day-bg);border:1px solid var(--edge);border-radius:12px;color:var(--t1);font-weight:500;box-shadow:var(--inset)}
 .day.out{background:transparent;border-color:transparent;cursor:default;box-shadow:none}
 .day.we{background:transparent;border-color:rgba(120,205,255,.07)}
-.day.free{border-color:rgba(77,163,255,.55);box-shadow:0 0 14px -4px rgba(77,163,255,.7) inset}
 .day.today .dn{background:var(--t1);color:#02070D;border-radius:5px;padding:0 5px}
 .day.sel{border-color:var(--edge-hi);box-shadow:0 0 0 1px var(--edge-hi)}
 .day.win{background:rgba(47,227,154,.15)} .day.loss{background:rgba(255,77,94,.14)}
@@ -738,9 +772,9 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
       <span class="hpill" id="kTodayUsd">$0</span><span class="hpill" id="kSlotsPill">0 / 2 tradeuri</span>
       <div class="band">
         <div class="track" id="band">
-          <div class="segs" aria-hidden="true"><i class="lon"></i><i class="lon"></i><i></i><i class="dead"></i><i class="ny"></i><i class="ny"></i></div>
+          <div class="segs" aria-hidden="true"><i class="lon s1"></i><i class="lon s2"></i><i class="dead s3"></i><i class="ny s4"></i></div>
         </div>
-        <div class="lgx"><span>10:15</span><span>12:00</span><span>16:15</span><span>16:45</span><span>22:00</span></div>
+        <div class="lgx"><span class="p0">10:15</span><span class="p1">12:00</span><span class="p2">16:45</span><span class="p3">22:00</span></div>
       </div>
       <div class="state">
         <div><div class="txt" id="todayT1">—</div><div class="sub" id="todayT2">—</div></div>
@@ -877,7 +911,6 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
         <span><i class="dots"><i class="dot-L"></i></i>LOSE</span>
         <span><i class="dots"><i class="dot-BE"></i></i>BE</span>
         <span><i class="dots"><i class="dot-P"></i></i>deschis</span>
-        <span>chenar albastru = zi liberă</span>
       </div>
     </div>
     <div class="card daypanel" id="dayPanel">
@@ -896,15 +929,6 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
         <p class="note" style="margin-top:9px"><b>FTMO</b> (roșu): ±2 min fără ordine, SL, TP sau modificări. <b>IF</b>: dacă ești în poziție, risc max 0.5% și RR max 1:3. Doar astea două îți dau restricții. Propunerea vine din calendarul Forex Factory — <b>confirmă pe linia violet din indicatorul FTMO News</b>.</p>
       </div>
       <div class="list" id="dayList"></div>
-    </div>
-    <div class="card"><h2>Zile libere</h2>
-      <div class="row">
-        <div class="f"><label for="fFreeM">Luna</label><select id="fFreeM"></select></div>
-        <div class="f"><label for="fFreeD">Zilele</label><input id="fFreeD" inputmode="numeric" autocomplete="off" placeholder="13, 17, 19"></div>
-      </div>
-      <button type="button" class="ghost wide" id="btnFree" style="margin-top:10px">Salvează zilele</button>
-      <p class="msg" id="freeMsg" hidden></p>
-      <p class="note">Zilele în care tranzacționezi.</p>
     </div>
   </section>
 
@@ -951,8 +975,18 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
     </div>
 
 
+    <div class="card"><h2>Copie de siguranță</h2>
+      <p class="note" style="margin:0 0 10px">Tot ce ține aplicația: tradeuri, conturi, știri, setări și pozele de setup. Tradeurile scrise deja în Sheets rămân acolo oricum.</p>
+      <div class="row2">
+        <button type="button" class="ghost" id="btnBkSave">Descarcă backup</button>
+        <button type="button" class="ghost" id="btnBkLoad">Restaurează</button>
+      </div>
+      <input type="file" id="bkFile" accept="application/json,.json" hidden>
+      <p class="msg" id="bkMsg" hidden></p>
+    </div>
+
     <div class="card"><h2>Reguli</h2>
-      <p class="note" style="margin:0;line-height:1.6">Max 2 tradeuri pe zi · stop după 2 pierderi · BE la 1.5R · DAX 10:15–18:00, luni/marți fără 10:15–12:00 · GBPUSD fără 16:15–16:45 · exclus DAX LIQ LOCALA+ și GBPUSD LOD+ · fără NFP, CPI, FOMC, bank holiday (USD / GBP / EUR). Celelalte ★★★: avertisment.</p>
+      <p class="note" style="margin:0;line-height:1.6">Doar DAX și GBPUSD · risc 1%, RR 1:2, BE la 1.5R · max 2 tradeuri pe zi, stop după 2 pierderi · DAX de la 10:15, luni și marți fără 10:15–12:00 · GBPUSD fără 16:15–16:45 · exclus DAX LIQ LOCALA+ și GBPUSD LOD+ · zi fără trading la NFP, CPI, FOMC și bank holiday SUA, scrise de tine în Calendar → Știri · limitele de pierdere pe cont se setează la Conturi. Celelalte ★★★: avertisment.</p>
     </div>
   </section>
 </div>
@@ -1099,9 +1133,6 @@ var ZILE=["DUMINICA","LUNI","MARTI","MIERCURI","JOI","VINERI","SAMBATA"];
 var ZILE_D=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];
 var ZILE_ORD=["Luni","Marți","Miercuri","Joi","Vineri"], ZILE_SC=["Lu","Ma","Mi","Jo","Vi"];
 function ziOf(t){ var d=parseISO(t&&t.date); return isNaN(d)?"":ZILE_D[d.getDay()]; }
-var FREE={"2026-11":[13,17,19,23,25,27]};   /* implicit; se poate schimba din Setări */
-var freeCfg={};
-function freeDays(key){ var a=freeCfg[key]; return (a&&a.length)?a:(FREE[key]||null); }
 
 /* ---------- coloanele se potrivesc după antet, nu după poziție ---------- */
 var HEAD=["PIATA","LUNA","DATA","ZIUA","REZULTAT","BUY/SELL","LICHIDITATE","SETUP","MSS","RE-ENTRY",
@@ -1144,7 +1175,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="28.11.2026 14:25";   /* amprenta versiunii */
+var BUILD="28.11.2026 23:10";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1165,10 +1196,11 @@ function cfgSet(c){ c=c||{}; cfgX.risk=(+c.risk>0 && +c.risk<=RISK_MAX?+c.risk:1
 function esc(x){ return String(x==null?"":x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 function accUid(){ return "a"+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
 function accDefaults(){ var t0=Date.parse("2026-11-16T12:00:00Z");
-  return [{id:"a1",name:DEFAULT_ACCTS[0],start:2,target:10,size:10000,from:t0,to:null,closed:false,why:"",final:null},
-          {id:"a2",name:DEFAULT_ACCTS[1],start:9,target:10,size:10000,from:t0,to:null,closed:false,why:"",final:null}]; }
+  return [{id:"a1",name:DEFAULT_ACCTS[0],start:2,target:10,ddDay:3,ddMax:10,size:10000,from:t0,to:null,closed:false,why:"",final:null},
+          {id:"a2",name:DEFAULT_ACCTS[1],start:9,target:10,ddDay:5,ddMax:10,size:10000,from:t0,to:null,closed:false,why:"",final:null}]; }
 function accFix(a){ a=a||{}; return {id:a.id||accUid(), name:String(a.name||"Cont"), start:(+a.start||0),
-  target:(+a.target>0?+a.target:10), size:(+a.size>0?+a.size:10000), from:(+a.from||Date.parse("2026-11-16T12:00:00Z")),
+  target:(+a.target>0?+a.target:10), ddDay:(+a.ddDay>0?+a.ddDay:3), ddMax:(+a.ddMax>0?+a.ddMax:10),
+  size:(+a.size>0?+a.size:10000), from:(+a.from||Date.parse("2026-11-16T12:00:00Z")),
   to:(a.to?+a.to:null), closed:!!a.closed, why:String(a.why||""), final:(a.final==null?null:+a.final)}; }
 function accSet(list){ accounts=(list||[]).map(accFix); }
 function accMigrate(d){ var b=accDefaults();
@@ -1185,6 +1217,12 @@ function accCounts(a,x){ if((x.dest||"LIVE")!=="LIVE"||!x.res||!x.createdAt) ret
 function accPct(a){ if(a.closed && a.final!=null) return +a.final;
   var sum=+a.start||0; trades.forEach(function(x){ if(accCounts(a,x)) sum+=pctOf(x.res); }); return sum; }
 function accN(a){ var n=0; trades.forEach(function(x){ if(accCounts(a,x)) n++; }); return n; }
+/* pierderea zilei pe cont, in procente (doar partea negativa) */
+function accDay(a){ var tdy=todayISO(), sum=0;
+  trades.forEach(function(x){ if(accCounts(a,x) && x.date===tdy) sum+=pctOf(x.res); });
+  return sum<0?-sum:0; }
+/* consumul din limita totala: cat e sub balanta de pornire */
+function accDD(a){ var v=accPct(a); return v<0?-v:0; }
 var editRow=null;   /* rând din Sheets aflat în editare */
 /* ---------- teme ---------- */
 var THEMES=[
@@ -1224,22 +1262,6 @@ function paintThemes(){ var box=$("themeList"); if(!box) return; var cur=documen
       box.appendChild(b); }); }
   Array.prototype.forEach.call(box.children,function(b){ b.setAttribute("aria-pressed", b.dataset.id===cur); }); }
 applyTheme(curTheme());
-
-/* ---------- zile libere, editabile ---------- */
-function monthKeys(){ var o=[], d=new Date(); d.setDate(1);
-  for(var i=0;i<14;i++){ o.push(d.getFullYear()+"-"+pad(d.getMonth()+1)); d.setMonth(d.getMonth()+1); } return o; }
-function paintFree(){ var sel=$("fFreeM"); if(!sel) return;
-  if(!sel.children.length){ monthKeys().forEach(function(k){ var o=el("option",null,LUNI_D[+k.slice(5,7)-1]+" "+k.slice(0,4)); o.value=k; sel.appendChild(o); }); }
-  var k=sel.value||monthKeys()[0]; sel.value=k;
-  $("fFreeD").value=(freeDays(k)||[]).join(", "); }
-if($("fFreeM")) $("fFreeM").addEventListener("change",paintFree);
-if($("btnFree")) $("btnFree").onclick=function(){
-  var k=$("fFreeM").value, raw=$("fFreeD").value||"";
-  var d=raw.split(/[^0-9]+/).filter(Boolean).map(Number).filter(function(x){return x>=1&&x<=31;});
-  d=d.filter(function(x,i){return d.indexOf(x)===i;}).sort(function(a,b){return a-b;});
-  freeCfg[k]=d; saveSettings(); renderAll(); paintFree();
-  var m=$("freeMsg"); m.hidden=false; m.className="msg ok";
-  m.textContent=d.length?("Salvat: "+d.join(", ")):"Luna e goală, nu mai apare „zi de job”."; };
 
 /* ---------- notarea BE ---------- */
 async function saveBE(t,val,btn){
@@ -1339,24 +1361,25 @@ function setupDisc(s){ return (s||"").split("+").reverse().join("/"); }
 function interval(t,iso){ var m=mins(t), h=shiftFor(iso);
   if(m<12*60+h) return "10:15 - 12:00"; if(m<16*60+15+h) return "12:00 - 16:15";
   if(m<16*60+45+h) return "16:15 - 16:45"; return "16:45 - 22:00"; }
-function session(t){ return mins(t)<15*60?"LONDRA":"NEW YORK"; }
+function session(t,iso){ return mins(t)<15*60+shiftFor(iso)?"LONDRA":"NEW YORK"; }
 function toRow(t){ var d=parseISO(t.date), r=t.res, out=[], i;
   for(i=0;i<COLN;i++) out.push("");
   function put(nm,v){ var k=ci(nm); if(k>=0&&k<out.length) out[k]=v; }
   put("PIATA",t.instRaw||t.inst); put("LUNA",LUNI[d.getMonth()]); put("DATA",roDate(t.date));
   put("ZIUA",ZILE[d.getDay()]); put("REZULTAT",r); put("BUY/SELL",t.dir);
   put("LICHIDITATE",t.liq); put("SETUP",t.setup); put("MSS",t.mss);
-  put("RE-ENTRY",t.re?"RE-ENTRY":""); put("SESIUNE",session(t.time)); put("STIRI",t.news||"───");
+  put("RE-ENTRY",t.re?"RE-ENTRY":""); put("SESIUNE",session(t.time,t.date)); put("STIRI",t.news||"───");
   put("PROFIT %", r==="WIN"?"2%":r==="LOSE"?"-1%":"0%"); put("RR", r==="WIN"?2:r==="LOSE"?-1:0);
   put("ORA",t.time); put("INTERVAL",interval(t.time,t.date)); put("SCREENSHOT",t.shot||"");
   put("COMENTARII",t.com||"");
   return out; }
-function discord(t){ var d=parseISO(t.date), ses=t.ses||session(t.time);
+function discord(t){ var d=parseISO(t.date), ses=t.ses||session(t.time,t.date);
   return "Instrument: "+(DISC_CODE[t.inst]||t.inst)+"\nDirecție: "+(t.dir==="SELL"?"Short":"Long")+
     "\nData / Ora:  "+roDate(t.date)+" - "+t.time+"  - "+ZILE_D[d.getDay()]+"\nSesiune:  "+(ses==="LONDRA"?"Londra":"NY")+
     "\n\nContext : "+(t.ctx||"")+"\nTip lichiditate: "+(t.liqTxt||liqDisc(t.liq))+"\nTip setup : "+(t.setupTxt||setupDisc(t.setup))+
     "\n\nRisc alocat:  1%\n"+accLive().map(function(a){ var tot=totalFor(t,a); return a.name+" : "+resPct(t.res)+(tot==null?"":" ("+fmtPct(tot)+")"); }).join("\n"); }
-function pctOf(r){ return r==="WIN"?2:r==="LOSE"?-1:0; }
+/* procentul pe cont: urmeaza riscul setat (1% implicit), RR 1:2 */
+function pctOf(r){ var k=resK({res:r}), x=+cfgX.risk||1; return k==="W"?2*x:k==="L"?-x:0; }
 function fmtPct(v){ v=Math.round(v*100)/100; return (v>0?"+":"")+String(v).replace(".",",")+"%"; }
 function totalFor(t,a){
   if(t.src==="sheet" || !t.createdAt || t.createdAt<=a.from) return null;
@@ -1367,8 +1390,8 @@ function totalFor(t,a){
   if(t.res) sum+=pctOf(t.res);
   return sum; }
 function resPct(r){ return r==="WIN"?"+2%":r==="LOSE"?"-1%":r==="BREAK EVEN"?"BE":"în desfășurare"; }
-function rOf(r){ return r==="WIN"?2:r==="LOSE"?-1:0; }
-function resKey(r){ return r==="WIN"?"W":r==="LOSE"?"L":r==="BREAK EVEN"?"BE":"P"; }
+function rOf(r){ var k=resK({res:r}); return k==="W"?2:k==="L"?-1:0; }
+function resKey(r){ var k=resK({res:r}); return k==="W"?"W":k==="L"?"L":k==="B"?"BE":"P"; }
 
 function checks(t){ var w=[];
   t=t||{}; t.inst=t.inst||""; t.liq=t.liq||""; t.setup=t.setup||""; t.mss=t.mss||"NORMAL"; t.dir=t.dir||"BUY";
@@ -1377,13 +1400,11 @@ function checks(t){ var w=[];
   var d=parseISO(t.date), dow=d.getDay(), m=mins(t.time), core=CORE.indexOf(t.inst)>=0;
   if(dow===0||dow===6) w.push({l:"no",m:"Weekend."});
   if((t.dest||"LIVE")!=="LIVE") return w;
-  var fk=t.date.slice(0,7), fd=freeDays(fk);
-  if(!t.simz && fd && fd.indexOf(d.getDate())<0) w.push({l:"warn",m:"Data nu e în lista de zile libere din "+(LUNI[d.getMonth()].toLowerCase())+"."});
   var H=shiftFor(t.date);
   if(!t.simz && H) w.push({l:"warn",m:"Săptămână cu ora schimbată: fereastra e cu o oră mai devreme."});
   if(!core) w.push({l:"no",m:t.inst+" e în afara algoritmului (doar DAX și GBPUSD)."});
-  if(t.inst==="DAX"){ if(m>=22*60+H) w.push({l:"no",m:"DAX după 22:00."});
-    if(m<10*60+15+H) w.push({l:"warn",m:"DAX înainte de deschiderea ferestrei."});
+  if(t.inst==="DAX"){
+    if(m<10*60+15+H) w.push({l:"warn",m:"DAX înainte de 10:15."});
     if((dow===1||dow===2)&&m>=10*60+15+H&&m<12*60+H) w.push({l:"no",m:"DAX luni/marți în 10:15–12:00 (38% WR, n 77)."});
     if(t.liq==="LIQ LOCALA+") w.push({l:"no",m:"DAX LIQ LOCALA+ e exclus din filtrul Normal (25%, n 15)."}); }
   if(t.inst==="GBPUSD"){ if(m>=16*60+15+H&&m<16*60+45+H) w.push({l:"no",m:"GBPUSD în 16:15–16:45."});
@@ -1406,7 +1427,13 @@ function checks(t){ var w=[];
   if(BAD_WORDS.some(function(b){return new RegExp("(^|[^a-zăâîșț])"+b).test(txt);})) w.push({l:"no",m:"Comentariu „mic / înghesuit / forțat / întârziat / cherry pick”: live 0W / 8L / 1BE."});
   var same=all().filter(function(x){return x.key!==("q:"+t.id) && x.date===t.date && CORE.indexOf(x.inst)>=0;});
   if(core && same.length>=2) w.push({l:"no",m:"Al "+(same.length+1)+"-lea trade în ziua asta (max 2)."});
-  if(core && same.filter(function(x){return x.res==="LOSE";}).length>=2) w.push({l:"no",m:"Ai deja 2 pierderi în ziua asta: stop."});
+  if(core && same.filter(function(x){return resK(x)==="L";}).length>=2) w.push({l:"no",m:"Ai deja 2 pierderi în ziua asta: stop."});
+  if(core && !t.simz && t.date===todayISO()) accLive().forEach(function(ac){
+    var dz=accDay(ac), dt=accDD(ac), lz=+ac.ddDay||3, lt=+ac.ddMax||10, risc=+cfgX.risk||1;
+    if(dz+risc>=lz) w.push({l:"no",m:ac.name+": ai pierdut "+r1(dz)+"% azi, limita e "+lz+"%. Încă un SL te scoate."});
+    else if(dz+2*risc>=lz) w.push({l:"warn",m:ac.name+": "+r1(dz)+"% din "+lz+"% pe azi. Mai încape un singur SL."});
+    if(dt+risc>=lt) w.push({l:"no",m:ac.name+": ești la −"+r1(dt)+"% din limita totală de "+lt+"%. Încă un SL te scoate."});
+    else if(dt>lt*0.7) w.push({l:"warn",m:ac.name+": −"+r1(dt)+"% din "+lt+"% total consumat."}); });
   return w; }
 
 /* ---------- merged data: Sheets LIVE + unsent queue ---------- */
@@ -1484,17 +1511,13 @@ function renderSpark(A,mo){
   $("spark").innerHTML=s+'</svg>'; }
 
 function renderHome(){
-  var A=all(), tdy=todayISO(), d=new Date(), dow=d.getDay(), fk=tdy.slice(0,7), free=freeDays(fk);
+  var A=all(), tdy=todayISO(), d=new Date(), dow=d.getDay();
   var T=A.filter(function(t){return isCore(t)&&t.date===tdy;}).sort(byTime);
-  var n=T.length, L=T.filter(function(t){return t.res==="LOSE";}).length;
-  function nextFree(){ var out=null, K={}; Object.keys(FREE).forEach(function(k){K[k]=1;}); Object.keys(freeCfg).forEach(function(k){K[k]=1;});
-    Object.keys(K).sort().forEach(function(k){ (freeDays(k)||[]).forEach(function(dd){ var iso=k+"-"+pad(dd); if(iso>tdy&&(!out||iso<out)) out=iso; }); }); return out; }
-  var nf=nextFree(), nfTxt=nf?("Următoarea zi liberă: "+ZILE_D[parseISO(nf).getDay()].toLowerCase()+" "+roDate(nf).slice(0,5)+"."):"Trimite lista zilelor libere pentru luna asta.";
+  var n=T.length, L=T.filter(function(t){return resK(t)==="L";}).length;
   $("todayDate").textContent=ZILE_D[dow]+", "+d.getDate()+" "+LUNI_D[d.getMonth()].toLowerCase();
   var t1,t2,off=false;
-  if(dow===0||dow===6){ t1="Weekend"; t2=nfTxt; off=true; }
-  else if(free && free.indexOf(d.getDate())<0){ t1="Zi de job"; t2="Azi nu tranzacționezi. "+nfTxt; off=true; }
-  else if(L>=2){ t1="Stop pe azi"; t2="Două pierderi. "+nfTxt; off=true; }
+  if(dow===0||dow===6){ t1="Weekend"; t2="Piețele sunt închise."; off=true; }
+  else if(L>=2){ t1="Stop pe azi"; t2="Două pierderi. Oprește."; off=true; }
   else if(n>=2){ t1="Stop pe azi"; t2="Limita de două tradeuri e atinsă."; off=true; }
   else { t1="Mai poți "+(2-n)+(2-n>1?" tradeuri":" trade"); t2="Confirmă știrile pe linia violet din indicatorul FTMO News."; }
   $("todayT1").textContent=t1; $("todayT2").textContent=t2;
@@ -1566,13 +1589,12 @@ function renderCal(){
   var cal=$("cal"); cal.textContent="";
   ["L","Ma","Mi","J","V","S","D"].forEach(function(d){ cal.appendChild(el("div","dow",d)); });
   var lead=(first.getDay()+6)%7; for(var i=0;i<lead;i++) cal.appendChild(el("div","day out"));
-  var free=freeDays(calMonth)||[], tdy=todayISO();
+  var tdy=todayISO();
   var W=0,L=0,BE=0,R=0,N=0,days_t=0;
   for(var d=1; d<=days; d++){
     var iso=calMonth+"-"+pad(d), dt=new Date(y,m,d), list=(byDay[iso]||[]).sort(function(a,b){return (a.time||"").localeCompare(b.time||"");});
     var b=el("button","day"); b.type="button";
     var dow=dt.getDay(); if(dow===0||dow===6) b.classList.add("we");
-    if(free.indexOf(d)>=0) b.classList.add("free");
     if(iso===tdy) b.classList.add("today");
     if(iso===selDay) b.classList.add("sel");
     b.appendChild(el("span","dn",String(d)));
@@ -1582,7 +1604,7 @@ function renderCal(){
     if(coreN) days_t++; R+=r;
     b.appendChild(dots);
     if(coreN){ var dr=el("span","dr "+rCls(r),fmtR(r)); b.appendChild(dr); if(r>0) b.classList.add("win"); else if(r<0) b.classList.add("loss"); }
-    var lbl=d+" "+LUNI_D[m]+(list.length?(": "+list.length+" tradeuri, "+fmtR(r)):"")+(free.indexOf(d)>=0?", zi liberă":"");
+    var lbl=d+" "+LUNI_D[m]+(list.length?(": "+list.length+" tradeuri, "+fmtR(r)):"");
     b.setAttribute("aria-label",lbl);
     (function(iso){ b.onclick=function(){ selDay=iso; renderCal(); renderDay(); }; })(iso);
     cal.appendChild(b);
@@ -1902,7 +1924,17 @@ function renderAccts(){ var box=$("accs"); if(!box) return;
       '<div class="av" style="color:'+(v?col:"var(--t3)")+'">'+fmtPct(v)+'</div>'+
       '<div class="ring"><i style="width:'+(f*100).toFixed(1)+'%;background:linear-gradient(90deg,rgba('+rgb+',.35),'+col+');'+
       'box-shadow:0 0 10px rgba('+rgb+',.8)"></i></div>'+
-      '<div class="at">din '+tg+'%</div></div>'; }).join(""); }
+      '<div class="at">din '+tg+'%</div>'+accRisk(a)+'</div>'; }).join(""); }
+function accRisk(a){
+  var dz=accDay(a), dt=accDD(a), lz=+a.ddDay||3, lt=+a.ddMax||10;
+  if(!dz && !dt) return '<div class="arisk ok"><i style="width:0"></i><span>Buget intact · '+lz+'% zi / '+lt+'% total</span></div>';
+  var pz=Math.min(1,dz/lz), pt=Math.min(1,dt/lt), p=Math.max(pz,pt);
+  var cls=p>=.75?"hot":(p>=.4?"warm":"ok");
+  var txt = dz
+    ? ("azi −"+r1(dz)+"% din "+lz+"% · total −"+r1(dt)+"% din "+lt+"%")
+    : ("total −"+r1(dt)+"% din "+lt+"%");
+  return '<div class="arisk '+cls+'"><i style="width:'+(p*100).toFixed(0)+'%"></i><span>'+txt+'</span></div>'; }
+function r1(v){ return (Math.round(v*10)/10); }
 
 /* ---------- conturi: administrare în Setări ---------- */
 function dmy(ms){ var d=new Date(+ms||Date.now()); return pad(d.getDate())+"."+pad(d.getMonth()+1)+"."+d.getFullYear(); }
@@ -1918,6 +1950,8 @@ function paintAccs(){ var box=$("accList"); if(!box) return;
       '<div class="f"><label>Start %</label><input data-k="start" type="number" inputmode="decimal" step="0.5" value="'+a.start+'"></div>'+
       '<div class="f"><label>Target %</label><input data-k="target" type="number" inputmode="decimal" min="1" step="0.5" value="'+a.target+'"></div>'+
       '<div class="f"><label>Mărime $</label><input data-k="size" type="number" inputmode="numeric" step="1000" value="'+a.size+'"></div>'+
+      '<div class="f"><label>Pierdere zi %</label><input data-k="ddDay" type="number" inputmode="decimal" min="0.5" step="0.5" value="'+a.ddDay+'"></div>'+
+      '<div class="f"><label>Pierdere max %</label><input data-k="ddMax" type="number" inputmode="decimal" min="1" step="0.5" value="'+a.ddMax+'"></div>'+
       '<div class="f"><label>Numără de la</label><input data-k="from" type="date" value="'+isoOf(a.from)+'"></div>'+
       '</div>'+
       '<div class="accrow-a"><span class="accn">'+accN(a)+' execuții</span>'+
@@ -1939,7 +1973,12 @@ if($("accList")) $("accList").addEventListener("change",function(ev){
   var a=accFind(row.dataset.id); if(!a) return; var k=el.dataset.k; if(!k) return;
   if(k==="name"){ a.name=el.value.trim()||"Cont"; }
   else if(k==="from"){ var d=parseISO(el.value); if(d&&!isNaN(d)) a.from=d.getTime()+12*3600*1000; }
-  else { var v=parseFloat(el.value); if(k==="target") a.target=(v>0?v:10); else if(k==="size") a.size=(v>0?v:10000); else a.start=(isNaN(v)?0:v); }
+  else { var v=parseFloat(el.value);
+    if(k==="target") a.target=(v>0?v:10);
+    else if(k==="size") a.size=(v>0?v:10000);
+    else if(k==="ddDay") a.ddDay=(v>0?v:3);
+    else if(k==="ddMax") a.ddMax=(v>0?v:10);
+    else if(k==="start") a.start=(isNaN(v)?0:v); }
   accCommit(); });
 function accAction(ev){ var b=ev.target.closest&&ev.target.closest("button[data-a]"); if(!b) return;
   var row=b.closest("[data-id]"); if(!row) return; var a=accFind(row.dataset.id); if(!a) return;
@@ -2064,18 +2103,17 @@ var store={
   update:function(id,d){ if(db) return db.doc("trades/"+id).update(d).catch(dbErr); trades=trades.map(function(x){return x.id===id?Object.assign({},x,d):x;}); lsSave(); renderAll(); },
   del:function(id){ if(db) return db.doc("trades/"+id).delete().catch(dbErr); trades=trades.filter(function(x){return x.id!==id;}); lsSave(); renderAll(); }
 };
-function lsSave(){ try{ localStorage.setItem(LS,JSON.stringify({trades:trades,accounts:accAll(),free:freeCfg,cfg:cfgX,news:newsCfg})); }catch(e){} }
+function lsSave(){ try{ localStorage.setItem(LS,JSON.stringify({trades:trades,accounts:accAll(),cfg:cfgX,news:newsCfg})); }catch(e){} }
 function lsLoad(){ try{ var j=JSON.parse(localStorage.getItem(LS)||"{}"); trades=j.trades||[];
   if(j.accounts&&j.accounts.length) accSet(j.accounts); else accSet(accMigrate(j));
-  if(j.free) freeCfg=j.free; if(j.cfg) cfgSet(j.cfg); if(j.news) newsCfg=j.news; }catch(e){ trades=[]; } }
+  if(j.cfg) cfgSet(j.cfg); if(j.news) newsCfg=j.news; }catch(e){ trades=[]; } }
 function pruneCfg(){
   var now=Date.now(), k;
   for(k in newsCfg){ var d=parseISO(k);
     if(isNaN(d) || (now-d.getTime())>150*864e5) delete newsCfg[k]; }
-  var keys=Object.keys(freeCfg).sort();
-  while(keys.length>30) delete freeCfg[keys.shift()]; }
+}
 function saveSettings(){ pruneCfg(); lsSave();
-  if(db) db.doc("settings/main").set({accounts:accAll(),free:freeCfg,cfg:cfgX,news:newsCfg}).catch(dbErr); }
+  if(db) db.doc("settings/main").set({accounts:accAll(),cfg:cfgX,news:newsCfg}).catch(dbErr); }
 function dbErr(e){ $("dbDot").className="bad"; $("dbTxt").textContent="Lista „De trimis” nu s-a salvat ("+(e&&e.code||"eroare")+")."; }
 
 /* ---------- queue ---------- */
@@ -2359,7 +2397,10 @@ $("shotDel").onclick=function(ev){ ev.stopPropagation(); ev.preventDefault(); kv
   $("shotImg").hidden=true; $("shotImg").removeAttribute("src"); $("shotHint").hidden=false;
   $("shotHint").innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.2A1.2 1.2 0 0 1 4.2 7h2.3l1-1.7a1 1 0 0 1 .9-.5h7.2a1 1 0 0 1 .9.5l1 1.7h2.3A1.2 1.2 0 0 1 21 8.2v9.6a1.2 1.2 0 0 1-1.2 1.2H4.2A1.2 1.2 0 0 1 3 17.8z"/><circle cx="12" cy="12.6" r="3.3"/></svg><b>Foto setup</b>';
   $("shotDel").hidden=true; };
-function kClear(){ kvSave(); kVerify(); }
+var kTimer=null;
+function kClear(){ kvSave();
+  if(kTimer) cancelAnimationFrame(kTimer);
+  kTimer=requestAnimationFrame(function(){ kTimer=null; kVerify(); }); }
 
 function ziDate(zi){ var i=ZILE_ORD.indexOf(zi); if(i<0) return todayISO();
   var d=new Date(), g=0; while(d.getDay()!==(i+1) && g++<8) d.setDate(d.getDate()-1);
@@ -2382,6 +2423,33 @@ function wrCard(lab,st,hint){
    nu doar mijlocul, altfel 16:45–22:00 pe DAX pică mereu pe regula de după 18:00 */
 function ivMid(iv){ var m=String(iv||"").match(/^(\d{2}):(\d{2})\s*-\s*(\d{2}):(\d{2})$/); if(!m) return null;
   return m[1]+":"+m[2]; }
+/* calitatea combinatiei lichiditate + setup, pe tot esantionul (fara zi/interval) */
+function qualOf(pool,liq,setup){
+  if(!setup) return null;
+  var st=stat(pool.filter(function(x){ return x.liq===liq && x.setup===setup; }));
+  var d=st.W+st.L;
+  if(!st.n) return {n:0};
+  if(!d) return {n:st.n,be:true};
+  var wr=Math.round(100*st.wr);
+  return {n:st.n,W:st.W,L:st.L,B:st.B,wr:wr,R:st.R/st.n,thin:d<10,
+          s:(wr>56?3:(wr>=50?2:1))}; }
+function qualHtml(q,liq,setup){
+  if(!q) return "";
+  var cap="Lichiditate + setup";
+  var head='<span class="ql">'+cap+'</span>';
+  if(!q.n) return '<div class="qual none" data-q="0">'+
+    '<div class="qb">'+head+'<span class="qw">fără date</span><span class="qt">'+esc(setup)+' pe '+esc(liq)+'</span></div>'+
+    '<span class="qs">☆☆☆</span></div>';
+  if(q.be) return '<div class="qual thin" data-q="0">'+
+    '<div class="qb">'+head+'<span class="qw">doar BE</span><span class="qt">'+esc(setup)+' pe '+esc(liq)+' · '+nTr(q.n)+'</span></div>'+
+    '<span class="qs">☆☆☆</span></div>';
+  var pl=["","★☆☆","★★☆","★★★"][q.s];
+  return '<div class="qual'+(q.thin?" thin":"")+'" data-q="'+(q.thin?0:q.s)+'">'+
+    '<div class="qb">'+head+'<span class="qw">'+q.wr+'%</span>'+
+    '<span class="qt">'+esc(setup)+' pe '+esc(liq)+' · '+nTr(q.n)+' · '+fmtR(q.R)+'/trade'+
+      (q.thin?' · orientativ':'')+'</span></div>'+
+    '<span class="qs">'+pl+'</span></div>'; }
+
 function kVerify(){
   var t=kTrade();
   if(kv.zi && kv.iv){ var mid=ivMid(kv.iv); if(mid) t.time=mid; }
@@ -2400,6 +2468,7 @@ function kVerify(){
   var w=checks(t), bad=w.filter(function(x){return x.l==="no";});
   if(bad.length) h+='<div class="kstop"><b>INVALID</b><ul>'+bad.map(function(x){return '<li>'+esc(x.m)+'</li>';}).join("")+'</ul></div>';
   h+='<div class="kiv">'+zi+(kv.zi?' · ales':'')+' · '+iv+(kv.iv?' · ales':' · acum '+t.time)+'</div>';
+  h+=qualHtml(qualOf(pool,t.liq,t.setup),t.liq,t.setup);
   h+='<div class="wrs">';
   h+=wrCard("Lichiditate "+t.liq+" · "+zi, sLiq);
   if(sSetLiq) h+=wrCard(t.setup+" pe "+t.liq+" · "+zi, sSetLiq);
@@ -2434,12 +2503,23 @@ function kVerify(){
       h+='<div class="liqr'+(o.k===zi?" on":"")+((dec<10)?" few":"")+'"><span class="lq">'+esc(o.k)+'</span>'+
          '<span class="lw '+c+'">'+w+'</span><span class="ln">'+o.st.n+'</span></div>'; });
     h+='</div>'; }
-  h+='<p class="note">'+(useBT?("Backtest "+t.inst+" ("+pool.length+" tradeuri)"):("Live "+t.inst+" ("+pool.length+" tradeuri)"))+
-     ', fără ★★★. Prag de lucru 40%, bază 52%.'+
+  var vech="";
+  if(useBT && btAt){
+    var ore=Math.floor((Date.now()-btAt)/36e5);
+    vech=" Copia locală: "+(ore<1?"actualizată acum":(ore<24?("veche de "+ore+(ore===1?" oră":" ore")):
+      (function(){ var z=Math.floor(ore/24); return "veche de "+z+(z===1?" zi":" zile"); })()))+".";
+    if(ore>=24) vech+=" Apasă „Sincronizează backtestul” în Jurnal.";
+  }
+  h+='<p class="note'+((useBT&&btAt&&(Date.now()-btAt)>=24*36e5)?" no":"")+'">'+
+     (useBT?("Backtest "+t.inst+" ("+pool.length+" tradeuri)"):("Live "+t.inst+" ("+pool.length+" tradeuri)"))+
+     ', fără ★★★. Prag de lucru 40%, bază 52%.'+vech+
      (useBT?'':' Sincronizează backtestul din Jurnal ca să ai eșantion mare.')+'</p>';
-  $("kOut").innerHTML=h;
-  $("kOut").scrollIntoView({behavior:"smooth",block:"nearest"}); }
-$("kGo").onclick=kVerify;
+  var box=$("kOut");
+  box.innerHTML=h;
+  if(kScroll){ kScroll=false; box.scrollIntoView({behavior:"smooth",block:"nearest"}); }
+  box.classList.remove("swap"); void box.offsetWidth; box.classList.add("swap"); }
+var kScroll=false;
+$("kGo").onclick=function(){ kScroll=true; kVerify(); };
 
 /* ---------- știrile zilei (Setări) ---------- */
 if($("kNewsS")){
@@ -2509,13 +2589,12 @@ function typingInSettings(){
 }
 function applySettings(d){
   if(!d) return false;
-  var before=JSON.stringify([accAll(),freeCfg,cfgX,newsCfg]);
+  var before=JSON.stringify([accAll(),cfgX,newsCfg]);
   if(d.accounts && d.accounts.length) accSet(d.accounts);
   else if(d.accts || d.bals) accSet(accMigrate(d));
-  if(d.free) freeCfg=d.free;
   if(d.cfg) cfgSet(d.cfg);
   if(d.news) newsCfg=d.news;
-  return JSON.stringify([accAll(),freeCfg,cfgX,newsCfg])!==before;
+  return JSON.stringify([accAll(),cfgX,newsCfg])!==before;
 }
 async function pullSettings(){
   if(!db || pullBusy) return;
@@ -2605,7 +2684,7 @@ async function checkVersion(manual){
 if($("btnVer")) $("btnVer").onclick=function(){ checkVersion(true); };
 setTimeout(function(){ checkVersion(false); },4000);
 setTimeout(function(){ if(!mcp) return;
-  if(!btCount() || (Date.now()-btAt)>12*3600*1000) loadBT(true); },2500);
+  if(!btCount() || (Date.now()-btAt)>2*3600*1000) loadBT(true); },2500);
 document.addEventListener("visibilitychange",function(){ if(!document.hidden) checkVersion(false); });
 
 /* ---------- întreținere ---------- */
@@ -2630,6 +2709,46 @@ if($("btnPrune")) $("btnPrune").onclick=function(){
   m.textContent="Curățat: "+del.length+" tradeuri și "+orf.length+" poze.";
   mntPaint(); };
 
+/* ---------- copie de siguranță ---------- */
+function bkMsg(t,cls){ var m=$("bkMsg"); if(!m) return; m.hidden=false; m.className="msg"+(cls?" "+cls:""); m.textContent=t; }
+function bkMake(){
+  var o={app:"trade-app",v:1,build:BUILD,at:new Date().toISOString(),ls:{}};
+  ["executii-live-v1","tradeapp-server","tradeapp-bt","tradeapp-check","tradeapp-hf","tradeapp-shots","tradeapp-theme"]
+    .forEach(function(k){ var v=null; try{ v=localStorage.getItem(k); }catch(e){} if(v!=null) o.ls[k]=v; });
+  try{ for(var i=0;i<localStorage.length;i++){ var k=localStorage.key(i);
+    if(/^(tradeapp|executii)/.test(k) && o.ls[k]==null) o.ls[k]=localStorage.getItem(k); } }catch(e){}
+  return o; }
+if($("btnBkSave")) $("btnBkSave").onclick=function(){
+  try{
+    var o=bkMake(), txt=JSON.stringify(o);
+    var a=document.createElement("a"), bl=new Blob([txt],{type:"application/json"});
+    a.href=URL.createObjectURL(bl);
+    a.download="trade-app-backup-"+todayISO()+".json";
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1500);
+    var n=(JSON.parse(o.ls["executii-live-v1"]||"{}").trades||[]).length;
+    var kb=txt.length/1024;
+    bkMsg("Salvat: "+nTr(n)+", "+Object.keys(o.ls).length+" seturi de date, "+
+      (kb<1?(txt.length+" B"):(Math.round(kb)+" KB"))+".","ok");
+  }catch(e){ bkMsg("Nu s-a putut salva: "+((e&&e.message)||e),"no"); } };
+if($("btnBkLoad")) $("btnBkLoad").onclick=function(){ $("bkFile").click(); };
+if($("bkFile")) $("bkFile").addEventListener("change",function(){
+  var f=this.files&&this.files[0]; this.value="";
+  if(!f) return;
+  var rd=new FileReader();
+  rd.onerror=function(){ bkMsg("Fișierul nu s-a putut citi.","no"); };
+  rd.onload=function(){
+    var o; try{ o=JSON.parse(rd.result); }catch(e){ return bkMsg("Fișierul nu e un backup valid.","no"); }
+    if(!o || o.app!=="trade-app" || !o.ls) return bkMsg("Fișierul nu e un backup al acestei aplicații.","no");
+    var n=0; try{ n=(JSON.parse(o.ls["executii-live-v1"]||"{}").trades||[]).length; }catch(e){}
+    if(!confirm("Restaurez backupul din "+String(o.at||"?").slice(0,10)+" ("+n+" tradeuri)?\nTot ce e acum în aplicație se înlocuiește. În Sheets nu se schimbă nimic.")) return;
+    try{
+      Object.keys(o.ls).forEach(function(k){ localStorage.setItem(k,o.ls[k]); });
+      bkMsg("Restaurat. Se reîncarcă…","ok");
+      setTimeout(function(){ location.reload(); },700);
+    }catch(e){ bkMsg("Nu s-a putut scrie: "+((e&&e.message)||e),"no"); } };
+  rd.readAsText(f); });
+
 /* ---------- tabs ---------- */
 var TABS=["acasa","jurnal","adauga","calendar","setari"], TITLES={acasa:"Acasă",jurnal:"Jurnal",adauga:"Trade nou",calendar:"Calendar",setari:"Setări"};
 function showTab(){ var h=(location.hash||"").slice(1); if(TABS.indexOf(h)<0) h="acasa"; document.body.dataset.tab=h;
@@ -2646,21 +2765,21 @@ function renderAll(){
   kpis(); renderAccts(); update();
   if(onTab("acasa")) renderHome();
   if(onTab("jurnal")){ renderJournal(); renderCells(); btStatus(); }
-  if(onTab("calendar")){ renderCal(); renderDay(); paintFree(); }
+  if(onTab("calendar")){ renderCal(); renderDay(); }
   if(onTab("adauga")) renderQueue();
-  if(onTab("setari")){ paintThemes(); paintFree(); paintAccs(); mntPaint(); } }
+  if(onTab("setari")){ paintThemes(); paintAccs(); mntPaint(); } }
 function flushTab(h){ if(!stale[h]) return; stale[h]=0;
   if(h==="acasa") renderHome();
   else if(h==="jurnal"){ renderJournal(); renderCells(); btStatus(); }
-  else if(h==="calendar"){ renderCal(); renderDay(); paintFree(); }
+  else if(h==="calendar"){ renderCal(); renderDay(); }
   else if(h==="adauga") renderQueue();
-  else if(h==="setari"){ paintThemes(); paintFree(); paintAccs(); mntPaint(); } }
+  else if(h==="setari"){ paintThemes(); paintAccs(); mntPaint(); } }
 
 /* ---------- boot ---------- */
 btRestore(); kvLoad();
 showTab(); resetForm();
 kpis(); renderAccts(); update(); renderHome(); renderJournal(); renderCells(); renderCal(); renderDay(); renderQueue();
-paintThemes(); paintFree(); newsPaint(); paintAccs(); btStatus();
+paintThemes(); newsPaint(); paintAccs(); btStatus();
 setTimeout(function(){ try{
   orphanShots().forEach(shotDrop);
   var old=oldSynced().filter(function(t){ return (Date.now()-(t.createdAt||0))>90*864e5; });
