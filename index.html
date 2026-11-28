@@ -363,6 +363,29 @@ button.primary.big{min-height:54px;font-size:16px;letter-spacing:-.01em}
 .kverd.ok{background:rgba(47,227,154,.1);border-color:rgba(47,227,154,.28);color:#8DF7C2}
 .kverd.no{background:rgba(255,77,94,.1);border-color:rgba(255,77,94,.28);color:#FF93A0}
 .kverd.mid{background:rgba(255,194,74,.09);border-color:rgba(255,194,74,.26);color:#FFD27A}
+.clocks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.clk{position:relative;aspect-ratio:1;border-radius:18px;border:1px solid var(--edge);background:var(--ctl-in);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 6px;overflow:hidden}
+.clk .cn{font-size:10.5px;font-weight:650;letter-spacing:.04em;text-transform:uppercase;color:var(--t3)}
+.clk .ch{font-size:25px;font-weight:700;letter-spacing:-.03em;color:var(--t1);font-variant-numeric:tabular-nums;line-height:1}
+.clk .cw{font-size:9.5px;color:var(--t4);font-variant-numeric:tabular-nums;text-align:center;line-height:1.3}
+.clk{--c:var(--win)}
+.clk[data-s="ny"]{--c:#FF9D52}
+.clk[data-s="asia"]{--c:#5CC6FF}
+.clk .ch{color:var(--c);opacity:.5}
+.clk .cd{position:absolute;top:9px;right:9px;width:6px;height:6px;border-radius:50%;background:var(--c);opacity:.4}
+.clk.on{border-color:color-mix(in srgb,var(--c) 50%,var(--edge));
+  background:linear-gradient(180deg,color-mix(in srgb,var(--c) 7%,transparent),transparent 62%),var(--ctl-in)}
+.clk.on .cd{opacity:1;box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 20%,transparent)}
+.clk.on .ch{opacity:1}
+.clk.on .cn{color:color-mix(in srgb,var(--c) 70%,var(--t2))}
+.ovlap{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;
+  padding:9px 13px;border-radius:13px;border:1px solid var(--edge);background:var(--ctl-in)}
+.ovlap .ol{font-size:11.5px;font-weight:600;color:var(--t2)}
+.ovlap .or{font-size:11.5px;color:var(--t4);font-variant-numeric:tabular-nums}
+.ovlap.on{border-color:color-mix(in srgb,#FF9D52 42%,var(--edge));
+  background:linear-gradient(90deg,color-mix(in srgb,var(--win) 8%,transparent),color-mix(in srgb,#FF9D52 9%,transparent)),var(--ctl-in)}
+.ovlap.on .ol{color:var(--win)} .ovlap.on .or{color:#FF9D52}
 .daycard{padding:12px var(--pad) 11px}
 .dayhd{display:flex;gap:6px;margin-bottom:10px}
 .dayhd .seg{flex:1;min-width:0}
@@ -730,6 +753,8 @@ html[data-theme="editorial"] .primary,html[data-theme="editorial"] .verifbar{col
       <span class="vb-t">Verifică setup</span>
     </button>
 
+    <div class="clocks" id="clocks"></div>
+    <div class="ovlap" id="ovlapRow" hidden><span class="ol" id="ovlapL">—</span><span class="or" id="ovlapR"></span></div>
     <div class="accs" id="accs"></div>
 
     <div class="glass month">
@@ -1119,7 +1144,7 @@ function tabOf(t){ var d=t.dest||"LIVE"; return d==="BT"?TABS_SHEET["BT_"+t.inst
 function destLabel(t){ var d=t.dest||"LIVE"; return d==="BT"?"Backtest "+t.inst:DESTS[d].label; }
 var trades=[], sheet=[], sheetLoaded=false, editing=null, db=null, mcp=null, plan=null;
 var accounts=null;
-var BUILD="28.11.2026 12:10";   /* amprenta versiunii */
+var BUILD="28.11.2026 13:55";   /* amprenta versiunii */
 var ACC_COLORS=["#3DDC84","#A855F7","#39C8FF","#FFB33C","#FF6FB1"];
 var PV_DEF={DAX:1,GBPUSD:10};
 var cfgX={risk:1,pv:{DAX:1,GBPUSD:10},acc:null};
@@ -1353,9 +1378,9 @@ function checks(t){ var w=[];
   if(dow===0||dow===6) w.push({l:"no",m:"Weekend."});
   if((t.dest||"LIVE")!=="LIVE") return w;
   var fk=t.date.slice(0,7), fd=freeDays(fk);
-  if(fd && fd.indexOf(d.getDate())<0) w.push({l:"warn",m:"Data nu e în lista de zile libere din "+(LUNI[d.getMonth()].toLowerCase())+"."});
+  if(!t.simz && fd && fd.indexOf(d.getDate())<0) w.push({l:"warn",m:"Data nu e în lista de zile libere din "+(LUNI[d.getMonth()].toLowerCase())+"."});
   var H=shiftFor(t.date);
-  if(H) w.push({l:"warn",m:"Săptămână cu ora schimbată: fereastra e cu o oră mai devreme."});
+  if(!t.simz && H) w.push({l:"warn",m:"Săptămână cu ora schimbată: fereastra e cu o oră mai devreme."});
   if(!core) w.push({l:"no",m:t.inst+" e în afara algoritmului (doar DAX și GBPUSD)."});
   if(t.inst==="DAX"){ if(m>=18*60+H) w.push({l:"no",m:"DAX după 18:00."});
     if(m<10*60+15+H) w.push({l:"warn",m:"DAX înainte de deschiderea ferestrei."});
@@ -1364,7 +1389,7 @@ function checks(t){ var w=[];
   if(t.inst==="GBPUSD"){ if(m>=16*60+15+H&&m<16*60+45+H) w.push({l:"no",m:"GBPUSD în 16:15–16:45."});
     if(t.liq==="LOD+") w.push({l:"no",m:"GBPUSD LOD+ e exclus din filtrul Normal (33%, n 12)."}); }
   if(t.mss==="AGRESIV") w.push({l:"warn",m:"MSS Agresiv."});
-  var NW=newsOf(t.date), st=(t.news&&t.news!=="───")?t.news:NW.s, nn=NW.n?(" ("+NW.n+")"):"";
+  var NW=t.simz?{t:[],s:"───",n:""}:newsOf(t.date), st=(t.news&&t.news!=="───")?t.news:NW.s, nn=NW.n?(" ("+NW.n+")"):"";
   var hard=newsHard(NW.n), ftmo=newsFtmo(NW.n), ore=NW.t.length?(" la "+NW.t.join(", ")):"";
   if(st==="★★★"){
     if(hard) w.push({l:"no",m:"Știre ★★★"+nn+ore+": NFP / CPI / FOMC / bank holiday — zi fără trading."});
@@ -1486,7 +1511,7 @@ function renderHome(){
     m.title=(t.instRaw||t.inst)+" "+t.time; b.appendChild(m); });
   var nowM=pad(d.getHours())+":"+pad(d.getMinutes());
   if(mins(nowM)>=DAY_A+H && mins(nowM)<=DAY_B+H){ var nw=el("span","now"); nw.style.left=pctOfDay(nowM,tdy)+"%"; b.appendChild(nw); }
-  renderDays();
+  renderDays(); renderClocks();
   /* lista */
   var h=$("homeList"); h.textContent="";
   if(!sheetLoaded){ for(var j=0;j<3;j++){ var r=el("div","sk-row"), m2=el("div");
@@ -1662,6 +1687,54 @@ function renderCells(force){
 seg($("cSrc"),["live","bt","totw","gul"],function(v){ cf.src=v; renderCells(); },["Live","Backtest","TOTW","GU Locale"],function(){return cf.src;});
 seg($("cDim"),["ziiv","zi","iv","liq","setup","mss","dir"],function(v){ cf.dim=v; renderCells(); },
     ["Zi × interval","Zi","Interval","Lichiditate","Setup","MSS","Direcție"],function(){return cf.dim;});
+/* ---------- ceasuri de sesiune ---------- */
+var TZRO="Europe/Bucharest";
+var SESIUNI=[
+  {n:"Londra",   tz:"Europe/London",   a:8*60,  b:16*60+30},
+  {n:"New York", tz:"America/New_York",a:8*60,  b:16*60},
+  {n:"Asia",     tz:"Asia/Tokyo",      a:10*60, b:17*60}
+];
+function tzParts(tz,d){
+  var o={};
+  new Intl.DateTimeFormat("en-CA",{timeZone:tz,hour12:false,year:"numeric",month:"2-digit",
+    day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",weekday:"short"})
+    .formatToParts(d).forEach(function(p){ o[p.type]=p.value; });
+  o.hour=(+o.hour)%24; o.minute=+o.minute; o.second=+o.second;
+  return o; }
+function tzOff(tz,d){ var o=tzParts(tz,d);
+  return Math.round((Date.UTC(+o.year,+o.month-1,+o.day,o.hour,o.minute,o.second)-d.getTime())/6e4); }
+function hm(m){ m=((m%1440)+1440)%1440; return pad(Math.floor(m/60))+":"+pad(m%60); }
+function dur(m){ var h=Math.floor(m/60), r=m%60, o=[];
+  if(h) o.push(h+"h"); if(r||!h) o.push(r+"m"); return o.join(" "); }
+function renderClocks(){
+  var box=$("clocks"); if(!box) return;
+  var now=new Date(), oRO=tzOff(TZRO,now), lucr=[], h="";
+  SESIUNI.forEach(function(S,ix){
+    var P=tzParts(S.tz,now), loc=P.hour*60+P.minute, off=tzOff(S.tz,now), sh=oRO-off;
+    var wd=new Date(+P.year,+P.month-1,+P.day).getDay(), week=(wd>=1&&wd<=5);
+    var on=week && loc>=S.a && loc<S.b;
+    lucr.push({n:S.n,a:S.a+sh,b:S.b+sh,on:on});
+    h+='<div class="clk'+(on?" on":"")+'" data-s="'+["lon","ny","asia"][ix]+'"><span class="cd"></span>'+
+       '<span class="cn">'+esc(S.n)+'</span>'+
+       '<span class="ch">'+pad(P.hour)+":"+pad(P.minute)+'</span>'+
+       '<span class="cw">'+hm(S.a+sh)+'–'+hm(S.b+sh)+'<br>ora RO</span></div>'; });
+  box.innerHTML=h;
+  var L=lucr[0], N=lucr[1], a=Math.max(L.a,N.a), b=Math.min(L.b,N.b), row=$("ovlapRow");
+  if(!row) return;
+  if(b<=a){ row.hidden=true; return; }
+  row.hidden=false;
+  var P=tzParts(TZRO,now), m=P.hour*60+P.minute, wd=now.getDay(), week=(wd>=1&&wd<=5);
+  var viu=week&&(m>=a&&m<b)&&L.on&&N.on;
+  row.className="ovlap"+(viu?" on":"");
+  $("ovlapL").textContent="Overlap Londra × New York";
+  $("ovlapR").textContent=hm(a)+"–"+hm(b)+" · "+
+    (!week?"weekend":(viu?("mai sunt "+dur(b-m)):(m<a?("peste "+dur(a-m)):"s-a încheiat"))); }
+var clkZi="";
+setInterval(function(){
+  try{ renderClocks();
+    var t=todayISO(); if(clkZi && t!==clkZi){ clkZi=t; renderAll(); } else clkZi=clkZi||t;
+  }catch(e){} },20000);
+
 /* ---------- Acasă: win rate pe zile ---------- */
 var HFK="tradeapp-hf", hf={inst:"DAX",src:"bt"};
 try{ var _h=JSON.parse(localStorage.getItem(HFK)||"null"); if(_h&&_h.inst&&_h.src) hf=_h; }catch(e){}
@@ -2288,7 +2361,11 @@ $("shotDel").onclick=function(ev){ ev.stopPropagation(); ev.preventDefault(); kv
   $("shotDel").hidden=true; };
 function kClear(){ kvSave(); kVerify(); }
 
-function kTrade(){ return {id:"__k",dest:"LIVE",inst:kv.inst,instRaw:kv.inst,date:todayISO(),time:hhmm(),
+function ziDate(zi){ var i=ZILE_ORD.indexOf(zi); if(i<0) return todayISO();
+  var d=new Date(), g=0; while(d.getDay()!==(i+1) && g++<8) d.setDate(d.getDate()-1);
+  return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+function kTrade(){ return {id:"__k",dest:"LIVE",inst:kv.inst,instRaw:kv.inst,
+  date:(kv.zi?ziDate(kv.zi):todayISO()), simz:!!kv.zi, time:hhmm(),
   res:"",dir:"BUY",liq:kv.liq,setup:kv.setup,mss:kv.mss,re:false,news:"───",com:"",ctx:""}; }
 function nTr(n){ return n===1?"1 trade":(n+" tradeuri"); }
 function wrCard(lab,st,hint){
@@ -2301,8 +2378,12 @@ function wrCard(lab,st,hint){
     '<div class="wrtop"><div class="wrl">'+esc(lab)+'</div>'+
     (hint?'<span class="wrh">'+esc(hint)+'</span>':'')+'</div>'+
     '<div class="wrv">'+wr+'</div><div class="wrm">'+esc(sub)+'</div></div>'; }
+function ivMid(iv){ var m=String(iv||"").match(/^(\d{2}):(\d{2})\s*-\s*(\d{2}):(\d{2})$/); if(!m) return null;
+  var a=+m[1]*60+ +m[2], b=+m[3]*60+ +m[4], c=Math.round((a+b)/2); return pad(Math.floor(c/60))+":"+pad(c%60); }
 function kVerify(){
-  var t=kTrade(), iv=kv.iv||interval(t.time,t.date), d=parseISO(t.date), zi=kv.zi||ZILE_D[d.getDay()];
+  var t=kTrade();
+  if(kv.zi && kv.iv){ var mid=ivMid(kv.iv); if(mid) t.time=mid; }
+  var iv=kv.iv||interval(t.time,t.date), d=parseISO(t.date), zi=kv.zi||ZILE_D[d.getDay()];
   var ziOk=function(x){ return ziOf(x)===zi; };
   var useBT=!!(btRows[t.inst]&&btRows[t.inst].length);
   var pool=(useBT?btRows[t.inst]:all().filter(function(x){return x.inst===t.inst;}))
